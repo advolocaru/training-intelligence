@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LemonIO - Athlete Performance Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+    <style>
+:root{--bg-primary:#0a0a0f;--bg-surface:#141420;--bg-surface-hover:#1a1a2e;--bg-elevated:#1e1e30;--border-color:#2a2a3e;--border-subtle:#1f1f2e;--text-primary:#f5f5f7;--text-secondary:#8888a0;--text-tertiary:#5a5a70;--accent:#8b5cf6;--accent-hover:#a78bfa;--accent-muted:rgba(139,92,246,0.15);--success:#22c55e;--success-muted:rgba(34,197,94,0.15);--warning:#eab308;--warning-muted:rgba(234,179,8,0.15);--error:#ef4444;--error-muted:rgba(239,68,68,0.15);--info:#3b82f6;--info-muted:rgba(59,130,246,0.15);--sidebar-width:240px;--sidebar-collapsed:72px;--topbar-height:64px;--card-padding:24px;--gap-lg:24px;--gap-md:16px;--gap-sm:8px;--gap-xs:4px;--radius-lg:16px;--radius-md:12px;--radius-sm:8px;--radius-xs:6px;--shadow-md:0 4px 12px rgba(0,0,0,0.4);--shadow-lg:0 8px 24px rgba(0,0,0,0.5);--transition-fast:150ms ease;--transition-base:200ms ease;--transition-slow:300ms ease}
+[data-theme="light"]{--bg-primary:#f5f5f7;--bg-surface:#ffffff;--bg-surface-hover:#f0f0f5;--bg-elevated:#ffffff;--border-color:#e5e5ea;--border-subtle:#ebebf0;--text-primary:#1a1a2e;--text-secondary:#6b6b80;--text-tertiary:#9898a8;--accent:#7c3aed;--accent-hover:#6d28d9;--accent-muted:rgba(124,58,237,0.1);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--shadow-lg:0 8px 24px rgba(0,0,0,0.12)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg-primary);color:var(--text-primary);font-size:14px;line-height:1.5;overflow-x:hidden}
+.pin-screen{position:fixed;inset:0;background:var(--bg-primary);display:flex;align-items:center;justify-content:center;z-index:9999}
+.pin-screen.hidden{display:none}
+.pin-container{text-align:center;padding:var(--gap-lg)}
+.pin-logo{width:64px;height:64px;background:var(--accent);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:28px;color:white;margin:0 auto var(--gap-lg)}
+.pin-title{font-size:24px;font-weight:600;margin-bottom:var(--gap-sm)}
+.pin-subtitle{color:var(--text-secondary);margin-bottom:var(--gap-lg)}
+.pin-inputs{display:flex;gap:var(--gap-sm);justify-content:center;margin-bottom:var(--gap-lg)}
+.pin-input{width:56px;height:64px;background:var(--bg-surface);border:2px solid var(--border-color);border-radius:var(--radius-sm);font-size:24px;font-weight:600;text-align:center;color:var(--text-primary);outline:none;transition:all var(--transition-fast)}
+.pin-input:focus{border-color:var(--accent);background:var(--bg-surface-hover)}
+.pin-input.error{border-color:var(--error);animation:shake 0.4s ease}
+.pin-input.success{border-color:var(--success)}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.pin-error{color:var(--error);font-size:13px;min-height:20px}
+.app-container{display:flex;min-height:100vh}
+.sidebar{width:var(--sidebar-width);height:100vh;position:fixed;left:0;top:0;background:var(--bg-surface);border-right:1px solid var(--border-color);display:flex;flex-direction:column;transition:all var(--transition-base);z-index:100}
+.sidebar.collapsed{width:var(--sidebar-collapsed)}
+.sidebar-header{height:var(--topbar-height);padding:0 var(--gap-md);display:flex;align-items:center;gap:var(--gap-sm);border-bottom:1px solid var(--border-subtle)}
+.sidebar-logo{width:36px;height:36px;background:var(--accent);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;color:white;flex-shrink:0}
+.sidebar-brand{font-weight:600;font-size:18px;white-space:nowrap;overflow:hidden;transition:opacity var(--transition-fast)}
+.sidebar.collapsed .sidebar-brand{opacity:0;width:0}
+.sidebar-nav{flex:1;padding:var(--gap-md) var(--gap-sm);overflow-y:auto}
+.nav-section{margin-bottom:var(--gap-lg)}
+.nav-section-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-tertiary);padding:var(--gap-sm);white-space:nowrap}
+.sidebar.collapsed .nav-section-title{opacity:0;height:0;padding:0}
+.nav-item{display:flex;align-items:center;gap:var(--gap-sm);padding:12px var(--gap-sm);border-radius:var(--radius-sm);color:var(--text-secondary);cursor:pointer;transition:all var(--transition-fast);margin-bottom:2px;position:relative}
+.nav-item:hover{background:var(--bg-surface-hover);color:var(--text-primary)}
+.nav-item.active{background:var(--accent-muted);color:var(--accent)}
+.nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:24px;background:var(--accent);border-radius:0 3px 3px 0}
+.sidebar.collapsed .nav-item{justify-content:center;padding:12px}
+.nav-item-icon{width:22px;height:22px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.nav-item-icon svg{width:22px;height:22px}
+.nav-item-text{white-space:nowrap;transition:opacity var(--transition-fast)}
+.sidebar.collapsed .nav-item-text{opacity:0;width:0;position:absolute}
+.sidebar-footer{padding:var(--gap-sm);border-top:1px solid var(--border-subtle)}
+.sidebar-toggle{width:100%;padding:12px;background:transparent;border:none;border-radius:var(--radius-sm);color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:var(--gap-sm);transition:all var(--transition-fast)}
+.sidebar-toggle:hover{background:var(--bg-surface-hover);color:var(--text-primary)}
+.sidebar-toggle svg{transition:transform var(--transition-base)}
+.sidebar.collapsed .sidebar-toggle svg{transform:rotate(180deg)}
+.sidebar.collapsed .toggle-text{display:none}
+.sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99}
+.sidebar-overlay.show{display:block}
+.main-content{flex:1;margin-left:var(--sidebar-width);transition:margin-left var(--transition-base);min-height:100vh}
+.sidebar.collapsed ~ .main-content{margin-left:var(--sidebar-collapsed)}
+.topbar{height:var(--topbar-height);background:var(--bg-surface);border-bottom:1px solid var(--border-color);display:flex;align-items:center;justify-content:space-between;padding:0 var(--gap-lg);position:sticky;top:0;z-index:50}
+.topbar-left{display:flex;align-items:center;gap:var(--gap-md)}
+.mobile-menu-btn{display:none;width:40px;height:40px;border-radius:var(--radius-sm);background:transparent;border:none;color:var(--text-primary);cursor:pointer;align-items:center;justify-content:center}
+.page-title{font-size:18px;font-weight:600}
+.topbar-right{display:flex;align-items:center;gap:var(--gap-xs)}
+.topbar-btn{width:40px;height:40px;border-radius:var(--radius-sm);background:transparent;border:none;color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--transition-fast)}
+.topbar-btn:hover{background:var(--bg-surface-hover);color:var(--text-primary)}
+.profile-btn{display:flex;align-items:center;gap:var(--gap-sm);padding:6px 12px 6px 6px;background:transparent;border:1px solid var(--border-color);border-radius:var(--radius-sm);cursor:pointer;transition:all var(--transition-fast)}
+.profile-btn:hover{background:var(--bg-surface-hover);border-color:var(--accent)}
+.profile-avatar{width:28px;height:28px;border-radius:var(--radius-xs);background:var(--accent);color:white;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:12px}
+.profile-name{color:var(--text-primary);font-size:14px;font-weight:500}
+.page-content{padding:var(--gap-lg)}
+.page-panel{display:none;animation:fadeIn var(--transition-base)}
+.page-panel.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.section-header{margin-bottom:var(--gap-lg)}
+.section-title{font-size:20px;font-weight:600}
+.section-subtitle{color:var(--text-secondary);font-size:13px;margin-top:2px}
+.status-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--gap-md);margin-bottom:var(--gap-lg)}
+.stat-card{background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:var(--card-padding);transition:all var(--transition-fast)}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--accent)}
+.stat-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--gap-md)}
+.stat-card-icon{width:40px;height:40px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center}
+.stat-card-icon.readiness{background:var(--accent-muted);color:var(--accent)}
+.stat-card-icon.hrv{background:var(--success-muted);color:var(--success)}
+.stat-card-icon.sleep{background:var(--info-muted);color:var(--info)}
+.stat-card-icon.stress{background:var(--warning-muted);color:var(--warning)}
+.stat-card-trend{font-size:12px;font-weight:500;padding:4px 8px;border-radius:var(--radius-xs)}
+.stat-card-trend.up{background:var(--success-muted);color:var(--success)}
+.stat-card-trend.down{background:var(--error-muted);color:var(--error)}
+.stat-card-trend.neutral{background:var(--bg-surface-hover);color:var(--text-secondary)}
+.stat-card-value{font-size:32px;font-weight:700;margin-bottom:var(--gap-xs)}
+.stat-card-value span{font-size:18px;color:var(--text-secondary)}
+.stat-card-label{color:var(--text-secondary);font-size:13px}
+.tabs-section{background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-lg);overflow:hidden}
+.tabs-header{display:flex;border-bottom:1px solid var(--border-color);padding:0 var(--gap-md)}
+.tab-btn{padding:var(--gap-md);background:transparent;border:none;color:var(--text-secondary);font-size:14px;font-weight:500;cursor:pointer;position:relative;transition:color var(--transition-fast)}
+.tab-btn:hover{color:var(--text-primary)}
+.tab-btn.active{color:var(--accent)}
+.tab-btn.active::after{content:'';position:absolute;bottom:0;left:var(--gap-md);right:var(--gap-md);height:2px;background:var(--accent)}
+.tabs-content{padding:var(--card-padding)}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+.activity-list{display:flex;flex-direction:column;gap:var(--gap-sm)}
+.activity-item{display:flex;align-items:center;gap:var(--gap-md);padding:var(--gap-md);background:var(--bg-primary);border-radius:var(--radius-sm);cursor:pointer;transition:all var(--transition-fast)}
+.activity-item:hover{background:var(--bg-surface-hover)}
+.activity-icon{width:44px;height:44px;border-radius:var(--radius-sm);background:var(--accent-muted);color:var(--accent);display:flex;align-items:center;justify-content:center}
+.activity-info{flex:1}
+.activity-name{font-weight:500;margin-bottom:2px}
+.activity-meta{color:var(--text-secondary);font-size:13px}
+.activity-stats{display:flex;gap:var(--gap-lg)}
+.activity-stat{text-align:right}
+.activity-stat-value{font-weight:600;font-size:15px}
+.activity-stat-label{color:var(--text-tertiary);font-size:11px;text-transform:uppercase}
+.insight-box{background:linear-gradient(135deg,var(--accent-muted) 0%,transparent 100%);border:1px solid var(--accent);border-radius:var(--radius-md);padding:var(--card-padding);margin-bottom:var(--gap-lg)}
+.insight-header{display:flex;align-items:center;gap:var(--gap-sm);margin-bottom:var(--gap-md)}
+.insight-badge{background:var(--accent);color:white;font-size:11px;font-weight:600;padding:4px 8px;border-radius:var(--radius-xs)}
+.insight-title{font-size:18px;font-weight:600}
+.insight-text{color:var(--text-secondary);line-height:1.6}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--gap-sm);padding:10px 16px;font-size:14px;font-weight:500;border-radius:var(--radius-sm);border:none;cursor:pointer;transition:all var(--transition-fast)}
+.btn-primary{background:var(--accent);color:white}
+.btn-primary:hover{background:var(--accent-hover)}
+.coming-soon{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:400px;text-align:center;padding:var(--gap-lg)}
+.coming-soon-icon{width:80px;height:80px;border-radius:var(--radius-lg);background:var(--accent-muted);color:var(--accent);display:flex;align-items:center;justify-content:center;margin-bottom:var(--gap-lg)}
+.coming-soon-title{font-size:24px;font-weight:600;margin-bottom:var(--gap-sm)}
+.coming-soon-text{color:var(--text-secondary);max-width:400px}
+
+/* MAPS - COMPLETELY REDESIGNED */
+.maps-page{display:flex;gap:var(--gap-md);height:calc(100vh - var(--topbar-height) - 48px)}
+.map-main{flex:1;position:relative;border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border-color);background:#1a1a2e}
+#map{width:100%;height:100%}
+.map-overlay-stats{position:absolute;bottom:20px;left:20px;display:flex;gap:var(--gap-sm);z-index:5}
+.map-badge{background:rgba(20,20,32,0.9);backdrop-filter:blur(8px);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:8px 14px;display:flex;align-items:center;gap:8px}
+.map-badge-value{font-weight:700;font-size:18px;color:var(--accent)}
+.map-badge-label{font-size:12px;color:var(--text-secondary)}
+.map-overlay-controls{position:absolute;top:20px;left:20px;display:flex;flex-direction:column;gap:var(--gap-sm);z-index:5}
+.map-btn{width:40px;height:40px;background:rgba(20,20,32,0.9);backdrop-filter:blur(8px);border:1px solid var(--border-color);border-radius:var(--radius-sm);color:var(--text-primary);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--transition-fast)}
+.map-btn:hover{background:var(--accent);border-color:var(--accent)}
+.routes-sidebar{width:360px;display:flex;flex-direction:column;gap:var(--gap-md)}
+.routes-info{background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:var(--gap-md)}
+.routes-info h3{margin-bottom:4px}
+.routes-info p{font-size:13px;color:var(--text-secondary)}
+.routes-list-card{flex:1;background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);display:flex;flex-direction:column;overflow:hidden}
+.routes-list-header{padding:var(--gap-md);border-bottom:1px solid var(--border-color);font-weight:600}
+.routes-list{flex:1;overflow-y:auto;padding:var(--gap-sm)}
+.route-item{padding:var(--gap-md);margin-bottom:4px;background:var(--bg-primary);border-radius:var(--radius-sm);cursor:pointer;transition:all var(--transition-fast);border-left:3px solid transparent}
+.route-item:hover,.route-item.active{background:var(--accent-muted);border-left-color:var(--accent)}
+.route-item-name{font-weight:500;margin-bottom:4px}
+.route-item-meta{font-size:12px;color:var(--text-secondary);display:flex;gap:var(--gap-md)}
+
+/* Route Detail Slide */
+.route-detail{position:fixed;top:var(--topbar-height);right:-420px;width:400px;height:calc(100vh - var(--topbar-height));background:var(--bg-surface);border-left:1px solid var(--border-color);transition:right 0.3s ease;z-index:200;display:flex;flex-direction:column;box-shadow:-4px 0 20px rgba(0,0,0,0.3)}
+.route-detail.open{right:0}
+.route-detail-header{padding:var(--gap-lg);border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center}
+.route-detail-title{font-size:18px;font-weight:600}
+.close-btn{width:36px;height:36px;border:none;background:transparent;color:var(--text-secondary);cursor:pointer;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center}
+.close-btn:hover{background:var(--bg-surface-hover);color:var(--text-primary)}
+.route-detail-body{flex:1;padding:var(--gap-lg);overflow-y:auto}
+.detail-stats{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap-md);margin-bottom:var(--gap-lg)}
+.detail-stat{background:var(--bg-primary);border-radius:var(--radius-sm);padding:var(--gap-md);text-align:center}
+.detail-stat-value{font-size:24px;font-weight:700;color:var(--accent)}
+.detail-stat-label{font-size:12px;color:var(--text-secondary);margin-top:4px}
+.detail-info{border-top:1px solid var(--border-color);padding-top:var(--gap-md)}
+.detail-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border-subtle)}
+.detail-label{color:var(--text-secondary)}
+.detail-value{font-weight:500}
+
+/* PREDICTIONS */
+.targets-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap-md);margin-bottom:var(--gap-lg)}
+.target-card{background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:var(--card-padding);position:relative;overflow:hidden}
+.target-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
+.target-card.runs::before{background:var(--accent)}
+.target-card.distance::before{background:var(--success)}
+.target-card.elevation::before{background:var(--warning)}
+.target-header{display:flex;align-items:center;gap:var(--gap-sm);margin-bottom:var(--gap-md)}
+.target-icon{width:44px;height:44px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center}
+.target-icon.runs{background:var(--accent-muted);color:var(--accent)}
+.target-icon.distance{background:var(--success-muted);color:var(--success)}
+.target-icon.elevation{background:var(--warning-muted);color:var(--warning)}
+.target-title{font-weight:600}
+.target-subtitle{font-size:12px;color:var(--text-secondary)}
+.target-pct{font-size:36px;font-weight:700;margin-bottom:var(--gap-sm)}
+.target-bar{height:8px;background:var(--bg-primary);border-radius:4px;overflow:hidden;margin-bottom:var(--gap-sm)}
+.target-fill{height:100%;border-radius:4px}
+.target-fill.runs{background:var(--accent)}
+.target-fill.distance{background:var(--success)}
+.target-fill.elevation{background:var(--warning)}
+.target-values{display:flex;justify-content:space-between;font-size:13px}
+.target-current{font-weight:600}
+.target-goal{color:var(--text-secondary)}
+.target-note{font-size:13px;color:var(--text-tertiary);margin-top:var(--gap-sm)}
+
+/* Calendar */
+.calendar-card{background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-lg);overflow:hidden}
+.calendar-header{padding:var(--gap-md) var(--card-padding);border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center}
+.calendar-title{font-weight:600}
+.calendar-body{padding:var(--card-padding)}
+.calendar-weekdays{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:var(--gap-sm)}
+.calendar-weekday{text-align:center;font-size:12px;font-weight:500;color:var(--text-tertiary);padding:8px}
+.calendar-days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-day{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:var(--radius-sm);font-size:14px;background:var(--bg-primary);cursor:pointer;transition:all var(--transition-fast)}
+.cal-day:hover{background:var(--bg-surface-hover)}
+.cal-day.other{opacity:0.3}
+.cal-day.today{border:2px solid var(--accent)}
+.cal-day.has-run{background:var(--success-muted)}
+.cal-day.has-run::after{content:'';width:6px;height:6px;background:var(--success);border-radius:50%;margin-top:2px}
+.cal-day-num{font-weight:500}
+.calendar-legend{display:flex;gap:var(--gap-lg);padding:var(--gap-md) var(--card-padding);border-top:1px solid var(--border-color)}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-secondary)}
+.legend-dot{width:10px;height:10px;border-radius:50%}
+
+/* Chat */
+.chat-fab{position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;background:var(--accent);border:none;color:white;cursor:pointer;box-shadow:var(--shadow-lg);display:flex;align-items:center;justify-content:center;z-index:300}
+.chat-fab:hover{transform:scale(1.05);background:var(--accent-hover)}
+.chat-panel{position:fixed;bottom:96px;right:24px;width:380px;max-height:500px;background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);display:none;flex-direction:column;z-index:300;overflow:hidden}
+.chat-panel.show{display:flex}
+.chat-header{padding:var(--gap-md);border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center}
+.chat-title{font-weight:600;display:flex;align-items:center;gap:var(--gap-sm)}
+.chat-badge{background:var(--accent);color:white;font-size:10px;padding:2px 6px;border-radius:var(--radius-xs)}
+.chat-close{width:32px;height:32px;border:none;background:transparent;color:var(--text-secondary);cursor:pointer;border-radius:var(--radius-xs);display:flex;align-items:center;justify-content:center}
+.chat-close:hover{background:var(--bg-surface-hover)}
+.chat-messages{flex:1;overflow-y:auto;padding:var(--gap-md);display:flex;flex-direction:column;gap:var(--gap-sm);min-height:280px;max-height:350px}
+.chat-msg{max-width:85%;padding:10px 14px;border-radius:var(--radius-md);font-size:14px;line-height:1.5}
+.chat-msg.bot{background:var(--bg-primary);align-self:flex-start}
+.chat-msg.user{background:var(--accent);color:white;align-self:flex-end}
+.chat-msg.loading{display:flex;gap:4px;padding:14px}
+.chat-msg.loading span{width:8px;height:8px;background:var(--text-tertiary);border-radius:50%;animation:bounce 1.4s infinite}
+.chat-msg.loading span:nth-child(2){animation-delay:0.2s}
+.chat-msg.loading span:nth-child(3){animation-delay:0.4s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-8px)}}
+.chat-input-row{padding:var(--gap-md);border-top:1px solid var(--border-color);display:flex;gap:var(--gap-sm)}
+.chat-input{flex:1;padding:12px;background:var(--bg-primary);border:1px solid var(--border-color);border-radius:var(--radius-sm);color:var(--text-primary);font-size:14px;outline:none}
+.chat-input:focus{border-color:var(--accent)}
+.chat-send{width:44px;height:44px;border-radius:var(--radius-sm);background:var(--accent);border:none;color:white;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.chat-send:hover{background:var(--accent-hover)}
+.chat-send:disabled{opacity:0.5}
+
+.dropdown{position:relative}
+.dropdown-menu{position:absolute;top:100%;right:0;margin-top:var(--gap-sm);min-width:180px;background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);opacity:0;visibility:hidden;transform:translateY(-8px);transition:all var(--transition-fast);z-index:100}
+.dropdown.open .dropdown-menu{opacity:1;visibility:visible;transform:translateY(0)}
+.dropdown-item{display:flex;align-items:center;gap:var(--gap-sm);padding:10px var(--gap-md);color:var(--text-primary);font-size:14px;cursor:pointer}
+.dropdown-item:hover{background:var(--bg-surface-hover)}
+.dropdown-divider{height:1px;background:var(--border-color);margin:4px 0}
+
+.toast-container{position:fixed;top:80px;right:24px;z-index:1000}
+.toast{background:var(--bg-surface);border:1px solid var(--border-color);border-left:3px solid var(--info);border-radius:var(--radius-sm);padding:var(--gap-md);box-shadow:var(--shadow-lg);animation:slideIn 0.3s ease;min-width:260px;margin-bottom:8px}
+@keyframes slideIn{from{opacity:0;transform:translateX(100%)}to{opacity:1;transform:translateX(0)}}
+
+@media(max-width:1200px){.status-grid,.targets-grid{grid-template-columns:repeat(2,1fr)}.maps-page{flex-direction:column;height:auto}.map-main{min-height:500px}.routes-sidebar{width:100%}}
+@media(max-width:768px){.sidebar{transform:translateX(-100%)}.sidebar.mobile-open{transform:translateX(0)}.main-content{margin-left:0}.mobile-menu-btn{display:flex}.status-grid,.targets-grid{grid-template-columns:1fr}.routes-sidebar{display:none}.route-detail{width:100%;right:-100%}}
+    </style>
+</head>
+<body>
+    <!-- PIN -->
+    <div class="pin-screen" id="pin-screen">
+        <div class="pin-container">
+            <div class="pin-logo">L</div>
+            <h1 class="pin-title">Welcome Back</h1>
+            <p class="pin-subtitle">Enter PIN to continue</p>
+            <div class="pin-inputs">
+                <input type="password" class="pin-input" maxlength="1" inputmode="numeric">
+                <input type="password" class="pin-input" maxlength="1" inputmode="numeric">
+                <input type="password" class="pin-input" maxlength="1" inputmode="numeric">
+                <input type="password" class="pin-input" maxlength="1" inputmode="numeric">
+            </div>
+            <p class="pin-error" id="pin-error"></p>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <div class="app-container">
+        <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeMobileSidebar()"></div>
+        
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header"><div class="sidebar-logo">L</div><span class="sidebar-brand">LemonIO</span></div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a class="nav-item active" data-page="dashboard" onclick="navigateTo('dashboard')"><span class="nav-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span><span class="nav-item-text">Dashboard</span></a>
+                    <a class="nav-item" data-page="maps" onclick="navigateTo('maps')"><span class="nav-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg></span><span class="nav-item-text">Maps</span></a>
+                    <a class="nav-item" data-page="predictions" onclick="navigateTo('predictions')"><span class="nav-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span><span class="nav-item-text">Predictions</span></a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Health</div>
+                    <a class="nav-item" data-page="health" onclick="navigateTo('health')"><span class="nav-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span><span class="nav-item-text">Health</span></a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Insights</div>
+                    <a class="nav-item" data-page="ai" onclick="navigateTo('ai')"><span class="nav-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></span><span class="nav-item-text">AI Coach</span></a>
+                </div>
+            </nav>
+            <div class="sidebar-footer"><button class="sidebar-toggle" onclick="toggleSidebar()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg><span class="toggle-text">Collapse</span></button></div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="mobile-menu-btn" onclick="openMobileSidebar()"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+                    <h1 class="page-title" id="page-title">Dashboard</h1>
+                </div>
+                <div class="topbar-right">
+                    <button class="topbar-btn" onclick="toggleTheme()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
+                    <div class="dropdown" id="profileDropdown">
+                        <button class="profile-btn" onclick="toggleProfileDropdown()"><div class="profile-avatar">AV</div><span class="profile-name">Alex Volo</span></button>
+                        <div class="dropdown-menu">
+                            <div class="dropdown-item" onclick="showToast('Settings coming soon')">⚙️ Settings</div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-item" onclick="logout()">🚪 Logout</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="page-content">
+                <!-- DASHBOARD -->
+                <div class="page-panel active" id="page-dashboard">
+                    <div class="section-header"><h2 class="section-title">Today's Status</h2><p class="section-subtitle" id="today-date"></p></div>
+                    <div class="status-grid">
+                        <div class="stat-card"><div class="stat-card-header"><div class="stat-card-icon readiness"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><span class="stat-card-trend down">↓ Poor</span></div><div class="stat-card-value">1<span>/100</span></div><div class="stat-card-label">Training Readiness</div></div>
+                        <div class="stat-card"><div class="stat-card-header"><div class="stat-card-icon hrv"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><span class="stat-card-trend neutral">Balanced</span></div><div class="stat-card-value">36<span>ms</span></div><div class="stat-card-label">HRV Weekly Avg</div></div>
+                        <div class="stat-card"><div class="stat-card-header"><div class="stat-card-icon sleep"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div><span class="stat-card-trend down">↓ Poor</span></div><div class="stat-card-value">28<span>/100</span></div><div class="stat-card-label">Sleep Score</div></div>
+                        <div class="stat-card"><div class="stat-card-header"><div class="stat-card-icon stress"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 16s-1.5-2-4-2-4 2-4 2"/></svg></div><span class="stat-card-trend up">↑ High</span></div><div class="stat-card-value">88<span>max</span></div><div class="stat-card-label">Stress Level</div></div>
+                    </div>
+                    <div class="tabs-section">
+                        <div class="tabs-header"><button class="tab-btn active" data-tab="recent">Recent</button><button class="tab-btn" data-tab="insights">AI Insights</button></div>
+                        <div class="tabs-content">
+                            <div class="tab-panel active" id="tab-recent">
+                                <div class="activity-list">
+                                    <div class="activity-item"><div class="activity-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="activity-info"><div class="activity-name">Threshold 4x2km Z4</div><div class="activity-meta">Jan 25 • Afternoon</div></div><div class="activity-stats"><div class="activity-stat"><div class="activity-stat-value">11.82km</div><div class="activity-stat-label">Dist</div></div><div class="activity-stat"><div class="activity-stat-value">4:23/km</div><div class="activity-stat-label">Pace</div></div></div></div>
+                                    <div class="activity-item"><div class="activity-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="activity-info"><div class="activity-name">Easy Z2 Run</div><div class="activity-meta">Jan 22 • Evening</div></div><div class="activity-stats"><div class="activity-stat"><div class="activity-stat-value">7.96km</div><div class="activity-stat-label">Dist</div></div><div class="activity-stat"><div class="activity-stat-value">5:20/km</div><div class="activity-stat-label">Pace</div></div></div></div>
+                                </div>
+                            </div>
+                            <div class="tab-panel" id="tab-insights"><div class="insight-box"><div class="insight-header"><span class="insight-badge">AI</span><span class="insight-title">Recovery Day Recommended</span></div><p class="insight-text"><strong>Training Readiness at 1/100</strong> - prioritize rest today. 🏆 New 10K PR: 43:34!</p></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MAPS -->
+                <div class="page-panel" id="page-maps">
+                    <div class="maps-page">
+                        <div class="map-main">
+                            <div id="map"></div>
+                            <div class="map-overlay-controls">
+                                <button class="map-btn" onclick="fitAllRoutes()" title="Fit all routes"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></button>
+                                <button class="map-btn" onclick="toggleMapStyle()" title="Change style"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></button>
+                            </div>
+                            <div class="map-overlay-stats">
+                                <div class="map-badge"><span class="map-badge-value" id="stat-routes">5</span><span class="map-badge-label">routes</span></div>
+                                <div class="map-badge"><span class="map-badge-value" id="stat-km">50.9</span><span class="map-badge-label">km total</span></div>
+                            </div>
+                        </div>
+                        <div class="routes-sidebar">
+                            <div class="routes-info"><h3>🗺️ Running Maps</h3><p>Click a route on the map or list to see details</p></div>
+                            <div class="routes-list-card">
+                                <div class="routes-list-header">Recent Routes</div>
+                                <div class="routes-list" id="routes-list"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PREDICTIONS -->
+                <div class="page-panel" id="page-predictions">
+                    <div class="section-header"><h2 class="section-title">2026 Targets</h2><p class="section-subtitle">Track your monthly goals</p></div>
+                    <div class="targets-grid">
+                        <div class="target-card runs"><div class="target-header"><div class="target-icon runs"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><div class="target-title">Target Runs</div><div class="target-subtitle">Monthly: 15 runs</div></div></div><div class="target-pct">60%</div><div class="target-bar"><div class="target-fill runs" style="width:60%"></div></div><div class="target-values"><span class="target-current">9 runs</span><span class="target-goal">/ 15 runs</span></div><div class="target-note">6 more runs to reach goal</div></div>
+                        <div class="target-card distance"><div class="target-header"><div class="target-icon distance"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div><div class="target-title">Target Distance</div><div class="target-subtitle">Monthly: 150 km</div></div></div><div class="target-pct">68%</div><div class="target-bar"><div class="target-fill distance" style="width:68%"></div></div><div class="target-values"><span class="target-current">102 km</span><span class="target-goal">/ 150 km</span></div><div class="target-note">48 km to reach goal</div></div>
+                        <div class="target-card elevation"><div class="target-header"><div class="target-icon elevation"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div><div class="target-title">Target Elevation</div><div class="target-subtitle">Monthly: 2,000m</div></div></div><div class="target-pct">45%</div><div class="target-bar"><div class="target-fill elevation" style="width:45%"></div></div><div class="target-values"><span class="target-current">892m</span><span class="target-goal">/ 2,000m</span></div><div class="target-note">1,108m to reach goal</div></div>
+                    </div>
+                    <div class="insight-box"><div class="insight-header"><span class="insight-badge">AI INSIGHT</span><span class="insight-title">On Track for January! 🎯</span></div><p class="insight-text">You're <strong>68% through distance goal</strong> with 4 days left. Need <strong>4-5 more runs</strong> to hit 150km. Elevation is behind - try hill routes!</p></div>
+                    <div class="calendar-card">
+                        <div class="calendar-header"><div class="calendar-title">📅 January 2026</div></div>
+                        <div class="calendar-body">
+                            <div class="calendar-weekdays"><div class="calendar-weekday">Mon</div><div class="calendar-weekday">Tue</div><div class="calendar-weekday">Wed</div><div class="calendar-weekday">Thu</div><div class="calendar-weekday">Fri</div><div class="calendar-weekday">Sat</div><div class="calendar-weekday">Sun</div></div>
+                            <div class="calendar-days" id="calendar-days"></div>
+                        </div>
+                        <div class="calendar-legend"><div class="legend-item"><div class="legend-dot" style="background:var(--success)"></div>Completed Run</div><div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Today</div></div>
+                    </div>
+                </div>
+
+                <!-- HEALTH -->
+                <div class="page-panel" id="page-health"><div class="coming-soon"><div class="coming-soon-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><h2 class="coming-soon-title">Health Metrics</h2><p class="coming-soon-text">HRV, VO2 Max, Sleep data coming soon.</p></div></div>
+
+                <!-- AI -->
+                <div class="page-panel" id="page-ai"><div class="coming-soon"><div class="coming-soon-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/></svg></div><h2 class="coming-soon-title">AI Coach</h2><p class="coming-soon-text">Your personal running assistant.</p><button class="btn btn-primary" style="margin-top:20px" onclick="toggleChat()">💬 Open Chat</button></div></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Route Detail -->
+    <div class="route-detail" id="route-detail">
+        <div class="route-detail-header"><div class="route-detail-title" id="detail-title">Route Details</div><button class="close-btn" onclick="closeRouteDetail()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+        <div class="route-detail-body">
+            <div class="detail-stats">
+                <div class="detail-stat"><div class="detail-stat-value" id="d-dist">-</div><div class="detail-stat-label">Distance</div></div>
+                <div class="detail-stat"><div class="detail-stat-value" id="d-pace">-</div><div class="detail-stat-label">Pace</div></div>
+                <div class="detail-stat"><div class="detail-stat-value" id="d-time">-</div><div class="detail-stat-label">Time</div></div>
+                <div class="detail-stat"><div class="detail-stat-value" id="d-hr">-</div><div class="detail-stat-label">Avg HR</div></div>
+            </div>
+            <div class="detail-info">
+                <div class="detail-row"><span class="detail-label">Date</span><span class="detail-value" id="d-date">-</span></div>
+                <div class="detail-row"><span class="detail-label">Type</span><span class="detail-value" id="d-type">-</span></div>
+                <div class="detail-row"><span class="detail-label">Elevation</span><span class="detail-value" id="d-elev">-</span></div>
+                <div class="detail-row"><span class="detail-label">Calories</span><span class="detail-value" id="d-cal">-</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat -->
+    <button class="chat-fab" onclick="toggleChat()"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
+    <div class="chat-panel" id="chat-panel">
+        <div class="chat-header"><div class="chat-title">🏃 Running Coach <span class="chat-badge">AI</span></div><button class="chat-close" onclick="toggleChat()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+        <div class="chat-messages" id="chat-messages"><div class="chat-msg bot">Salut! 👋 Sunt asistentul tău AI pentru running. Ce te interesează?</div></div>
+        <div class="chat-input-row"><input type="text" class="chat-input" id="chat-input" placeholder="Ask anything..." onkeypress="if(event.key==='Enter')sendMessage()"><button class="chat-send" id="chat-send" onclick="sendMessage()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button></div>
+    </div>
+
+<script>
+// CONFIG
+const CONFIG = {
+    PIN: '1234',
+    PIN_EXPIRY: 24*60*60*1000,
+    GROQ_API_KEY: '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',
+    GROQ_MODEL: 'llama-3.3-70b-versatile',
+    // Using a demo Mapbox token
+    MAPBOX_TOKEN: 'pk.eyJ1IjoiYWR2b2xvY2FydSIsImEiOiJjbWtyZWs3czcweGIxM2JyMnVqeHBuZTVvIn0.w4FHperuYk67Lr0XW0tR2w'
+};
+
+const SYSTEM_PROMPT = `Ești un coach de running de elită. Răspunzi în română, concis. Alex Volo: 10K PR: 43:34, VO2 Max: 51.9, Training Readiness: 1/100 (POOR!). Recomandă recovery!`;
+
+// Routes with REAL coordinates
+const ROUTES = [
+    {id:1, name:"Threshold 4x2km Z4", date:"2026-01-25", distance:11.82, pace:"4:23/km", time:"51:46", hr:173, elevation:89, calories:892, type:"Interval", 
+     coords:[[26.1249,44.4097],[26.1251,44.4099],[26.1255,44.4101],[26.1258,44.4104],[26.1259,44.4106],[26.1260,44.4109],[26.1259,44.4111],[26.1255,44.4114],[26.1252,44.4113],[26.1247,44.4114],[26.1244,44.4116],[26.1242,44.4118],[26.1242,44.4121],[26.1243,44.4123],[26.1244,44.4125],[26.1247,44.4127],[26.1250,44.4129],[26.1254,44.4129],[26.1258,44.4127],[26.1260,44.4125],[26.1263,44.4121],[26.1264,44.4117],[26.1262,44.4113],[26.1258,44.4109],[26.1255,44.4107],[26.1250,44.4104],[26.1246,44.4103],[26.1243,44.4102],[26.1242,44.4100],[26.1241,44.4099],[26.1241,44.4097],[26.1243,44.4097],[26.1246,44.4097],[26.1249,44.4097]]},
+    {id:2, name:"Easy Z2 Run", date:"2026-01-22", distance:7.96, pace:"5:20/km", time:"42:28", hr:142, elevation:45, calories:612, type:"Easy Run",
+     coords:[[26.1077,44.4066],[26.1079,44.4066],[26.1083,44.4067],[26.1086,44.4069],[26.1088,44.4070],[26.1092,44.4070],[26.1095,44.4070],[26.1098,44.4070],[26.1100,44.4069],[26.1101,44.4067],[26.1103,44.4066],[26.1104,44.4063],[26.1104,44.4061],[26.1103,44.4057],[26.1101,44.4053],[26.1098,44.4050],[26.1094,44.4048],[26.1091,44.4048],[26.1086,44.4049],[26.1083,44.4051],[26.1080,44.4054],[26.1080,44.4057],[26.1080,44.4060],[26.1080,44.4062],[26.1078,44.4064],[26.1075,44.4066],[26.1077,44.4066]]},
+    {id:3, name:"Long Run", date:"2026-01-19", distance:15.4, pace:"5:05/km", time:"1:18:26", hr:155, elevation:112, calories:1180, type:"Long Run",
+     coords:[[26.1049,44.4266],[26.1055,44.4270],[26.1065,44.4275],[26.1080,44.4278],[26.1095,44.4280],[26.1110,44.4276],[26.1125,44.4270],[26.1135,44.4262],[26.1140,44.4252],[26.1138,44.4240],[26.1130,44.4228],[26.1118,44.4218],[26.1100,44.4212],[26.1080,44.4210],[26.1060,44.4215],[26.1045,44.4225],[26.1038,44.4240],[26.1040,44.4255],[26.1049,44.4266]]},
+    {id:4, name:"Recovery Run", date:"2026-01-16", distance:5.5, pace:"6:00/km", time:"33:00", hr:128, elevation:28, calories:420, type:"Recovery",
+     coords:[[26.1200,44.4350],[26.1210,44.4355],[26.1225,44.4358],[26.1240,44.4355],[26.1250,44.4348],[26.1255,44.4338],[26.1250,44.4328],[26.1238,44.4320],[26.1220,44.4318],[26.1205,44.4325],[26.1198,44.4338],[26.1200,44.4350]]},
+    {id:5, name:"Tempo Run", date:"2026-01-13", distance:10.2, pace:"4:45/km", time:"48:27", hr:165, elevation:67, calories:785, type:"Tempo",
+     coords:[[26.0950,44.4180],[26.0960,44.4185],[26.0975,44.4192],[26.0995,44.4198],[26.1015,44.4200],[26.1035,44.4195],[26.1050,44.4185],[26.1058,44.4172],[26.1055,44.4158],[26.1042,44.4148],[26.1025,44.4145],[26.1005,44.4150],[26.0988,44.4162],[26.0978,44.4175],[26.0950,44.4180]]}
+];
+
+const JAN_RUNS = {5:8.2, 8:6.5, 11:10.5, 13:10.2, 16:5.5, 19:15.4, 22:7.96, 25:11.82};
+
+let map = null;
+let mapStyle = 'dark';
+let mapInitialized = false;
+let isTyping = false;
+
+// PIN
+function initPinSystem() {
+    const ps = document.getElementById('pin-screen');
+    const inputs = document.querySelectorAll('.pin-input');
+    const err = document.getElementById('pin-error');
+    
+    const authTime = localStorage.getItem('lemon_auth_time');
+    if (authTime && (Date.now() - parseInt(authTime)) < CONFIG.PIN_EXPIRY) {
+        ps.classList.add('hidden');
+        return;
+    }
+    
+    inputs[0].focus();
+    inputs.forEach((input, i) => {
+        input.addEventListener('input', e => {
+            if (e.target.value.length === 1) {
+                if (i < inputs.length - 1) {
+                    inputs[i + 1].focus();
+                } else {
+                    const pin = Array.from(inputs).map(x => x.value).join('');
+                    if (pin === CONFIG.PIN) {
+                        inputs.forEach(x => x.classList.add('success'));
+                        localStorage.setItem('lemon_auth_time', Date.now().toString());
+                        setTimeout(() => ps.classList.add('hidden'), 300);
+                    } else {
+                        inputs.forEach(x => x.classList.add('error'));
+                        err.textContent = 'Wrong PIN';
+                        setTimeout(() => {
+                            inputs.forEach(x => { x.classList.remove('error'); x.value = ''; });
+                            inputs[0].focus();
+                            err.textContent = '';
+                        }, 1000);
+                    }
+                }
+            }
+        });
+        input.addEventListener('keydown', e => {
+            if (e.key === 'Backspace' && !input.value && i > 0) inputs[i-1].focus();
+        });
+    });
+}
+
+// Theme
+function toggleTheme() {
+    const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', t);
+    localStorage.setItem('theme', t);
+}
+function loadTheme() {
+    document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'dark');
+}
+
+// Sidebar
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
+function openMobileSidebar() { document.getElementById('sidebar').classList.add('mobile-open'); document.getElementById('sidebar-overlay').classList.add('show'); }
+function closeMobileSidebar() { document.getElementById('sidebar').classList.remove('mobile-open'); document.getElementById('sidebar-overlay').classList.remove('show'); }
+
+// Navigation
+function navigateTo(page) {
+    document.querySelectorAll('.nav-item').forEach(i => {
+        i.classList.remove('active');
+        if (i.dataset.page === page) i.classList.add('active');
+    });
+    document.querySelectorAll('.page-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + page)?.classList.add('active');
+    
+    const titles = {dashboard:'Dashboard', maps:'Running Maps', predictions:'Predictions', health:'Health', ai:'AI Coach'};
+    document.getElementById('page-title').textContent = titles[page] || 'Dashboard';
+    
+    closeMobileSidebar();
+    closeRouteDetail();
+    document.getElementById('profileDropdown').classList.remove('open');
+    
+    if (page === 'maps') {
+        setTimeout(initMap, 200);
+    }
+    if (page === 'predictions') {
+        renderCalendar();
+    }
+}
+
+// Tabs
+function initTabs() {
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('tab-' + btn.dataset.tab)?.classList.add('active');
+        });
+    });
+}
+
+// Dropdown
+function toggleProfileDropdown() { document.getElementById('profileDropdown').classList.toggle('open'); }
+function logout() { localStorage.removeItem('lemon_auth_time'); location.reload(); }
+function showToast(msg) {
+    const c = document.getElementById('toast-container');
+    const t = document.createElement('div');
+    t.className = 'toast';
+    t.textContent = msg;
+    c.appendChild(t);
+    setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3000);
+}
+
+// MAP INITIALIZATION
+function initMap() {
+    console.log('initMap called, mapInitialized:', mapInitialized);
+    
+    if (mapInitialized && map) {
+        console.log('Map already initialized, just resizing');
+        map.resize();
+        return;
+    }
+    
+    const container = document.getElementById('map');
+    if (!container) {
+        console.error('Map container not found!');
+        return;
+    }
+    
+    console.log('Container found:', container.offsetWidth, container.offsetHeight);
+    
+    try {
+        mapboxgl.accessToken = CONFIG.MAPBOX_TOKEN;
+        
+        map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/dark-v11',
+            center: [26.1, 44.42],
+            zoom: 11
+        });
+        
+        map.on('load', function() {
+            console.log('Map loaded!');
+            mapInitialized = true;
+            addRoutesToMap();
+            renderRoutesList();
+        });
+        
+        map.on('error', function(e) {
+            console.error('Map error:', e);
+        });
+        
+    } catch (e) {
+        console.error('Map init error:', e);
+    }
+}
+
+function addRoutesToMap() {
+    console.log('Adding routes to map...');
+    const colors = ['#8b5cf6', '#22c55e', '#3b82f6', '#eab308', '#ef4444'];
+    
+    ROUTES.forEach((route, i) => {
+        const sourceId = 'route-' + route.id;
+        const layerId = 'route-layer-' + route.id;
+        
+        // Check if source already exists
+        if (map.getSource(sourceId)) {
+            console.log('Source already exists:', sourceId);
+            return;
+        }
+        
+        console.log('Adding route:', route.name, route.coords.length, 'points');
+        
+        map.addSource(sourceId, {
+            type: 'geojson',
+            data: {
+                type: 'Feature',
+                properties: { name: route.name },
+                geometry: {
+                    type: 'LineString',
+                    coordinates: route.coords
+                }
+            }
+        });
+        
+        map.addLayer({
+            id: layerId,
+            type: 'line',
+            source: sourceId,
+            layout: {
+                'line-join': 'round',
+                'line-cap': 'round'
+            },
+            paint: {
+                'line-color': colors[i % colors.length],
+                'line-width': 4,
+                'line-opacity': 0.85
+            }
+        });
+        
+        // Click handler
+        map.on('click', layerId, () => {
+            console.log('Route clicked:', route.name);
+            openRouteDetail(route);
+        });
+        
+        // Hover effects
+        map.on('mouseenter', layerId, () => {
+            map.getCanvas().style.cursor = 'pointer';
+            map.setPaintProperty(layerId, 'line-width', 6);
+        });
+        
+        map.on('mouseleave', layerId, () => {
+            map.getCanvas().style.cursor = '';
+            map.setPaintProperty(layerId, 'line-width', 4);
+        });
+    });
+    
+    console.log('Routes added, fitting bounds...');
+    fitAllRoutes();
+}
+
+function renderRoutesList() {
+    const list = document.getElementById('routes-list');
+    if (!list) return;
+    
+    list.innerHTML = ROUTES.map(r => `
+        <div class="route-item" data-id="${r.id}" onclick="openRouteDetail(ROUTES.find(x=>x.id===${r.id}))">
+            <div class="route-item-name">${r.name}</div>
+            <div class="route-item-meta">
+                <span>${r.date}</span>
+                <span>${r.distance} km</span>
+                <span>${r.pace}</span>
+            </div>
+        </div>
+    `).join('');
+    
+    const totalKm = ROUTES.reduce((a, r) => a + r.distance, 0);
+    document.getElementById('stat-routes').textContent = ROUTES.length;
+    document.getElementById('stat-km').textContent = totalKm.toFixed(1);
+}
+
+function openRouteDetail(route) {
+    console.log('Opening detail for:', route.name);
+    
+    document.querySelectorAll('.route-item').forEach(c => c.classList.remove('active'));
+    document.querySelector(`.route-item[data-id="${route.id}"]`)?.classList.add('active');
+    
+    document.getElementById('detail-title').textContent = route.name;
+    document.getElementById('d-dist').textContent = route.distance + ' km';
+    document.getElementById('d-pace').textContent = route.pace;
+    document.getElementById('d-time').textContent = route.time;
+    document.getElementById('d-hr').textContent = route.hr + ' bpm';
+    document.getElementById('d-date').textContent = route.date;
+    document.getElementById('d-type').textContent = route.type;
+    document.getElementById('d-elev').textContent = route.elevation + 'm';
+    document.getElementById('d-cal').textContent = route.calories + ' kcal';
+    
+    document.getElementById('route-detail').classList.add('open');
+    
+    // Zoom to route
+    if (map && route.coords && route.coords.length > 0) {
+        const bounds = route.coords.reduce((b, c) => b.extend(c), new mapboxgl.LngLatBounds(route.coords[0], route.coords[0]));
+        map.fitBounds(bounds, { padding: 60 });
+    }
+}
+
+function closeRouteDetail() {
+    document.getElementById('route-detail').classList.remove('open');
+    document.querySelectorAll('.route-item').forEach(c => c.classList.remove('active'));
+}
+
+function fitAllRoutes() {
+    if (!map) return;
+    
+    let allCoords = [];
+    ROUTES.forEach(r => {
+        if (r.coords) allCoords = allCoords.concat(r.coords);
+    });
+    
+    if (allCoords.length === 0) return;
+    
+    const bounds = allCoords.reduce((b, c) => b.extend(c), new mapboxgl.LngLatBounds(allCoords[0], allCoords[0]));
+    map.fitBounds(bounds, { padding: 40 });
+}
+
+function toggleMapStyle() {
+    if (!map) return;
+    mapStyle = mapStyle === 'dark' ? 'light' : 'dark';
+    map.setStyle('mapbox://styles/mapbox/' + mapStyle + '-v11');
+    
+    // Re-add routes after style change
+    map.once('style.load', () => {
+        mapInitialized = false; // Force re-add
+        addRoutesToMap();
+    });
+}
+
+// Calendar
+function renderCalendar() {
+    const days = document.getElementById('calendar-days');
+    if (!days) return;
+    
+    let html = '';
+    // Dec 29, 30, 31
+    for (let i = 29; i <= 31; i++) {
+        html += `<div class="cal-day other"><div class="cal-day-num">${i}</div></div>`;
+    }
+    // January
+    for (let d = 1; d <= 31; d++) {
+        const isToday = d === 28;
+        const km = JAN_RUNS[d];
+        const classes = ['cal-day'];
+        if (isToday) classes.push('today');
+        if (km) classes.push('has-run');
+        html += `<div class="${classes.join(' ')}"><div class="cal-day-num">${d}</div></div>`;
+    }
+    days.innerHTML = html;
+}
+
+// Chat
+function toggleChat() {
+    document.getElementById('chat-panel').classList.toggle('show');
+    if (document.getElementById('chat-panel').classList.contains('show')) {
+        document.getElementById('chat-input').focus();
+    }
+}
+
+async function sendMessage() {
+    const input = document.getElementById('chat-input');
+    const btn = document.getElementById('chat-send');
+    const msg = input.value.trim();
+    if (!msg || isTyping) return;
+    
+    addMsg(msg, 'user');
+    input.value = '';
+    isTyping = true;
+    btn.disabled = true;
+    
+    const loading = addLoadingMsg();
+    
+    try {
+        const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + CONFIG.GROQ_API_KEY },
+            body: JSON.stringify({ model: CONFIG.GROQ_MODEL, messages: [{role:'system',content:SYSTEM_PROMPT},{role:'user',content:msg}], temperature:0.7, max_tokens:500 })
+        });
+        loading.remove();
+        if (!res.ok) throw new Error('API Error');
+        const data = await res.json();
+        addMsg(data.choices[0].message.content, 'bot');
+    } catch (e) {
+        loading.remove();
+        addMsg('Eroare conexiune. Încearcă din nou.', 'bot');
+    }
+    isTyping = false;
+    btn.disabled = false;
+}
+
+function addMsg(text, type) {
+    const c = document.getElementById('chat-messages');
+    const d = document.createElement('div');
+    d.className = 'chat-msg ' + type;
+    d.textContent = text;
+    c.appendChild(d);
+    c.scrollTop = c.scrollHeight;
+    return d;
+}
+
+function addLoadingMsg() {
+    const c = document.getElementById('chat-messages');
+    const d = document.createElement('div');
+    d.className = 'chat-msg bot loading';
+    d.innerHTML = '<span></span><span></span><span></span>';
+    c.appendChild(d);
+    c.scrollTop = c.scrollHeight;
+    return d;
+}
+
+function updateDate() {
+    const el = document.getElementById('today-date');
+    if (el) el.textContent = new Date().toLocaleDateString('en-US', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+}
+
+// INIT
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM loaded');
+    loadTheme();
+    initPinSystem();
+    initTabs();
+    updateDate();
+    
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') {
+            document.getElementById('chat-panel').classList.remove('show');
+            document.getElementById('profileDropdown').classList.remove('open');
+            closeMobileSidebar();
+            closeRouteDetail();
+        }
+    });
+    
+    document.addEventListener('click', e => {
+        const dd = document.getElementById('profileDropdown');
+        if (dd && !dd.contains(e.target)) dd.classList.remove('open');
+    });
+});
+</script>
+</body>
+</html>
