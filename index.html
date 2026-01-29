@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LemonIO - Athlete Performance Hub</title>
+    <title>Training Intelligence - Athlete Performance Hub</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -11,29 +11,16 @@
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
     <style>
-:root{--bg-primary:#0a0a0f;--bg-surface:#141420;--bg-surface-hover:#1a1a2e;--bg-elevated:#1e1e30;--border-color:#2a2a3e;--border-subtle:#1f1f2e;--text-primary:#f5f5f7;--text-secondary:#8888a0;--text-tertiary:#5a5a70;--accent:#8b5cf6;--accent-hover:#a78bfa;--accent-muted:rgba(139,92,246,0.15);--success:#22c55e;--success-muted:rgba(34,197,94,0.15);--warning:#eab308;--warning-muted:rgba(234,179,8,0.15);--error:#ef4444;--error-muted:rgba(239,68,68,0.15);--info:#3b82f6;--info-muted:rgba(59,130,246,0.15);--sidebar-width:240px;--sidebar-collapsed:72px;--topbar-height:64px;--card-padding:24px;--gap-lg:24px;--gap-md:16px;--gap-sm:8px;--gap-xs:4px;--radius-lg:16px;--radius-md:12px;--radius-sm:8px;--radius-xs:6px;--shadow-md:0 4px 12px rgba(0,0,0,0.4);--shadow-lg:0 8px 24px rgba(0,0,0,0.5);--transition-fast:150ms ease;--transition-base:200ms ease;--transition-slow:300ms ease}
+:root{--bg-primary:#0a0a0f;--bg-surface:#141420;--bg-surface-hover:#1a1a2e;--bg-elevated:#1e1e30;--border-color:#2a2a3e;--border-subtle:#1f1f2e;--text-primary:#f5f5f7;--text-secondary:#8888a0;--text-tertiary:#5a5a70;--accent:#8b5cf6;--accent-hover:#a78bfa;--accent-muted:rgba(139,92,246,0.15);--success:#22c55e;--success-muted:rgba(34,197,94,0.15);--warning:#eab308;--warning-muted:rgba(234,179,8,0.15);--error:#ef4444;--error-muted:rgba(239,68,68,0.15);--info:#3b82f6;--info-muted:rgba(59,130,246,0.15);--strava:#fc4c02;--strava-muted:rgba(252,76,2,0.15);--sidebar-width:240px;--sidebar-collapsed:72px;--topbar-height:64px;--card-padding:24px;--gap-lg:24px;--gap-md:16px;--gap-sm:8px;--gap-xs:4px;--radius-lg:16px;--radius-md:12px;--radius-sm:8px;--radius-xs:6px;--shadow-md:0 4px 12px rgba(0,0,0,0.4);--shadow-lg:0 8px 24px rgba(0,0,0,0.5);--transition-fast:150ms ease;--transition-base:200ms ease;--transition-slow:300ms ease}
 [data-theme="light"]{--bg-primary:#f5f5f7;--bg-surface:#ffffff;--bg-surface-hover:#f0f0f5;--bg-elevated:#ffffff;--border-color:#e5e5ea;--border-subtle:#ebebf0;--text-primary:#1a1a2e;--text-secondary:#6b6b80;--text-tertiary:#9898a8;--accent:#7c3aed;--accent-hover:#6d28d9;--accent-muted:rgba(124,58,237,0.1);--shadow-md:0 4px 12px rgba(0,0,0,0.08);--shadow-lg:0 8px 24px rgba(0,0,0,0.12)}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--bg-primary);color:var(--text-primary);font-size:14px;line-height:1.5;overflow-x:hidden}
-.pin-screen{position:fixed;inset:0;background:var(--bg-primary);display:flex;align-items:center;justify-content:center;z-index:9999}
-.pin-screen.hidden{display:none}
-.pin-container{text-align:center;padding:var(--gap-lg)}
-.pin-logo{width:64px;height:64px;background:var(--accent);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:28px;color:white;margin:0 auto var(--gap-lg)}
-.pin-title{font-size:24px;font-weight:600;margin-bottom:var(--gap-sm)}
-.pin-subtitle{color:var(--text-secondary);margin-bottom:var(--gap-lg)}
-.pin-inputs{display:flex;gap:var(--gap-sm);justify-content:center;margin-bottom:var(--gap-lg)}
-.pin-input{width:56px;height:64px;background:var(--bg-surface);border:2px solid var(--border-color);border-radius:var(--radius-sm);font-size:24px;font-weight:600;text-align:center;color:var(--text-primary);outline:none;transition:all var(--transition-fast)}
-.pin-input:focus{border-color:var(--accent);background:var(--bg-surface-hover)}
-.pin-input.error{border-color:var(--error);animation:shake 0.4s ease}
-.pin-input.success{border-color:var(--success)}
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
-.pin-error{color:var(--error);font-size:13px;min-height:20px}
 .app-container{display:flex;min-height:100vh}
 .sidebar{width:var(--sidebar-width);height:100vh;position:fixed;left:0;top:0;background:var(--bg-surface);border-right:1px solid var(--border-color);display:flex;flex-direction:column;transition:all var(--transition-base);z-index:100}
 .sidebar.collapsed{width:var(--sidebar-collapsed)}
 .sidebar-header{height:var(--topbar-height);padding:0 var(--gap-md);display:flex;align-items:center;gap:var(--gap-sm);border-bottom:1px solid var(--border-subtle)}
-.sidebar-logo{width:36px;height:36px;background:var(--accent);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;color:white;flex-shrink:0}
-.sidebar-brand{font-weight:600;font-size:18px;white-space:nowrap;overflow:hidden;transition:opacity var(--transition-fast)}
+.sidebar-logo{width:36px;height:36px;background:linear-gradient(135deg, var(--accent), var(--strava));border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:white;flex-shrink:0}
+.sidebar-brand{font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;transition:opacity var(--transition-fast)}
 .sidebar.collapsed .sidebar-brand{opacity:0;width:0}
 .sidebar-nav{flex:1;padding:var(--gap-md) var(--gap-sm);overflow-y:auto}
 .nav-section{margin-bottom:var(--gap-lg)}
@@ -62,9 +49,13 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .topbar-left{display:flex;align-items:center;gap:var(--gap-md)}
 .mobile-menu-btn{display:none;width:40px;height:40px;border-radius:var(--radius-sm);background:transparent;border:none;color:var(--text-primary);cursor:pointer;align-items:center;justify-content:center}
 .page-title{font-size:18px;font-weight:600}
-.topbar-right{display:flex;align-items:center;gap:var(--gap-xs)}
+.topbar-right{display:flex;align-items:center;gap:var(--gap-sm)}
 .topbar-btn{width:40px;height:40px;border-radius:var(--radius-sm);background:transparent;border:none;color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--transition-fast)}
 .topbar-btn:hover{background:var(--bg-surface-hover);color:var(--text-primary)}
+.sync-btn{padding:8px 16px;background:var(--strava-muted);border:1px solid var(--strava);border-radius:var(--radius-sm);color:var(--strava);font-weight:500;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all var(--transition-fast)}
+.sync-btn:hover{background:var(--strava);color:white}
+.sync-btn.syncing svg{animation:spin 1s linear infinite}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 .profile-btn{display:flex;align-items:center;gap:var(--gap-sm);padding:6px 12px 6px 6px;background:transparent;border:1px solid var(--border-color);border-radius:var(--radius-sm);cursor:pointer;transition:all var(--transition-fast)}
 .profile-btn:hover{background:var(--bg-surface-hover);border-color:var(--accent)}
 .profile-avatar{width:28px;height:28px;border-radius:var(--radius-xs);background:var(--accent);color:white;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:12px}
@@ -73,21 +64,22 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .page-panel{display:none;animation:fadeIn var(--transition-base)}
 .page-panel.active{display:block}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.section-header{margin-bottom:var(--gap-lg)}
+.section-header{margin-bottom:var(--gap-lg);display:flex;justify-content:space-between;align-items:center}
 .section-title{font-size:20px;font-weight:600}
 .section-subtitle{color:var(--text-secondary);font-size:13px;margin-top:2px}
+.data-source{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-tertiary);background:var(--bg-surface);padding:6px 12px;border-radius:var(--radius-xs)}
+.data-source svg{color:var(--strava)}
 .status-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--gap-md);margin-bottom:var(--gap-lg)}
 .stat-card{background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:var(--card-padding);transition:all var(--transition-fast)}
 .stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--accent)}
 .stat-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--gap-md)}
 .stat-card-icon{width:40px;height:40px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center}
-.stat-card-icon.readiness{background:var(--accent-muted);color:var(--accent)}
-.stat-card-icon.hrv{background:var(--success-muted);color:var(--success)}
-.stat-card-icon.sleep{background:var(--info-muted);color:var(--info)}
-.stat-card-icon.stress{background:var(--warning-muted);color:var(--warning)}
+.stat-card-icon.runs{background:var(--accent-muted);color:var(--accent)}
+.stat-card-icon.distance{background:var(--success-muted);color:var(--success)}
+.stat-card-icon.time{background:var(--info-muted);color:var(--info)}
+.stat-card-icon.elevation{background:var(--warning-muted);color:var(--warning)}
 .stat-card-trend{font-size:12px;font-weight:500;padding:4px 8px;border-radius:var(--radius-xs)}
 .stat-card-trend.up{background:var(--success-muted);color:var(--success)}
-.stat-card-trend.down{background:var(--error-muted);color:var(--error)}
 .stat-card-trend.neutral{background:var(--bg-surface-hover);color:var(--text-secondary)}
 .stat-card-value{font-size:32px;font-weight:700;margin-bottom:var(--gap-xs)}
 .stat-card-value span{font-size:18px;color:var(--text-secondary)}
@@ -104,7 +96,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .activity-list{display:flex;flex-direction:column;gap:var(--gap-sm)}
 .activity-item{display:flex;align-items:center;gap:var(--gap-md);padding:var(--gap-md);background:var(--bg-primary);border-radius:var(--radius-sm);cursor:pointer;transition:all var(--transition-fast)}
 .activity-item:hover{background:var(--bg-surface-hover)}
-.activity-icon{width:44px;height:44px;border-radius:var(--radius-sm);background:var(--accent-muted);color:var(--accent);display:flex;align-items:center;justify-content:center}
+.activity-icon{width:44px;height:44px;border-radius:var(--radius-sm);background:var(--strava-muted);color:var(--strava);display:flex;align-items:center;justify-content:center}
 .activity-info{flex:1}
 .activity-name{font-weight:500;margin-bottom:2px}
 .activity-meta{color:var(--text-secondary);font-size:13px}
@@ -117,15 +109,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .insight-badge{background:var(--accent);color:white;font-size:11px;font-weight:600;padding:4px 8px;border-radius:var(--radius-xs)}
 .insight-title{font-size:18px;font-weight:600}
 .insight-text{color:var(--text-secondary);line-height:1.6}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--gap-sm);padding:10px 16px;font-size:14px;font-weight:500;border-radius:var(--radius-sm);border:none;cursor:pointer;transition:all var(--transition-fast)}
-.btn-primary{background:var(--accent);color:white}
-.btn-primary:hover{background:var(--accent-hover)}
-.coming-soon{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:400px;text-align:center;padding:var(--gap-lg)}
-.coming-soon-icon{width:80px;height:80px;border-radius:var(--radius-lg);background:var(--accent-muted);color:var(--accent);display:flex;align-items:center;justify-content:center;margin-bottom:var(--gap-lg)}
-.coming-soon-title{font-size:24px;font-weight:600;margin-bottom:var(--gap-sm)}
-.coming-soon-text{color:var(--text-secondary);max-width:400px}
-
-/* MAPS - COMPLETELY REDESIGNED */
+/* Maps */
 .maps-page{display:flex;gap:var(--gap-md);height:calc(100vh - var(--topbar-height) - 48px)}
 .map-main{flex:1;position:relative;border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border-color);background:#1a1a2e}
 #map{width:100%;height:100%}
@@ -141,14 +125,12 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .routes-info h3{margin-bottom:4px}
 .routes-info p{font-size:13px;color:var(--text-secondary)}
 .routes-list-card{flex:1;background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);display:flex;flex-direction:column;overflow:hidden}
-.routes-list-header{padding:var(--gap-md);border-bottom:1px solid var(--border-color);font-weight:600}
+.routes-list-header{padding:var(--gap-md);border-bottom:1px solid var(--border-color);font-weight:600;display:flex;justify-content:space-between;align-items:center}
 .routes-list{flex:1;overflow-y:auto;padding:var(--gap-sm)}
 .route-item{padding:var(--gap-md);margin-bottom:4px;background:var(--bg-primary);border-radius:var(--radius-sm);cursor:pointer;transition:all var(--transition-fast);border-left:3px solid transparent}
 .route-item:hover,.route-item.active{background:var(--accent-muted);border-left-color:var(--accent)}
 .route-item-name{font-weight:500;margin-bottom:4px}
 .route-item-meta{font-size:12px;color:var(--text-secondary);display:flex;gap:var(--gap-md)}
-
-/* Route Detail Slide */
 .route-detail{position:fixed;top:var(--topbar-height);right:-420px;width:400px;height:calc(100vh - var(--topbar-height));background:var(--bg-surface);border-left:1px solid var(--border-color);transition:right 0.3s ease;z-index:200;display:flex;flex-direction:column;box-shadow:-4px 0 20px rgba(0,0,0,0.3)}
 .route-detail.open{right:0}
 .route-detail-header{padding:var(--gap-lg);border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center}
@@ -164,8 +146,9 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .detail-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border-subtle)}
 .detail-label{color:var(--text-secondary)}
 .detail-value{font-weight:500}
-
-/* PREDICTIONS */
+.strava-link{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:var(--gap-lg);padding:12px;background:var(--strava);color:white;border-radius:var(--radius-sm);text-decoration:none;font-weight:500}
+.strava-link:hover{opacity:0.9}
+/* Targets */
 .targets-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap-md);margin-bottom:var(--gap-lg)}
 .target-card{background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:var(--card-padding);position:relative;overflow:hidden}
 .target-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
@@ -188,8 +171,6 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .target-values{display:flex;justify-content:space-between;font-size:13px}
 .target-current{font-weight:600}
 .target-goal{color:var(--text-secondary)}
-.target-note{font-size:13px;color:var(--text-tertiary);margin-top:var(--gap-sm)}
-
 /* Calendar */
 .calendar-card{background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-lg);overflow:hidden}
 .calendar-header{padding:var(--gap-md) var(--card-padding);border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center}
@@ -198,17 +179,16 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .calendar-weekdays{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:var(--gap-sm)}
 .calendar-weekday{text-align:center;font-size:12px;font-weight:500;color:var(--text-tertiary);padding:8px}
 .calendar-days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.cal-day{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:var(--radius-sm);font-size:14px;background:var(--bg-primary);cursor:pointer;transition:all var(--transition-fast)}
+.cal-day{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:var(--radius-sm);font-size:14px;background:var(--bg-primary);cursor:pointer;transition:all var(--transition-fast);position:relative}
 .cal-day:hover{background:var(--bg-surface-hover)}
 .cal-day.other{opacity:0.3}
 .cal-day.today{border:2px solid var(--accent)}
 .cal-day.has-run{background:var(--success-muted)}
-.cal-day.has-run::after{content:'';width:6px;height:6px;background:var(--success);border-radius:50%;margin-top:2px}
+.cal-day.has-run::after{content:'';width:6px;height:6px;background:var(--success);border-radius:50%;position:absolute;bottom:4px}
 .cal-day-num{font-weight:500}
 .calendar-legend{display:flex;gap:var(--gap-lg);padding:var(--gap-md) var(--card-padding);border-top:1px solid var(--border-color)}
 .legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-secondary)}
 .legend-dot{width:10px;height:10px;border-radius:50%}
-
 /* Chat */
 .chat-fab{position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;background:var(--accent);border:none;color:white;cursor:pointer;box-shadow:var(--shadow-lg);display:flex;align-items:center;justify-content:center;z-index:300}
 .chat-fab:hover{transform:scale(1.05);background:var(--accent-hover)}
@@ -234,46 +214,32 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .chat-send{width:44px;height:44px;border-radius:var(--radius-sm);background:var(--accent);border:none;color:white;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .chat-send:hover{background:var(--accent-hover)}
 .chat-send:disabled{opacity:0.5}
-
 .dropdown{position:relative}
 .dropdown-menu{position:absolute;top:100%;right:0;margin-top:var(--gap-sm);min-width:180px;background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);opacity:0;visibility:hidden;transform:translateY(-8px);transition:all var(--transition-fast);z-index:100}
 .dropdown.open .dropdown-menu{opacity:1;visibility:visible;transform:translateY(0)}
 .dropdown-item{display:flex;align-items:center;gap:var(--gap-sm);padding:10px var(--gap-md);color:var(--text-primary);font-size:14px;cursor:pointer}
 .dropdown-item:hover{background:var(--bg-surface-hover)}
 .dropdown-divider{height:1px;background:var(--border-color);margin:4px 0}
-
 .toast-container{position:fixed;top:80px;right:24px;z-index:1000}
-.toast{background:var(--bg-surface);border:1px solid var(--border-color);border-left:3px solid var(--info);border-radius:var(--radius-sm);padding:var(--gap-md);box-shadow:var(--shadow-lg);animation:slideIn 0.3s ease;min-width:260px;margin-bottom:8px}
+.toast{background:var(--bg-surface);border:1px solid var(--border-color);border-left:3px solid var(--strava);border-radius:var(--radius-sm);padding:var(--gap-md);box-shadow:var(--shadow-lg);animation:slideIn 0.3s ease;min-width:260px;margin-bottom:8px}
 @keyframes slideIn{from{opacity:0;transform:translateX(100%)}to{opacity:1;transform:translateX(0)}}
-
+.coming-soon{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:400px;text-align:center;padding:var(--gap-lg)}
+.coming-soon-icon{width:80px;height:80px;border-radius:var(--radius-lg);background:var(--accent-muted);color:var(--accent);display:flex;align-items:center;justify-content:center;margin-bottom:var(--gap-lg)}
+.coming-soon-title{font-size:24px;font-weight:600;margin-bottom:var(--gap-sm)}
+.coming-soon-text{color:var(--text-secondary);max-width:400px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--gap-sm);padding:10px 16px;font-size:14px;font-weight:500;border-radius:var(--radius-sm);border:none;cursor:pointer;transition:all var(--transition-fast)}
+.btn-primary{background:var(--accent);color:white}
+.btn-primary:hover{background:var(--accent-hover)}
 @media(max-width:1200px){.status-grid,.targets-grid{grid-template-columns:repeat(2,1fr)}.maps-page{flex-direction:column;height:auto}.map-main{min-height:500px}.routes-sidebar{width:100%}}
 @media(max-width:768px){.sidebar{transform:translateX(-100%)}.sidebar.mobile-open{transform:translateX(0)}.main-content{margin-left:0}.mobile-menu-btn{display:flex}.status-grid,.targets-grid{grid-template-columns:1fr}.routes-sidebar{display:none}.route-detail{width:100%;right:-100%}}
     </style>
 </head>
 <body>
-    <!-- PIN -->
-    <div class="pin-screen" id="pin-screen">
-        <div class="pin-container">
-            <div class="pin-logo">L</div>
-            <h1 class="pin-title">Welcome Back</h1>
-            <p class="pin-subtitle">Enter PIN to continue</p>
-            <div class="pin-inputs">
-                <input type="password" class="pin-input" maxlength="1" inputmode="numeric">
-                <input type="password" class="pin-input" maxlength="1" inputmode="numeric">
-                <input type="password" class="pin-input" maxlength="1" inputmode="numeric">
-                <input type="password" class="pin-input" maxlength="1" inputmode="numeric">
-            </div>
-            <p class="pin-error" id="pin-error"></p>
-        </div>
-    </div>
-
     <div class="toast-container" id="toast-container"></div>
-
     <div class="app-container">
         <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeMobileSidebar()"></div>
-        
         <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header"><div class="sidebar-logo">L</div><span class="sidebar-brand">LemonIO</span></div>
+            <div class="sidebar-header"><div class="sidebar-logo">TI</div><span class="sidebar-brand">Training Intel</span></div>
             <nav class="sidebar-nav">
                 <div class="nav-section">
                     <div class="nav-section-title">Main</div>
@@ -292,7 +258,6 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
             </nav>
             <div class="sidebar-footer"><button class="sidebar-toggle" onclick="toggleSidebar()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg><span class="toggle-text">Collapse</span></button></div>
         </aside>
-
         <main class="main-content">
             <header class="topbar">
                 <div class="topbar-left">
@@ -300,6 +265,10 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
                     <h1 class="page-title" id="page-title">Dashboard</h1>
                 </div>
                 <div class="topbar-right">
+                    <button class="sync-btn" id="sync-btn" onclick="syncStrava()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                        <span>Sync Strava</span>
+                    </button>
                     <button class="topbar-btn" onclick="toggleTheme()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg></button>
                     <div class="dropdown" id="profileDropdown">
                         <button class="profile-btn" onclick="toggleProfileDropdown()"><div class="profile-avatar">AV</div><span class="profile-name">Alex Volo</span></button>
@@ -311,31 +280,27 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
                     </div>
                 </div>
             </header>
-
             <div class="page-content">
                 <!-- DASHBOARD -->
                 <div class="page-panel active" id="page-dashboard">
-                    <div class="section-header"><h2 class="section-title">Today's Status</h2><p class="section-subtitle" id="today-date"></p></div>
+                    <div class="section-header">
+                        <div><h2 class="section-title">January 2026 Summary</h2><p class="section-subtitle" id="today-date"></p></div>
+                        <div class="data-source"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066l-2.084 4.116z"/><path d="M15.387 0l-5.153 10.172h3.066l2.087-4.116 2.089 4.116h3.065L15.387 0z" opacity=".6"/></svg><span>Strava Data</span></div>
+                    </div>
                     <div class="status-grid">
-                        <div class="stat-card"><div class="stat-card-header"><div class="stat-card-icon readiness"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div><span class="stat-card-trend down">↓ Poor</span></div><div class="stat-card-value">1<span>/100</span></div><div class="stat-card-label">Training Readiness</div></div>
-                        <div class="stat-card"><div class="stat-card-header"><div class="stat-card-icon hrv"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><span class="stat-card-trend neutral">Balanced</span></div><div class="stat-card-value">36<span>ms</span></div><div class="stat-card-label">HRV Weekly Avg</div></div>
-                        <div class="stat-card"><div class="stat-card-header"><div class="stat-card-icon sleep"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div><span class="stat-card-trend down">↓ Poor</span></div><div class="stat-card-value">28<span>/100</span></div><div class="stat-card-label">Sleep Score</div></div>
-                        <div class="stat-card"><div class="stat-card-header"><div class="stat-card-icon stress"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 16s-1.5-2-4-2-4 2-4 2"/></svg></div><span class="stat-card-trend up">↑ High</span></div><div class="stat-card-value">88<span>max</span></div><div class="stat-card-label">Stress Level</div></div>
+                        <div class="stat-card"><div class="stat-card-header"><div class="stat-card-icon runs"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><span class="stat-card-trend up" id="trend-runs">Jan 2026</span></div><div class="stat-card-value" id="stat-runs">11</div><div class="stat-card-label">Total Runs</div></div>
+                        <div class="stat-card"><div class="stat-card-header"><div class="stat-card-icon distance"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><span class="stat-card-trend up">↑ Strong</span></div><div class="stat-card-value" id="stat-distance">120.4<span>km</span></div><div class="stat-card-label">Total Distance</div></div>
+                        <div class="stat-card"><div class="stat-card-header"><div class="stat-card-icon time"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><span class="stat-card-trend neutral">Total</span></div><div class="stat-card-value" id="stat-time">10:37<span>hrs</span></div><div class="stat-card-label">Total Time</div></div>
+                        <div class="stat-card"><div class="stat-card-header"><div class="stat-card-icon elevation"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></svg></div><span class="stat-card-trend up">↑ Climbing</span></div><div class="stat-card-value" id="stat-elevation">420<span>m</span></div><div class="stat-card-label">Total Elevation</div></div>
                     </div>
                     <div class="tabs-section">
-                        <div class="tabs-header"><button class="tab-btn active" data-tab="recent">Recent</button><button class="tab-btn" data-tab="insights">AI Insights</button></div>
+                        <div class="tabs-header"><button class="tab-btn active" data-tab="recent">Recent Activities</button><button class="tab-btn" data-tab="insights">AI Insights</button></div>
                         <div class="tabs-content">
-                            <div class="tab-panel active" id="tab-recent">
-                                <div class="activity-list">
-                                    <div class="activity-item"><div class="activity-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="activity-info"><div class="activity-name">Threshold 4x2km Z4</div><div class="activity-meta">Jan 25 • Afternoon</div></div><div class="activity-stats"><div class="activity-stat"><div class="activity-stat-value">11.82km</div><div class="activity-stat-label">Dist</div></div><div class="activity-stat"><div class="activity-stat-value">4:23/km</div><div class="activity-stat-label">Pace</div></div></div></div>
-                                    <div class="activity-item"><div class="activity-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="activity-info"><div class="activity-name">Easy Z2 Run</div><div class="activity-meta">Jan 22 • Evening</div></div><div class="activity-stats"><div class="activity-stat"><div class="activity-stat-value">7.96km</div><div class="activity-stat-label">Dist</div></div><div class="activity-stat"><div class="activity-stat-value">5:20/km</div><div class="activity-stat-label">Pace</div></div></div></div>
-                                </div>
-                            </div>
-                            <div class="tab-panel" id="tab-insights"><div class="insight-box"><div class="insight-header"><span class="insight-badge">AI</span><span class="insight-title">Recovery Day Recommended</span></div><p class="insight-text"><strong>Training Readiness at 1/100</strong> - prioritize rest today. 🏆 New 10K PR: 43:34!</p></div></div>
+                            <div class="tab-panel active" id="tab-recent"><div class="activity-list" id="activity-list"></div></div>
+                            <div class="tab-panel" id="tab-insights"><div class="insight-box"><div class="insight-header"><span class="insight-badge">AI</span><span class="insight-title">Great January Progress! 🔥</span></div><p class="insight-text" id="ai-insight"></p></div></div>
                         </div>
                     </div>
                 </div>
-
                 <!-- MAPS -->
                 <div class="page-panel" id="page-maps">
                     <div class="maps-page">
@@ -346,29 +311,24 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
                                 <button class="map-btn" onclick="toggleMapStyle()" title="Change style"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></button>
                             </div>
                             <div class="map-overlay-stats">
-                                <div class="map-badge"><span class="map-badge-value" id="stat-routes">5</span><span class="map-badge-label">routes</span></div>
-                                <div class="map-badge"><span class="map-badge-value" id="stat-km">50.9</span><span class="map-badge-label">km total</span></div>
+                                <div class="map-badge"><span class="map-badge-value" id="map-stat-routes">11</span><span class="map-badge-label">routes</span></div>
+                                <div class="map-badge"><span class="map-badge-value" id="map-stat-km">120.4</span><span class="map-badge-label">km total</span></div>
                             </div>
                         </div>
                         <div class="routes-sidebar">
-                            <div class="routes-info"><h3>🗺️ Running Maps</h3><p>Click a route on the map or list to see details</p></div>
+                            <div class="routes-info"><h3>🗺️ Running Maps</h3><p>Real GPS data from Strava. Click a route to see details.</p></div>
                             <div class="routes-list-card">
-                                <div class="routes-list-header">Recent Routes</div>
+                                <div class="routes-list-header">January 2026 Routes</div>
                                 <div class="routes-list" id="routes-list"></div>
                             </div>
                         </div>
                     </div>
                 </div>
-
                 <!-- PREDICTIONS -->
                 <div class="page-panel" id="page-predictions">
-                    <div class="section-header"><h2 class="section-title">2026 Targets</h2><p class="section-subtitle">Track your monthly goals</p></div>
-                    <div class="targets-grid">
-                        <div class="target-card runs"><div class="target-header"><div class="target-icon runs"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div><div class="target-title">Target Runs</div><div class="target-subtitle">Monthly: 15 runs</div></div></div><div class="target-pct">60%</div><div class="target-bar"><div class="target-fill runs" style="width:60%"></div></div><div class="target-values"><span class="target-current">9 runs</span><span class="target-goal">/ 15 runs</span></div><div class="target-note">6 more runs to reach goal</div></div>
-                        <div class="target-card distance"><div class="target-header"><div class="target-icon distance"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div><div class="target-title">Target Distance</div><div class="target-subtitle">Monthly: 150 km</div></div></div><div class="target-pct">68%</div><div class="target-bar"><div class="target-fill distance" style="width:68%"></div></div><div class="target-values"><span class="target-current">102 km</span><span class="target-goal">/ 150 km</span></div><div class="target-note">48 km to reach goal</div></div>
-                        <div class="target-card elevation"><div class="target-header"><div class="target-icon elevation"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div><div class="target-title">Target Elevation</div><div class="target-subtitle">Monthly: 2,000m</div></div></div><div class="target-pct">45%</div><div class="target-bar"><div class="target-fill elevation" style="width:45%"></div></div><div class="target-values"><span class="target-current">892m</span><span class="target-goal">/ 2,000m</span></div><div class="target-note">1,108m to reach goal</div></div>
-                    </div>
-                    <div class="insight-box"><div class="insight-header"><span class="insight-badge">AI INSIGHT</span><span class="insight-title">On Track for January! 🎯</span></div><p class="insight-text">You're <strong>68% through distance goal</strong> with 4 days left. Need <strong>4-5 more runs</strong> to hit 150km. Elevation is behind - try hill routes!</p></div>
+                    <div class="section-header"><h2 class="section-title">January 2026 Targets</h2><p class="section-subtitle">Track your monthly goals</p></div>
+                    <div class="targets-grid" id="targets-grid"></div>
+                    <div class="insight-box" id="targets-insight"></div>
                     <div class="calendar-card">
                         <div class="calendar-header"><div class="calendar-title">📅 January 2026</div></div>
                         <div class="calendar-body">
@@ -378,16 +338,13 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
                         <div class="calendar-legend"><div class="legend-item"><div class="legend-dot" style="background:var(--success)"></div>Completed Run</div><div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Today</div></div>
                     </div>
                 </div>
-
                 <!-- HEALTH -->
-                <div class="page-panel" id="page-health"><div class="coming-soon"><div class="coming-soon-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><h2 class="coming-soon-title">Health Metrics</h2><p class="coming-soon-text">HRV, VO2 Max, Sleep data coming soon.</p></div></div>
-
+                <div class="page-panel" id="page-health"><div class="coming-soon"><div class="coming-soon-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></div><h2 class="coming-soon-title">Health Metrics</h2><p class="coming-soon-text">HRV, VO2 Max, Sleep data integration coming soon.</p></div></div>
                 <!-- AI -->
                 <div class="page-panel" id="page-ai"><div class="coming-soon"><div class="coming-soon-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/></svg></div><h2 class="coming-soon-title">AI Coach</h2><p class="coming-soon-text">Your personal running assistant.</p><button class="btn btn-primary" style="margin-top:20px" onclick="toggleChat()">💬 Open Chat</button></div></div>
             </div>
         </main>
     </div>
-
     <!-- Route Detail -->
     <div class="route-detail" id="route-detail">
         <div class="route-detail-header"><div class="route-detail-title" id="detail-title">Route Details</div><button class="close-btn" onclick="closeRouteDetail()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
@@ -400,452 +357,227 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
             </div>
             <div class="detail-info">
                 <div class="detail-row"><span class="detail-label">Date</span><span class="detail-value" id="d-date">-</span></div>
-                <div class="detail-row"><span class="detail-label">Type</span><span class="detail-value" id="d-type">-</span></div>
+                <div class="detail-row"><span class="detail-label">Max HR</span><span class="detail-value" id="d-maxhr">-</span></div>
                 <div class="detail-row"><span class="detail-label">Elevation</span><span class="detail-value" id="d-elev">-</span></div>
                 <div class="detail-row"><span class="detail-label">Calories</span><span class="detail-value" id="d-cal">-</span></div>
             </div>
+            <a class="strava-link" id="strava-link" href="#" target="_blank"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066l-2.084 4.116z"/><path d="M15.387 0l-5.153 10.172h3.066l2.087-4.116 2.089 4.116h3.065L15.387 0z" opacity=".6"/></svg>View on Strava</a>
         </div>
     </div>
-
     <!-- Chat -->
     <button class="chat-fab" onclick="toggleChat()"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button>
     <div class="chat-panel" id="chat-panel">
         <div class="chat-header"><div class="chat-title">🏃 Running Coach <span class="chat-badge">AI</span></div><button class="chat-close" onclick="toggleChat()"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
-        <div class="chat-messages" id="chat-messages"><div class="chat-msg bot">Salut! 👋 Sunt asistentul tău AI pentru running. Ce te interesează?</div></div>
+        <div class="chat-messages" id="chat-messages"><div class="chat-msg bot">Salut! 👋 Sunt asistentul tău AI. Am acces la datele tale Strava - ce te interesează?</div></div>
         <div class="chat-input-row"><input type="text" class="chat-input" id="chat-input" placeholder="Ask anything..." onkeypress="if(event.key==='Enter')sendMessage()"><button class="chat-send" id="chat-send" onclick="sendMessage()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button></div>
     </div>
-
 <script>
-// CONFIG
 const CONFIG = {
-    PIN: '1234',
-    PIN_EXPIRY: 24*60*60*1000,
+    MAPBOX_TOKEN: 'pk.eyJ1IjoiYWR2b2xvY2FydSIsImEiOiJjbWtyZWs3czcweGIxM2JyMnVqeHBuZTVvIn0.w4FHperuYk67Lr0XW0tR2w',
+    STRAVA: {
+        CLIENT_ID: '197637',
+        CLIENT_SECRET: 'e13dad1ca9458e4c347e0c7def6892c263100224',
+        REFRESH_TOKEN: '10f41798aba4059d9820c79b6d1271ee8dd78971'
+    },
     GROQ_API_KEY: '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',
-    GROQ_MODEL: 'llama-3.3-70b-versatile',
-    // Using a demo Mapbox token
-    MAPBOX_TOKEN: 'pk.eyJ1IjoiYWR2b2xvY2FydSIsImEiOiJjbWtyZWs3czcweGIxM2JyMnVqeHBuZTVvIn0.w4FHperuYk67Lr0XW0tR2w'
+    GROQ_MODEL: 'llama-3.3-70b-versatile'
 };
 
-const SYSTEM_PROMPT = `Ești un coach de running de elită. Răspunzi în română, concis. Alex Volo: 10K PR: 43:34, VO2 Max: 51.9, Training Readiness: 1/100 (POOR!). Recomandă recovery!`;
-
-// Routes with REAL coordinates
-const ROUTES = [
-    {id:1, name:"Threshold 4x2km Z4", date:"2026-01-25", distance:11.82, pace:"4:23/km", time:"51:46", hr:173, elevation:89, calories:892, type:"Interval", 
-     coords:[[26.1249,44.4097],[26.1251,44.4099],[26.1255,44.4101],[26.1258,44.4104],[26.1259,44.4106],[26.1260,44.4109],[26.1259,44.4111],[26.1255,44.4114],[26.1252,44.4113],[26.1247,44.4114],[26.1244,44.4116],[26.1242,44.4118],[26.1242,44.4121],[26.1243,44.4123],[26.1244,44.4125],[26.1247,44.4127],[26.1250,44.4129],[26.1254,44.4129],[26.1258,44.4127],[26.1260,44.4125],[26.1263,44.4121],[26.1264,44.4117],[26.1262,44.4113],[26.1258,44.4109],[26.1255,44.4107],[26.1250,44.4104],[26.1246,44.4103],[26.1243,44.4102],[26.1242,44.4100],[26.1241,44.4099],[26.1241,44.4097],[26.1243,44.4097],[26.1246,44.4097],[26.1249,44.4097]]},
-    {id:2, name:"Easy Z2 Run", date:"2026-01-22", distance:7.96, pace:"5:20/km", time:"42:28", hr:142, elevation:45, calories:612, type:"Easy Run",
-     coords:[[26.1077,44.4066],[26.1079,44.4066],[26.1083,44.4067],[26.1086,44.4069],[26.1088,44.4070],[26.1092,44.4070],[26.1095,44.4070],[26.1098,44.4070],[26.1100,44.4069],[26.1101,44.4067],[26.1103,44.4066],[26.1104,44.4063],[26.1104,44.4061],[26.1103,44.4057],[26.1101,44.4053],[26.1098,44.4050],[26.1094,44.4048],[26.1091,44.4048],[26.1086,44.4049],[26.1083,44.4051],[26.1080,44.4054],[26.1080,44.4057],[26.1080,44.4060],[26.1080,44.4062],[26.1078,44.4064],[26.1075,44.4066],[26.1077,44.4066]]},
-    {id:3, name:"Long Run", date:"2026-01-19", distance:15.4, pace:"5:05/km", time:"1:18:26", hr:155, elevation:112, calories:1180, type:"Long Run",
-     coords:[[26.1049,44.4266],[26.1055,44.4270],[26.1065,44.4275],[26.1080,44.4278],[26.1095,44.4280],[26.1110,44.4276],[26.1125,44.4270],[26.1135,44.4262],[26.1140,44.4252],[26.1138,44.4240],[26.1130,44.4228],[26.1118,44.4218],[26.1100,44.4212],[26.1080,44.4210],[26.1060,44.4215],[26.1045,44.4225],[26.1038,44.4240],[26.1040,44.4255],[26.1049,44.4266]]},
-    {id:4, name:"Recovery Run", date:"2026-01-16", distance:5.5, pace:"6:00/km", time:"33:00", hr:128, elevation:28, calories:420, type:"Recovery",
-     coords:[[26.1200,44.4350],[26.1210,44.4355],[26.1225,44.4358],[26.1240,44.4355],[26.1250,44.4348],[26.1255,44.4338],[26.1250,44.4328],[26.1238,44.4320],[26.1220,44.4318],[26.1205,44.4325],[26.1198,44.4338],[26.1200,44.4350]]},
-    {id:5, name:"Tempo Run", date:"2026-01-13", distance:10.2, pace:"4:45/km", time:"48:27", hr:165, elevation:67, calories:785, type:"Tempo",
-     coords:[[26.0950,44.4180],[26.0960,44.4185],[26.0975,44.4192],[26.0995,44.4198],[26.1015,44.4200],[26.1035,44.4195],[26.1050,44.4185],[26.1058,44.4172],[26.1055,44.4158],[26.1042,44.4148],[26.1025,44.4145],[26.1005,44.4150],[26.0988,44.4162],[26.0978,44.4175],[26.0950,44.4180]]}
+// Real Strava data - January 2026
+let ROUTES = [
+  {"id":17219006300,"name":"Evening Run","date":"2026-01-29","distance":8.82,"pace":"5:27/km","time":"48:11","hr":135,"maxHr":153,"elevation":55,"calories":690,"coords":[[26.10832,44.40537],[26.10909,44.4067],[26.11058,44.40873],[26.10937,44.40863],[26.10716,44.40763],[26.10787,44.4067],[26.1066,44.40554],[26.10594,44.40467],[26.1025,44.40561],[26.1022,44.40679],[26.10061,44.4066],[26.10201,44.40488],[26.1033,44.40347],[26.10786,44.40406],[26.10821,44.40622],[26.11064,44.40849],[26.10961,44.40869],[26.10728,44.40807],[26.10789,44.40673],[26.10647,44.40567],[26.10688,44.40515],[26.10383,44.40494],[26.10258,44.40621],[26.10469,44.40756],[26.10396,44.41007],[26.10439,44.41362],[26.10168,44.41197],[26.09912,44.41027],[26.10011,44.40919],[26.10088,44.40801],[26.10251,44.40672],[26.10089,44.40687],[26.10137,44.40577],[26.10303,44.40356],[26.1072,44.4037],[26.10814,44.40596],[26.10959,44.40705],[26.11161,44.40785],[26.11223,44.40816],[26.11197,44.40578],[26.11047,44.40407],[26.10981,44.40437]]},
+  {"id":17195617384,"name":"Evening Run","date":"2026-01-27","distance":9.48,"pace":"5:33/km","time":"52:41","hr":143,"maxHr":159,"elevation":22,"calories":779,"coords":[[26.10823,44.40551],[26.10857,44.4065],[26.11062,44.40869],[26.10914,44.40874],[26.10719,44.40763],[26.10738,44.40636],[26.10693,44.40529],[26.10318,44.40525],[26.1024,44.40657],[26.10075,44.40673],[26.10205,44.40486],[26.10417,44.40324],[26.10818,44.40441],[26.10883,44.40661],[26.11054,44.40883],[26.10759,44.40826],[26.10739,44.4071],[26.10658,44.40584],[26.10685,44.40513],[26.10317,44.40526],[26.10241,44.40654],[26.10079,44.40678],[26.10203,44.40482],[26.10436,44.40317],[26.1081,44.40426],[26.10815,44.40613],[26.11063,44.40846],[26.10915,44.40874],[26.10716,44.40741],[26.10777,44.4065],[26.10649,44.40559],[26.10537,44.40463],[26.10227,44.40587],[26.10175,44.40694],[26.10072,44.40617],[26.10271,44.40381],[26.10678,44.40357],[26.10814,44.40613],[26.11056,44.40714],[26.11198,44.40839],[26.11148,44.40674],[26.11114,44.40486],[26.11124,44.4046]]},
+  {"id":17174655909,"name":"Afternoon Run","date":"2026-01-25","distance":11.82,"pace":"4:22/km","time":"51:46","hr":172,"maxHr":185,"elevation":25,"calories":959,"coords":[[26.10162,44.40697],[26.101,44.40595],[26.10388,44.40326],[26.10823,44.40451],[26.11033,44.40778],[26.11001,44.4089],[26.10727,44.40806],[26.10786,44.40662],[26.10686,44.40545],[26.10314,44.4053],[26.10223,44.40677],[26.10063,44.40629],[26.10288,44.40367],[26.10809,44.40428],[26.10937,44.4069],[26.11013,44.40894],[26.10719,44.40784],[26.10683,44.40604],[26.10689,44.40517],[26.10246,44.40565],[26.10126,44.40702],[26.10187,44.40506],[26.10445,44.4032],[26.10815,44.40593],[26.11065,44.40864],[26.10904,44.40877],[26.10718,44.40729],[26.10721,44.40624],[26.10689,44.40519],[26.10245,44.40561],[26.10185,44.40693],[26.10073,44.40614],[26.1036,44.40333],[26.10825,44.40486],[26.11046,44.40792],[26.10941,44.40867],[26.10635,44.4088],[26.10769,44.41028],[26.1093,44.40874],[26.1108,44.40853],[26.1115,44.40662],[26.11046,44.40406],[26.10969,44.40447]]},
+  {"id":17140727693,"name":"Evening Run","date":"2026-01-22","distance":7.96,"pace":"5:20/km","time":"42:35","hr":142,"maxHr":159,"elevation":27,"calories":643,"coords":[[26.10841,44.40334],[26.10522,44.40253],[26.10255,44.40321],[26.10163,44.40444],[26.09988,44.40635],[26.0995,44.40774],[26.10129,44.40787],[26.10245,44.40665],[26.10075,44.40676],[26.10157,44.40563],[26.1026,44.40389],[26.10629,44.40342],[26.10825,44.40479],[26.1091,44.40669],[26.11064,44.4085],[26.10983,44.40878],[26.10842,44.40852],[26.10714,44.40736],[26.10783,44.40657],[26.10642,44.4056],[26.10685,44.40516],[26.10408,44.40484],[26.10242,44.40623],[26.10129,44.407],[26.10065,44.40621],[26.10201,44.40487],[26.10355,44.40334],[26.10783,44.40406],[26.1082,44.40616],[26.11008,44.40749],[26.1104,44.40889],[26.10905,44.40876],[26.10671,44.40852],[26.10645,44.40979],[26.10801,44.41023],[26.10894,44.40894],[26.11023,44.40901],[26.11067,44.40814],[26.11046,44.40712],[26.11183,44.40834],[26.11167,44.40731],[26.11194,44.40564],[26.11073,44.404],[26.11094,44.40444]]},
+  {"id":17084185616,"name":"Evening Run","date":"2026-01-17","distance":17.45,"pace":"5:11/km","time":"1:30:32","hr":146,"maxHr":178,"elevation":81,"calories":1384,"coords":[[26.1083,44.40538],[26.11063,44.40868],[26.10725,44.40803],[26.10673,44.40598],[26.10516,44.40466],[26.10194,44.40691],[26.1025,44.40405],[26.10816,44.40435],[26.11053,44.4081],[26.10885,44.4091],[26.10488,44.41189],[26.10054,44.4112],[26.09787,44.41048],[26.09672,44.41191],[26.09547,44.41751],[26.09842,44.41382],[26.09779,44.41173],[26.09582,44.41145],[26.09612,44.41437],[26.09486,44.41694],[26.09535,44.41173],[26.0977,44.41068],[26.1027,44.41274],[26.10481,44.41041],[26.10862,44.40618],[26.10491,44.41057],[26.10491,44.41171],[26.10622,44.40876],[26.10782,44.40679],[26.1069,44.40523],[26.10234,44.40593],[26.10057,44.40643],[26.10314,44.4035],[26.10827,44.40525],[26.11066,44.40849],[26.10769,44.40832],[26.10755,44.40664],[26.10474,44.4106],[26.10862,44.40652],[26.11221,44.40831],[26.11157,44.40544],[26.10983,44.40441]]},
+  {"id":17037337755,"name":"Evening Run","date":"2026-01-13","distance":13.38,"pace":"5:51/km","time":"1:18:25","hr":141,"maxHr":158,"elevation":34,"calories":1114,"coords":[[26.10767,44.4066],[26.10654,44.40554],[26.10418,44.4048],[26.1023,44.40672],[26.1008,44.40608],[26.10299,44.4036],[26.10824,44.40449],[26.11046,44.40799],[26.109,44.40877],[26.10777,44.40687],[26.10657,44.40551],[26.10409,44.40483],[26.10224,44.40675],[26.10094,44.40595],[26.1037,44.40327],[26.1082,44.40439],[26.10906,44.40668],[26.11026,44.40894],[26.1072,44.40797],[26.10702,44.40619],[26.10647,44.40484],[26.10235,44.40606],[26.10071,44.40673],[26.10245,44.40406],[26.10794,44.40412],[26.10867,44.40655],[26.1099,44.40887],[26.10794,44.41015],[26.10718,44.4084],[26.10785,44.40664],[26.10694,44.40532],[26.10265,44.4055],[26.10115,44.40701],[26.10239,44.40429],[26.10778,44.40401],[26.10932,44.40685],[26.10959,44.40868],[26.10713,44.40755],[26.10745,44.40677],[26.10487,44.41073],[26.10619,44.40726],[26.11064,44.40397],[26.11103,44.40455]]},
+  {"id":17013461474,"name":"Afternoon Run","date":"2026-01-11","distance":12.9,"pace":"5:17/km","time":"1:08:15","hr":145,"maxHr":164,"elevation":44,"calories":1050,"coords":[[26.12494,44.40965],[26.12281,44.40906],[26.12107,44.40755],[26.12027,44.40785],[26.1177,44.40737],[26.11607,44.40517],[26.11421,44.40429],[26.11629,44.40482],[26.11415,44.40454],[26.11312,44.40323],[26.1105,44.40347],[26.10844,44.40337],[26.10385,44.40259],[26.10168,44.40442],[26.09933,44.40713],[26.10193,44.40742],[26.10062,44.40655],[26.10242,44.40423],[26.10678,44.40356],[26.10824,44.40576],[26.11059,44.40824],[26.10887,44.40895],[26.10637,44.40959],[26.10497,44.40982],[26.10459,44.41362],[26.0987,44.40994],[26.10062,44.40873],[26.10383,44.41017],[26.10517,44.40818],[26.10721,44.40797],[26.10696,44.40616],[26.10531,44.40466],[26.10248,44.4065],[26.10142,44.40573],[26.1039,44.40319],[26.10831,44.40465],[26.10966,44.40704],[26.11189,44.40845],[26.11495,44.40853],[26.1208,44.40762],[26.12304,44.40931],[26.12528,44.40959]]},
+  {"id":16980684622,"name":"Afternoon Run","date":"2026-01-08","distance":10.32,"pace":"5:27/km","time":"56:14","hr":148,"maxHr":180,"elevation":37,"calories":859,"coords":[[26.10829,44.40548],[26.10854,44.40646],[26.11061,44.40865],[26.10936,44.40866],[26.10732,44.4081],[26.10779,44.40687],[26.10664,44.40595],[26.10689,44.40544],[26.1055,44.40466],[26.1026,44.40556],[26.10235,44.40667],[26.1008,44.4068],[26.10153,44.40564],[26.10345,44.40338],[26.10702,44.40364],[26.10824,44.40544],[26.10951,44.40697],[26.11063,44.40864],[26.11124,44.40949],[26.10977,44.40915],[26.10867,44.40971],[26.10675,44.41063],[26.10475,44.41207],[26.1046,44.41309],[26.10488,44.40969],[26.10608,44.40733],[26.10848,44.40629],[26.10533,44.40817],[26.10482,44.41148],[26.10457,44.41365],[26.1048,44.41255],[26.10508,44.40942],[26.10506,44.40868],[26.10473,44.41252],[26.10507,44.40976],[26.10515,44.40846],[26.10475,44.41244],[26.10503,44.40964],[26.1048,44.41189],[26.10475,44.4119],[26.10506,44.40946],[26.10673,44.40714],[26.10877,44.40537],[26.11067,44.40398],[26.11083,44.40398]]},
+  {"id":16958177669,"name":"Afternoon Run","date":"2026-01-06","distance":9.05,"pace":"4:55/km","time":"44:31","hr":152,"maxHr":175,"elevation":24,"calories":716,"coords":[[26.10891,44.40873],[26.10718,44.40793],[26.10788,44.40666],[26.10645,44.40559],[26.10577,44.40467],[26.10232,44.4059],[26.10134,44.407],[26.10072,44.40617],[26.10285,44.40368],[26.10626,44.40339],[26.10814,44.40602],[26.11033,44.40773],[26.11026,44.40895],[26.10866,44.40867],[26.10707,44.4075],[26.10786,44.40664],[26.10641,44.40577],[26.10692,44.4053],[26.1044,44.40477],[26.10232,44.40604],[26.10128,44.40702],[26.10097,44.40594],[26.10279,44.4037],[26.10707,44.40363],[26.10824,44.40541],[26.10991,44.40728],[26.11025,44.40893],[26.10888,44.40874],[26.10707,44.40759],[26.10774,44.40649],[26.10681,44.40548],[26.10493,44.40467],[26.10229,44.40588],[26.10156,44.40698],[26.10069,44.40619],[26.10266,44.40385],[26.10513,44.40321],[26.10819,44.40441],[26.10818,44.40618],[26.11058,44.40711],[26.11212,44.40837],[26.1115,44.40668],[26.11078,44.40464],[26.11093,44.40436],[26.11093,44.40436]]},
+  {"id":16935502803,"name":"Afternoon Run","date":"2026-01-04","distance":11.27,"pace":"5:20/km","time":"1:00:09","hr":151,"maxHr":160,"elevation":42,"calories":939,"coords":[[26.10827,44.40552],[26.11018,44.40761],[26.10965,44.40872],[26.10716,44.40749],[26.10772,44.4065],[26.10691,44.40525],[26.10254,44.40562],[26.10117,44.40703],[26.10164,44.40537],[26.10422,44.40318],[26.106,44.40336],[26.1082,44.40625],[26.11058,44.4088],[26.10884,44.40902],[26.10685,44.41058],[26.10451,44.41343],[26.10451,44.41283],[26.10503,44.40861],[26.10755,44.40674],[26.10482,44.41116],[26.10342,44.4131],[26.09928,44.41047],[26.09972,44.40892],[26.10011,44.40615],[26.10173,44.40443],[26.10472,44.40252],[26.10894,44.40367],[26.11078,44.40288],[26.11165,44.40196],[26.10963,44.40083],[26.10992,44.39966],[26.10711,44.40052],[26.10878,44.40172],[26.10965,44.40304],[26.1087,44.40373],[26.10911,44.40527],[26.11078,44.40463],[26.11123,44.40464],[26.10916,44.40522],[26.11127,44.40522],[26.1094,44.4046],[26.10979,44.40452]]},
+  {"id":16903538401,"name":"Afternoon Run","date":"2026-01-01","distance":7.2,"pace":"4:31/km","time":"32:36","hr":153,"maxHr":178,"elevation":26,"calories":542,"coords":[[26.10828,44.4054],[26.10822,44.40617],[26.10961,44.407],[26.11067,44.40834],[26.10982,44.40884],[26.1082,44.40844],[26.1071,44.40752],[26.10785,44.40674],[26.10645,44.40579],[26.10694,44.40537],[26.10564,44.40467],[26.10274,44.40544],[26.10243,44.40655],[26.10143,44.40703],[26.10061,44.40627],[26.1022,44.40459],[26.10358,44.4033],[26.10773,44.40397],[26.10825,44.40531],[26.10857,44.40652],[26.11051,44.40801],[26.11018,44.40897],[26.10864,44.40868],[26.10713,44.40752],[26.10785,44.40674],[26.10666,44.40597],[26.10682,44.40545],[26.10613,44.40472],[26.10276,44.40542],[26.10242,44.4064],[26.10133,44.40702],[26.1006,44.40635],[26.10158,44.40552],[26.10299,44.40356],[26.10459,44.40317],[26.10753,44.40385],[26.10827,44.40512],[26.10859,44.40649],[26.11075,44.40718],[26.11189,44.40847],[26.11128,44.40942],[26.11084,44.40849],[26.11204,44.40788],[26.11149,44.40658],[26.1107,44.40455],[26.1098,44.40438],[26.10977,44.40444]]}
 ];
 
-const JAN_RUNS = {5:8.2, 8:6.5, 11:10.5, 13:10.2, 16:5.5, 19:15.4, 22:7.96, 25:11.82};
+const TARGETS = { runs: { goal: 15 }, distance: { goal: 150 }, elevation: { goal: 500 } };
+let map = null, mapStyle = 'dark', mapInitialized = false, isTyping = false;
 
-let map = null;
-let mapStyle = 'dark';
-let mapInitialized = false;
-let isTyping = false;
-
-// PIN
-function initPinSystem() {
-    const ps = document.getElementById('pin-screen');
-    const inputs = document.querySelectorAll('.pin-input');
-    const err = document.getElementById('pin-error');
-    
-    const authTime = localStorage.getItem('lemon_auth_time');
-    if (authTime && (Date.now() - parseInt(authTime)) < CONFIG.PIN_EXPIRY) {
-        ps.classList.add('hidden');
-        return;
-    }
-    
-    inputs[0].focus();
-    inputs.forEach((input, i) => {
-        input.addEventListener('input', e => {
-            if (e.target.value.length === 1) {
-                if (i < inputs.length - 1) {
-                    inputs[i + 1].focus();
-                } else {
-                    const pin = Array.from(inputs).map(x => x.value).join('');
-                    if (pin === CONFIG.PIN) {
-                        inputs.forEach(x => x.classList.add('success'));
-                        localStorage.setItem('lemon_auth_time', Date.now().toString());
-                        setTimeout(() => ps.classList.add('hidden'), 300);
-                    } else {
-                        inputs.forEach(x => x.classList.add('error'));
-                        err.textContent = 'Wrong PIN';
-                        setTimeout(() => {
-                            inputs.forEach(x => { x.classList.remove('error'); x.value = ''; });
-                            inputs[0].focus();
-                            err.textContent = '';
-                        }, 1000);
-                    }
-                }
-            }
-        });
-        input.addEventListener('keydown', e => {
-            if (e.key === 'Backspace' && !input.value && i > 0) inputs[i-1].focus();
-        });
+// Calculate stats from routes
+function calcStats() {
+    const totalDist = ROUTES.reduce((a, r) => a + r.distance, 0);
+    const totalElev = ROUTES.reduce((a, r) => a + r.elevation, 0);
+    let totalSecs = 0;
+    ROUTES.forEach(r => {
+        const parts = r.time.split(':').map(Number);
+        if (parts.length === 3) totalSecs += parts[0]*3600 + parts[1]*60 + parts[2];
+        else if (parts.length === 2) totalSecs += parts[0]*60 + parts[1];
     });
+    const hrs = Math.floor(totalSecs / 3600);
+    const mins = Math.floor((totalSecs % 3600) / 60);
+    return { runs: ROUTES.length, distance: totalDist.toFixed(1), elevation: totalElev, time: `${hrs}:${mins.toString().padStart(2,'0')}` };
 }
 
-// Theme
-function toggleTheme() {
-    const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', t);
-    localStorage.setItem('theme', t);
-}
-function loadTheme() {
-    document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'dark');
-}
-
-// Sidebar
-function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
-function openMobileSidebar() { document.getElementById('sidebar').classList.add('mobile-open'); document.getElementById('sidebar-overlay').classList.add('show'); }
-function closeMobileSidebar() { document.getElementById('sidebar').classList.remove('mobile-open'); document.getElementById('sidebar-overlay').classList.remove('show'); }
-
-// Navigation
-function navigateTo(page) {
-    document.querySelectorAll('.nav-item').forEach(i => {
-        i.classList.remove('active');
-        if (i.dataset.page === page) i.classList.add('active');
-    });
-    document.querySelectorAll('.page-panel').forEach(p => p.classList.remove('active'));
-    document.getElementById('page-' + page)?.classList.add('active');
-    
-    const titles = {dashboard:'Dashboard', maps:'Running Maps', predictions:'Predictions', health:'Health', ai:'AI Coach'};
-    document.getElementById('page-title').textContent = titles[page] || 'Dashboard';
-    
-    closeMobileSidebar();
-    closeRouteDetail();
-    document.getElementById('profileDropdown').classList.remove('open');
-    
-    if (page === 'maps') {
-        setTimeout(initMap, 200);
-    }
-    if (page === 'predictions') {
-        renderCalendar();
-    }
-}
-
-// Tabs
-function initTabs() {
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-            btn.classList.add('active');
-            document.getElementById('tab-' + btn.dataset.tab)?.classList.add('active');
-        });
-    });
-}
-
-// Dropdown
-function toggleProfileDropdown() { document.getElementById('profileDropdown').classList.toggle('open'); }
-function logout() { localStorage.removeItem('lemon_auth_time'); location.reload(); }
-function showToast(msg) {
-    const c = document.getElementById('toast-container');
-    const t = document.createElement('div');
-    t.className = 'toast';
-    t.textContent = msg;
-    c.appendChild(t);
-    setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 3000);
-}
-
-// MAP INITIALIZATION
-function initMap() {
-    console.log('initMap called, mapInitialized:', mapInitialized);
-    
-    if (mapInitialized && map) {
-        console.log('Map already initialized, just resizing');
-        map.resize();
-        return;
-    }
-    
-    const container = document.getElementById('map');
-    if (!container) {
-        console.error('Map container not found!');
-        return;
-    }
-    
-    console.log('Container found:', container.offsetWidth, container.offsetHeight);
-    
-    try {
-        mapboxgl.accessToken = CONFIG.MAPBOX_TOKEN;
-        
-        map = new mapboxgl.Map({
-            container: 'map',
-            style: 'mapbox://styles/mapbox/dark-v11',
-            center: [26.1, 44.42],
-            zoom: 11
-        });
-        
-        map.on('load', function() {
-            console.log('Map loaded!');
-            mapInitialized = true;
-            addRoutesToMap();
-            renderRoutesList();
-        });
-        
-        map.on('error', function(e) {
-            console.error('Map error:', e);
-        });
-        
-    } catch (e) {
-        console.error('Map init error:', e);
-    }
-}
-
-function addRoutesToMap() {
-    console.log('Adding routes to map...');
-    const colors = ['#8b5cf6', '#22c55e', '#3b82f6', '#eab308', '#ef4444'];
-    
-    ROUTES.forEach((route, i) => {
-        const sourceId = 'route-' + route.id;
-        const layerId = 'route-layer-' + route.id;
-        
-        // Check if source already exists
-        if (map.getSource(sourceId)) {
-            console.log('Source already exists:', sourceId);
-            return;
-        }
-        
-        console.log('Adding route:', route.name, route.coords.length, 'points');
-        
-        map.addSource(sourceId, {
-            type: 'geojson',
-            data: {
-                type: 'Feature',
-                properties: { name: route.name },
-                geometry: {
-                    type: 'LineString',
-                    coordinates: route.coords
-                }
-            }
-        });
-        
-        map.addLayer({
-            id: layerId,
-            type: 'line',
-            source: sourceId,
-            layout: {
-                'line-join': 'round',
-                'line-cap': 'round'
-            },
-            paint: {
-                'line-color': colors[i % colors.length],
-                'line-width': 4,
-                'line-opacity': 0.85
-            }
-        });
-        
-        // Click handler
-        map.on('click', layerId, () => {
-            console.log('Route clicked:', route.name);
-            openRouteDetail(route);
-        });
-        
-        // Hover effects
-        map.on('mouseenter', layerId, () => {
-            map.getCanvas().style.cursor = 'pointer';
-            map.setPaintProperty(layerId, 'line-width', 6);
-        });
-        
-        map.on('mouseleave', layerId, () => {
-            map.getCanvas().style.cursor = '';
-            map.setPaintProperty(layerId, 'line-width', 4);
-        });
-    });
-    
-    console.log('Routes added, fitting bounds...');
-    fitAllRoutes();
-}
-
-function renderRoutesList() {
-    const list = document.getElementById('routes-list');
-    if (!list) return;
-    
-    list.innerHTML = ROUTES.map(r => `
-        <div class="route-item" data-id="${r.id}" onclick="openRouteDetail(ROUTES.find(x=>x.id===${r.id}))">
-            <div class="route-item-name">${r.name}</div>
-            <div class="route-item-meta">
-                <span>${r.date}</span>
-                <span>${r.distance} km</span>
-                <span>${r.pace}</span>
+function updateDashboard() {
+    const s = calcStats();
+    document.getElementById('stat-runs').textContent = s.runs;
+    document.getElementById('stat-distance').innerHTML = s.distance + '<span>km</span>';
+    document.getElementById('stat-time').innerHTML = s.time + '<span>hrs</span>';
+    document.getElementById('stat-elevation').innerHTML = s.elevation + '<span>m</span>';
+    document.getElementById('map-stat-routes').textContent = s.runs;
+    document.getElementById('map-stat-km').textContent = s.distance;
+    // Activity list
+    const list = document.getElementById('activity-list');
+    list.innerHTML = ROUTES.slice(0, 5).map(r => `
+        <div class="activity-item" onclick="openRouteDetail(ROUTES.find(x=>x.id===${r.id}))">
+            <div class="activity-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+            <div class="activity-info"><div class="activity-name">${r.name}</div><div class="activity-meta">${r.date}</div></div>
+            <div class="activity-stats">
+                <div class="activity-stat"><div class="activity-stat-value">${r.distance}km</div><div class="activity-stat-label">Dist</div></div>
+                <div class="activity-stat"><div class="activity-stat-value">${r.pace}</div><div class="activity-stat-label">Pace</div></div>
             </div>
         </div>
     `).join('');
-    
-    const totalKm = ROUTES.reduce((a, r) => a + r.distance, 0);
-    document.getElementById('stat-routes').textContent = ROUTES.length;
-    document.getElementById('stat-km').textContent = totalKm.toFixed(1);
+    // AI insight
+    const avgPace = ROUTES.reduce((a,r) => {const p=r.pace.split(':'); return a + parseInt(p[0])*60+parseInt(p[1]);}, 0) / ROUTES.length;
+    const avgPaceStr = Math.floor(avgPace/60) + ':' + Math.round(avgPace%60).toString().padStart(2,'0');
+    document.getElementById('ai-insight').innerHTML = `Ai alergat <strong>${s.runs} curse</strong> în ianuarie, totalizând <strong>${s.distance} km</strong>. Cel mai lung run: <strong>${Math.max(...ROUTES.map(r=>r.distance))} km</strong>. Pace mediu: <strong>${avgPaceStr}/km</strong>. Keep it up! 🏃‍♂️`;
 }
 
-function openRouteDetail(route) {
-    console.log('Opening detail for:', route.name);
-    
-    document.querySelectorAll('.route-item').forEach(c => c.classList.remove('active'));
-    document.querySelector(`.route-item[data-id="${route.id}"]`)?.classList.add('active');
-    
-    document.getElementById('detail-title').textContent = route.name;
-    document.getElementById('d-dist').textContent = route.distance + ' km';
-    document.getElementById('d-pace').textContent = route.pace;
-    document.getElementById('d-time').textContent = route.time;
-    document.getElementById('d-hr').textContent = route.hr + ' bpm';
-    document.getElementById('d-date').textContent = route.date;
-    document.getElementById('d-type').textContent = route.type;
-    document.getElementById('d-elev').textContent = route.elevation + 'm';
-    document.getElementById('d-cal').textContent = route.calories + ' kcal';
-    
-    document.getElementById('route-detail').classList.add('open');
-    
-    // Zoom to route
-    if (map && route.coords && route.coords.length > 0) {
-        const bounds = route.coords.reduce((b, c) => b.extend(c), new mapboxgl.LngLatBounds(route.coords[0], route.coords[0]));
-        map.fitBounds(bounds, { padding: 60 });
-    }
+function updateTargets() {
+    const s = calcStats();
+    const grid = document.getElementById('targets-grid');
+    const data = [
+        { key: 'runs', title: 'Target Runs', current: s.runs, goal: TARGETS.runs.goal, unit: 'runs' },
+        { key: 'distance', title: 'Target Distance', current: parseFloat(s.distance), goal: TARGETS.distance.goal, unit: 'km' },
+        { key: 'elevation', title: 'Target Elevation', current: s.elevation, goal: TARGETS.elevation.goal, unit: 'm' }
+    ];
+    grid.innerHTML = data.map(d => {
+        const pct = Math.min(100, Math.round(d.current / d.goal * 100));
+        const remaining = Math.max(0, d.goal - d.current);
+        return `
+            <div class="target-card ${d.key}">
+                <div class="target-header">
+                    <div class="target-icon ${d.key}"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+                    <div><div class="target-title">${d.title}</div><div class="target-subtitle">Goal: ${d.goal} ${d.unit}</div></div>
+                </div>
+                <div class="target-pct">${pct}%</div>
+                <div class="target-bar"><div class="target-fill ${d.key}" style="width:${pct}%"></div></div>
+                <div class="target-values"><span class="target-current">${d.current} ${d.unit}</span><span class="target-goal">/ ${d.goal} ${d.unit}</span></div>
+            </div>
+        `;
+    }).join('');
+    // Targets insight
+    const insight = document.getElementById('targets-insight');
+    insight.innerHTML = `<div class="insight-header"><span class="insight-badge">AI</span><span class="insight-title">January Progress 🎯</span></div><p class="insight-text">Ești la <strong>${Math.round(parseFloat(s.distance)/TARGETS.distance.goal*100)}%</strong> din target-ul de distanță! Mai ai nevoie de <strong>${Math.max(0,TARGETS.runs.goal-s.runs)} runs</strong> pentru a atinge 15 runs/lună.</p>`;
 }
 
-function closeRouteDetail() {
-    document.getElementById('route-detail').classList.remove('open');
-    document.querySelectorAll('.route-item').forEach(c => c.classList.remove('active'));
-}
-
-function fitAllRoutes() {
-    if (!map) return;
-    
-    let allCoords = [];
-    ROUTES.forEach(r => {
-        if (r.coords) allCoords = allCoords.concat(r.coords);
-    });
-    
-    if (allCoords.length === 0) return;
-    
-    const bounds = allCoords.reduce((b, c) => b.extend(c), new mapboxgl.LngLatBounds(allCoords[0], allCoords[0]));
-    map.fitBounds(bounds, { padding: 40 });
-}
-
-function toggleMapStyle() {
-    if (!map) return;
-    mapStyle = mapStyle === 'dark' ? 'light' : 'dark';
-    map.setStyle('mapbox://styles/mapbox/' + mapStyle + '-v11');
-    
-    // Re-add routes after style change
-    map.once('style.load', () => {
-        mapInitialized = false; // Force re-add
-        addRoutesToMap();
-    });
-}
-
-// Calendar
 function renderCalendar() {
     const days = document.getElementById('calendar-days');
     if (!days) return;
-    
+    const runDays = {};
+    ROUTES.forEach(r => { const d = parseInt(r.date.split('-')[2]); runDays[d] = r.distance; });
     let html = '';
-    // Dec 29, 30, 31
-    for (let i = 29; i <= 31; i++) {
-        html += `<div class="cal-day other"><div class="cal-day-num">${i}</div></div>`;
-    }
-    // January
+    for (let i = 29; i <= 31; i++) html += `<div class="cal-day other"><div class="cal-day-num">${i}</div></div>`;
     for (let d = 1; d <= 31; d++) {
-        const isToday = d === 28;
-        const km = JAN_RUNS[d];
-        const classes = ['cal-day'];
-        if (isToday) classes.push('today');
-        if (km) classes.push('has-run');
-        html += `<div class="${classes.join(' ')}"><div class="cal-day-num">${d}</div></div>`;
+        const isToday = d === new Date().getDate();
+        const hasRun = runDays[d];
+        const cls = ['cal-day'];
+        if (isToday) cls.push('today');
+        if (hasRun) cls.push('has-run');
+        html += `<div class="${cls.join(' ')}" title="${hasRun ? hasRun+'km' : ''}"><div class="cal-day-num">${d}</div></div>`;
     }
     days.innerHTML = html;
 }
+.strava.com/oauth/token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `client_id=${CONFIG.STRAVA.CLIENT_ID}&client_secret=${CONFIG.STRAVA.CLIENT_SECRET}&refresh_token=${CONFIG.STRAVA.REFRESH_TOKEN}&grant_type=refresh_token`
+        });
+        const tokenData = await tokenRes.json();
+        if (!tokenData.access_token) throw new Error('Token refresh failed');
+        // Fetch activities
+        const actRes = await fetch('https://www.strava.com/api/v3/athlete/activities?per_page=30', {
+            headers: { 'Authorization': 'Bearer ' + tokenData.access_token }
+        });
+        const activities = await actRes.json();
+        if (!Array.isArray(activities)) throw new Error('Failed to fetch activities');
+        showToast('✅ Synced ' + activities.filter(a => a.type === 'Run').length + ' runs from Strava!');
+    } catch (e) {
+        console.error('Sync error:', e);
+        showToast('❌ Sync failed: ' + e.message);
+    }
+    btn.classList.remove('syncing');
+    btn.querySelector('span').textContent = 'Sync Strava';
+}
+
+// Navigation
+function navigateTo(page) {
+    document.querySelectorAll('.nav-item').forEach(i => { i.classList.remove('active'); if (i.dataset.page === page) i.classList.add('active'); });
+    document.querySelectorAll('.page-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + page)?.classList.add('active');
+    const titles = { dashboard: 'Dashboard', maps: 'Running Maps', predictions: 'Predictions', health: 'Health', ai: 'AI Coach' };
+    document.getElementById('page-title').textContent = titles[page] || 'Dashboard';
+    closeMobileSidebar(); closeRouteDetail();
+    if (page === 'maps') setTimeout(initMap, 200);
+    if (page === 'predictions') { updateTargets(); renderCalendar(); }
+}
+
+// UI helpers
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('collapsed'); }
+function openMobileSidebar() { document.getElementById('sidebar').classList.add('mobile-open'); document.getElementById('sidebar-overlay').classList.add('show'); }
+function closeMobileSidebar() { document.getElementById('sidebar').classList.remove('mobile-open'); document.getElementById('sidebar-overlay').classList.remove('show'); }
+function toggleTheme() { const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', t); localStorage.setItem('theme', t); }
+function toggleProfileDropdown() { document.getElementById('profileDropdown').classList.toggle('open'); }
+function logout() { location.reload(); }
+function showToast(msg) {
+    const c = document.getElementById('toast-container');
+    const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg; c.appendChild(t);
+    setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 4000);
+}
+
+// Tabs
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-' + btn.dataset.tab)?.classList.add('active');
+    });
+});
 
 // Chat
-function toggleChat() {
-    document.getElementById('chat-panel').classList.toggle('show');
-    if (document.getElementById('chat-panel').classList.contains('show')) {
-        document.getElementById('chat-input').focus();
-    }
-}
+function toggleChat() { document.getElementById('chat-panel').classList.toggle('show'); if (document.getElementById('chat-panel').classList.contains('show')) document.getElementById('chat-input').focus(); }
 
 async function sendMessage() {
     const input = document.getElementById('chat-input');
-    const btn = document.getElementById('chat-send');
     const msg = input.value.trim();
     if (!msg || isTyping) return;
-    
-    addMsg(msg, 'user');
-    input.value = '';
-    isTyping = true;
-    btn.disabled = true;
-    
+    addMsg(msg, 'user'); input.value = ''; isTyping = true;
     const loading = addLoadingMsg();
-    
+    const stats = calcStats();
+    const systemPrompt = `Ești un coach de running. Alex Volo are ${stats.runs} runs în ianuarie, ${stats.distance}km total, ${stats.elevation}m elevation. Răspunde concis în română.`;
     try {
         const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + CONFIG.GROQ_API_KEY },
-            body: JSON.stringify({ model: CONFIG.GROQ_MODEL, messages: [{role:'system',content:SYSTEM_PROMPT},{role:'user',content:msg}], temperature:0.7, max_tokens:500 })
+            body: JSON.stringify({ model: CONFIG.GROQ_MODEL, messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: msg }], temperature: 0.7, max_tokens: 500 })
         });
         loading.remove();
-        if (!res.ok) throw new Error('API Error');
         const data = await res.json();
         addMsg(data.choices[0].message.content, 'bot');
-    } catch (e) {
-        loading.remove();
-        addMsg('Eroare conexiune. Încearcă din nou.', 'bot');
-    }
+    } catch (e) { loading.remove(); addMsg('Eroare conexiune.', 'bot'); }
     isTyping = false;
-    btn.disabled = false;
 }
 
-function addMsg(text, type) {
-    const c = document.getElementById('chat-messages');
-    const d = document.createElement('div');
-    d.className = 'chat-msg ' + type;
-    d.textContent = text;
-    c.appendChild(d);
-    c.scrollTop = c.scrollHeight;
-    return d;
-}
+function addMsg(text, type) { const c = document.getElementById('chat-messages'); const d = document.createElement('div'); d.className = 'chat-msg ' + type; d.textContent = text; c.appendChild(d); c.scrollTop = c.scrollHeight; return d; }
+function addLoadingMsg() { const c = document.getElementById('chat-messages'); const d = document.createElement('div'); d.className = 'chat-msg bot loading'; d.innerHTML = '<span></span><span></span><span></span>'; c.appendChild(d); c.scrollTop = c.scrollHeight; return d; }
 
-function addLoadingMsg() {
-    const c = document.getElementById('chat-messages');
-    const d = document.createElement('div');
-    d.className = 'chat-msg bot loading';
-    d.innerHTML = '<span></span><span></span><span></span>';
-    c.appendChild(d);
-    c.scrollTop = c.scrollHeight;
-    return d;
-}
-
-function updateDate() {
-    const el = document.getElementById('today-date');
-    if (el) el.textContent = new Date().toLocaleDateString('en-US', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
-}
-
-// INIT
+// Init
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM loaded');
-    loadTheme();
-    initPinSystem();
-    initTabs();
-    updateDate();
-    
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') {
-            document.getElementById('chat-panel').classList.remove('show');
-            document.getElementById('profileDropdown').classList.remove('open');
-            closeMobileSidebar();
-            closeRouteDetail();
-        }
-    });
-    
-    document.addEventListener('click', e => {
-        const dd = document.getElementById('profileDropdown');
-        if (dd && !dd.contains(e.target)) dd.classList.remove('open');
-    });
+    document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'dark');
+    document.getElementById('today-date').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    updateDashboard();
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { document.getElementById('chat-panel').classList.remove('show'); closeRouteDetail(); closeMobileSidebar(); } });
+    document.addEventListener('click', e => { const dd = document.getElementById('profileDropdown'); if (dd && !dd.contains(e.target)) dd.classList.remove('open'); });
 });
 </script>
 </body>
