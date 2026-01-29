@@ -53,13 +53,24 @@ module.exports = async function handler(req, res) {
       )
     `;
 
+    await sql`
+      CREATE TABLE IF NOT EXISTS steps (
+        id SERIAL PRIMARY KEY,
+        date DATE UNIQUE NOT NULL,
+        total_steps INTEGER,
+        total_distance INTEGER,
+        step_goal INTEGER,
+        created_at TIMESTAMP DEFAULT NOW()
+      )
+    `;
+
     await sql`CREATE INDEX IF NOT EXISTS idx_activities_date ON activities(date DESC)`;
     await sql`CREATE INDEX IF NOT EXISTS idx_activities_source ON activities(source)`;
 
     return res.status(200).json({ 
       success: true, 
       message: 'Database tables created',
-      tables: ['activities', 'sleep', 'stress']
+      tables: ['activities', 'sleep', 'stress', 'steps']
     });
 
   } catch (error) {
