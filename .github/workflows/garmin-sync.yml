@@ -13,9 +13,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install -r scripts/requirements.txt
+      - run: pip install garth psycopg2-binary
       - run: python scripts/garmin_sync.py
         env:
-          GARMIN_EMAIL: ${{ secrets.GARMIN_EMAIL }}
-          GARMIN_PASSWORD: ${{ secrets.GARMIN_PASSWORD }}
+          GARMIN_OAUTH1_TOKEN: ${{ secrets.GARMIN_OAUTH1_TOKEN }}
+          GARMIN_OAUTH2_TOKEN: ${{ secrets.GARMIN_OAUTH2_TOKEN }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
