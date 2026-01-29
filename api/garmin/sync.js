@@ -1,43 +1,40 @@
-import { sql } from '@vercel/postgres';
-import GarminConnect from 'garmin-connect';
+const { sql } = require('@vercel/postgres');
+const GarminConnect = require('garmin-connect').default;
 
-export const config = {
-  maxDuration: 60,
-};
-
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed. Use POST.' });
   }
 
-  const GCClient = new GarminConnect({
-    username: process.env.GARMIN_EMAIL,
-    password: process.env.GARMIN_PASSWORD,
-  });
-
   try {
-    await GCClient.login();
+    const GC = new GarminConnect({
+      username: process.env.GARMIN_EMAIL,
+      password: process.env.GARMIN_PASSWORD
+    });
+
+    await GC.login();
     
     const results = { activities: 0, sleep: 0, stress: 0, errors: [] };
 
-    // Get running activities
+    // Get running activities (last 100)
     try {
-      const activities = await GCClient.getActivities(0, 100);
+      const activities = await GC.getActivities(0, 100);
       
       for (const act of activities) {
-        if (act.activityType?.typeKey === 'running') {
-          const distance = (act.distance / 1000).toFixed(2);
+        if (act.activityType && act.activityType.typeKey === 'running') {
+          const distance = parseFloat((act.distance / 1000).toFixed(2));
           const duration = Math.round(act.duration);
           const paceSeconds = act.duration / (act.distance / 1000);
-          const pace = `${Math.floor(paceSeconds / 60)}:${Math.round(paceSeconds % 60).toString().padStart(2, '0')}/km`;
+          const pace = Math.floor(paceSeconds / 60) + ':' + Math.round(paceSeconds % 60).toString().padStart(2, '0') + '/km';
+          const date = act.startTimeLocal ? act.startTimeLocal.split(' ')[0] : act.startTimeGMT.split('T')[0];
 
           await sql`
-            INSERT INTO activities (id, source, name, activity_type, date, distance, duration, pace, calories, elevation, avg_hr, max_hr, raw_data)
-            VALUES (${act.activityId}, 'garmin', ${act.activityName}, 'run', ${act.startTimeLocal.split('T')[0]}, ${distance}, ${duration}, ${pace}, ${act.calories || 0}, ${Math.round(act.elevationGain || 0)}, ${act.averageHR || 0}, ${act.maxHR || 0}, ${JSON.stringify(act)})
+            INSERT INTO activities (id, source, name, activity_type, date, distance, duration, pace, calories, elevation, avg_hr, max_hr)
+            VALUES (${act.activityId}, 'garmin', ${act.activityName}, 'run', ${date}, ${distance}, ${duration}, ${pace}, ${Math.round(act.calories || 0)}, ${Math.round(act.elevationGain || 0)}, ${Math.round(act.averageHR || 0)}, ${Math.round(act.maxHR || 0)})
             ON CONFLICT (id) DO UPDATE SET
               name = EXCLUDED.name, distance = EXCLUDED.distance, duration = EXCLUDED.duration,
               pace = EXCLUDED.pace, calories = EXCLUDED.calories, elevation = EXCLUDED.elevation,
-              avg_hr = EXCLUDED.avg_hr, max_hr = EXCLUDED.max_hr, raw_data = EXCLUDED.raw_data, updated_at = NOW()
+              avg_hr = EXCLUDED.avg_hr, max_hr = EXCLUDED.max_hr, updated_at = NOW()
           `;
           results.activities++;
         }
@@ -55,8 +52,8 @@ export default async function handler(req, res) {
         const dateStr = date.toISOString().split('T')[0];
         
         try {
-          const sleep = await GCClient.getSleepData(dateStr);
-          if (sleep?.dailySleepDTO) {
+          const sleep = await GC.getSleepData(dateStr);
+          if (sleep && sleep.dailySleepDTO) {
             const s = sleep.dailySleepDTO;
             await sql`
               INSERT INTO sleep (date, total_sleep, deep_sleep, light_sleep, rem_sleep, awake, score, raw_data)
@@ -67,13 +64,13 @@ export default async function handler(req, res) {
             `;
             results.sleep++;
           }
-        } catch (e) { /* skip */ }
+        } catch (e) { /* skip days with no data */ }
       }
     } catch (e) {
       results.errors.push('Sleep: ' + e.message);
     }
 
-    // Get stress data (last 14 days)
+    // Get stress data (last 14 days)  
     try {
       const today = new Date();
       for (let i = 0; i < 14; i++) {
@@ -82,7 +79,7 @@ export default async function handler(req, res) {
         const dateStr = date.toISOString().split('T')[0];
         
         try {
-          const stress = await GCClient.getDailyStress(dateStr);
+          const stress = await GC.getDailyStress(dateStr);
           if (stress) {
             await sql`
               INSERT INTO stress (date, avg_stress, max_stress, raw_data)
@@ -104,4 +101,4 @@ export default async function handler(req, res) {
     console.error('Garmin sync error:', error);
     return res.status(500).json({ error: 'Sync failed', message: error.message });
   }
-}
+};
