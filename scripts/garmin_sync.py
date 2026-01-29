@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
 Garmin Connect Sync Script
-Uses saved OAuth tokens to fetch activities, sleep, stress data
+Uses saved OAuth tokens to fetch activities, sleep, stress, steps data
 """
 
 import os
 import json
 from datetime import datetime, timedelta
 import garth
-from garth import SleepData, DailyStress
+from garth import SleepData, DailyStress, DailySteps
 from garth.exc import GarthHTTPError
 import psycopg2
 
@@ -37,7 +37,7 @@ def get_db_connection():
     db_url = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
     return psycopg2.connect(db_url)
 
-def sync_activities(conn, days=30):
+def sync_activities(conn):
     """Sync running activities from Garmin"""
     print(f"\n🏃 Fetching activities...")
     
@@ -93,7 +93,7 @@ def sync_activities(conn, days=30):
     return count
 
 def sync_sleep(conn, days=14):
-    """Sync sleep data from Garmin using SleepData.list()"""
+    """Sync sleep data from Garmin"""
     print(f"\n😴 Fetching sleep data (last {days} days)...")
     
     cursor = conn.cursor()
@@ -113,7 +113,7 @@ def sync_sleep(conn, days=14):
                 light_sleep = s.light_sleep_seconds or 0
                 rem_sleep = s.rem_sleep_seconds or 0
                 awake = s.awake_sleep_seconds or 0
-                score = 0  # Sleep score not always available
+                score = 0
                 
                 cursor.execute("""
                     INSERT INTO sleep (date, total_sleep, deep_sleep, light_sleep, rem_sleep, awake, score)
@@ -170,6 +170,43 @@ def sync_stress(conn, days=14):
     print(f"✅ Synced {count} days of stress data")
     return count
 
+def sync_steps(conn, days=14):
+    """Sync steps data from Garmin"""
+    print(f"\n👟 Fetching steps data (last {days} days)...")
+    
+    cursor = conn.cursor()
+    count = 0
+    
+    try:
+        end_date = datetime.now().strftime('%Y-%m-%d')
+        steps_list = DailySteps.list(end_date, days)
+        
+        for steps in steps_list:
+            try:
+                date = steps.calendar_date.strftime('%Y-%m-%d')
+                total_steps = steps.total_steps or 0
+                total_distance = steps.total_distance or 0
+                step_goal = steps.step_goal or 0
+                
+                cursor.execute("""
+                    INSERT INTO steps (date, total_steps, total_distance, step_goal)
+                    VALUES (%s, %s, %s, %s)
+                    ON CONFLICT (date) DO UPDATE SET
+                        total_steps = EXCLUDED.total_steps, total_distance = EXCLUDED.total_distance,
+                        step_goal = EXCLUDED.step_goal
+                """, (date, total_steps, total_distance, step_goal))
+                
+                count += 1
+            except Exception as e:
+                print(f"  ⚠️ Error processing steps: {e}")
+        
+        conn.commit()
+    except Exception as e:
+        print(f"  ⚠️ Steps error: {e}")
+    
+    print(f"✅ Synced {count} days of steps data")
+    return count
+
 def main():
     print("=" * 50)
     print("🏃 Garmin Connect Sync")
@@ -193,6 +230,7 @@ def main():
         activities = sync_activities(conn)
         sleep = sync_sleep(conn)
         stress = sync_stress(conn)
+        steps = sync_steps(conn)
         
         conn.close()
         
@@ -201,6 +239,7 @@ def main():
         print(f"   Activities: {activities}")
         print(f"   Sleep days: {sleep}")
         print(f"   Stress days: {stress}")
+        print(f"   Steps days: {steps}")
         print("=" * 50)
         
     except Exception as e:
