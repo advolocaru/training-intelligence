@@ -492,7 +492,6 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 (function() {
     'use strict';
     
-    // ============== CONFIGURATION ==============
     const CONFIG = {
         MAPBOX_TOKEN: 'pk.eyJ1IjoiYWR2b2xvY2FydSIsImEiOiJjbWtyZWs3czcweGIxM2JyMnVqeHBuZTVvIn0.w4FHperuYk67Lr0XW0tR2w',
         STRAVA: {
@@ -502,21 +501,11 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
             API_URL: 'https://www.strava.com/api/v3',
             AUTH_URL: 'https://www.strava.com/oauth/token'
         },
-        GROQ: {
-            API_KEY: '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',
-            API_URL: 'https://api.groq.com/openai/v1/chat/completions',
-            MODEL: 'llama-3.3-70b-versatile'
-        },
-        MAP: {
-            CENTER: [26.1, 44.41],
-            ZOOM: 12,
-            STYLES: { dark: 'mapbox://styles/mapbox/dark-v11', light: 'mapbox://styles/mapbox/light-v11' }
-        },
+        GROQ_API_KEY: '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',
         ROUTE_COLORS: ['#8b5cf6','#22c55e','#3b82f6','#eab308','#ef4444','#ec4899','#06b6d4','#f97316','#84cc16','#6366f1','#14b8a6'],
         TARGETS: { runs: 15, distance: 150, elevation: 500 }
     };
 
-    // ============== DATA ==============
     let ROUTES = [
         {id:17219006300,name:"Evening Run",date:"2026-01-29",distance:8.82,pace:"5:27/km",time:"48:11",hr:135,maxHr:153,elevation:55,calories:690,coords:[[26.10832,44.40537],[26.10909,44.4067],[26.11058,44.40873],[26.10937,44.40863],[26.10716,44.40763],[26.10787,44.4067],[26.1066,44.40554],[26.10594,44.40467],[26.1025,44.40561],[26.1022,44.40679],[26.10061,44.4066],[26.10201,44.40488],[26.1033,44.40347],[26.10786,44.40406],[26.10821,44.40622],[26.11064,44.40849],[26.10961,44.40869],[26.10728,44.40807],[26.10789,44.40673],[26.10647,44.40567]]},
         {id:17195617384,name:"Evening Run",date:"2026-01-27",distance:9.48,pace:"5:33/km",time:"52:41",hr:143,maxHr:159,elevation:22,calories:779,coords:[[26.10823,44.40551],[26.10857,44.4065],[26.11062,44.40869],[26.10914,44.40874],[26.10719,44.40763],[26.10738,44.40636],[26.10693,44.40529],[26.10318,44.40525],[26.1024,44.40657],[26.10075,44.40673],[26.10205,44.40486],[26.10417,44.40324],[26.10818,44.40441],[26.10883,44.40661],[26.11054,44.40883],[26.10759,44.40826],[26.10739,44.4071],[26.10658,44.40584],[26.10685,44.40513]]},
@@ -531,68 +520,186 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
         {id:16903538401,name:"New Year Run",date:"2026-01-01",distance:7.2,pace:"4:31/km",time:"32:36",hr:153,maxHr:178,elevation:26,calories:542,coords:[[26.10828,44.4054],[26.10822,44.40617],[26.10961,44.407],[26.11067,44.40834],[26.10982,44.40884],[26.1082,44.40844],[26.1071,44.40752],[26.10785,44.40674],[26.10645,44.40579],[26.10694,44.40537]]}
     ];
 
-    // ============== STATE ==============
-    let state = {
-        map: null,
-        mapStyle: 'dark',
-        mapInitialized: false,
-        isTyping: false,
-        currentPage: 'dashboard'
-    };
+    let map = null, mapStyle = 'dark', mapInitialized = false, isTyping = false;
+    const $ = id => document.getElementById(id);
+    const $$ = sel => document.querySelectorAll(sel);
 
-    // ============== DOM CACHE ==============
-    const $ = (id) => document.getElementById(id);
-    const $$ = (sel) => document.querySelectorAll(sel);
-
-    // ============== UTILITIES ==============
     function calcStats() {
-        const totalDistance = ROUTES.reduce((sum, r) => sum + r.distance, 0);
-        const totalElevation = ROUTES.reduce((sum, r) => sum + r.elevation, 0);
-        let totalSeconds = 0;
+        const d = ROUTES.reduce((a, r) => a + r.distance, 0);
+        const e = ROUTES.reduce((a, r) => a + r.elevation, 0);
+        let s = 0;
         ROUTES.forEach(r => {
-            const parts = r.time.split(':').map(Number);
-            totalSeconds += parts.length === 3 ? parts[0]*3600 + parts[1]*60 + parts[2] : parts[0]*60 + parts[1];
+            const p = r.time.split(':').map(Number);
+            s += p.length === 3 ? p[0]*3600 + p[1]*60 + p[2] : p[0]*60 + p[1];
         });
-        const hours = Math.floor(totalSeconds / 3600);
-        const minutes = Math.floor((totalSeconds % 3600) / 60);
-        return {
-            runs: ROUTES.length,
-            distance: totalDistance.toFixed(1),
-            elevation: totalElevation,
-            time: `${hours}:${minutes.toString().padStart(2, '0')}`
-        };
+        return { runs: ROUTES.length, distance: d.toFixed(1), elevation: e, time: Math.floor(s/3600) + ':' + Math.floor((s%3600)/60).toString().padStart(2,'0') };
     }
 
-    function formatDate(dateStr) {
-        return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    function showToast(msg, type) {
+        const c = $('toast-container');
+        if (!c) return;
+        const t = document.createElement('div');
+        t.className = 'toast ' + (type || '');
+        t.textContent = msg;
+        c.appendChild(t);
+        setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 300); }, 4000);
     }
 
-    function showToast(message, type = 'info') {
-        const container = $('toast-container');
-        if (!container) return;
-        const toast = document.createElement('div');
-        toast.className = `toast ${type}`;
-        toast.textContent = message;
-        toast.setAttribute('role', 'alert');
-        container.appendChild(toast);
-        setTimeout(() => {
-            toast.style.opacity = '0';
-            toast.style.transform = 'translateX(100%)';
-            setTimeout(() => toast.remove(), 300);
-        }, 4000);
+    function updateDashboard() {
+        const s = calcStats();
+        if ($('stat-runs')) $('stat-runs').textContent = s.runs;
+        if ($('stat-distance')) $('stat-distance').innerHTML = s.distance + '<span>km</span>';
+        if ($('stat-time')) $('stat-time').innerHTML = s.time + '<span>hrs</span>';
+        if ($('stat-elevation')) $('stat-elevation').innerHTML = s.elevation + '<span>m</span>';
+        if ($('map-stat-routes')) $('map-stat-routes').textContent = s.runs;
+        if ($('map-stat-km')) $('map-stat-km').textContent = s.distance;
+
+        const list = $('activity-list');
+        if (list) {
+            list.innerHTML = ROUTES.slice(0, 5).map(r => 
+                '<div class="activity-item" data-id="' + r.id + '"><div class="activity-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="activity-info"><div class="activity-name">' + r.name + '</div><div class="activity-meta">' + r.date + '</div></div><div class="activity-stats"><div class="activity-stat"><div class="activity-stat-value">' + r.distance + 'km</div><div class="activity-stat-label">Dist</div></div><div class="activity-stat"><div class="activity-stat-value">' + r.pace + '</div><div class="activity-stat-label">Pace</div></div></div></div>'
+            ).join('');
+        }
+
+        const ap = ROUTES.reduce((a, r) => { const p = r.pace.split(':'); return a + parseInt(p[0])*60 + parseInt(p[1]); }, 0) / ROUTES.length;
+        if ($('ai-insight')) $('ai-insight').innerHTML = 'You completed <strong>' + s.runs + ' runs</strong> totaling <strong>' + s.distance + ' km</strong>. Longest: <strong>' + Math.max(...ROUTES.map(r => r.distance)) + ' km</strong>. Avg pace: <strong>' + Math.floor(ap/60) + ':' + Math.round(ap%60).toString().padStart(2,'0') + '/km</strong>';
     }
 
-    function safeSetText(id, text) {
-        const el = $(id);
-        if (el) el.textContent = text;
+    function updateTargets() {
+        const s = calcStats();
+        const data = [
+            { key: 'runs', title: 'Runs', current: s.runs, goal: CONFIG.TARGETS.runs, unit: 'runs' },
+            { key: 'distance', title: 'Distance', current: parseFloat(s.distance), goal: CONFIG.TARGETS.distance, unit: 'km' },
+            { key: 'elevation', title: 'Elevation', current: s.elevation, goal: CONFIG.TARGETS.elevation, unit: 'm' }
+        ];
+        const grid = $('targets-grid');
+        if (grid) {
+            grid.innerHTML = data.map(d => {
+                const p = Math.min(100, Math.round(d.current / d.goal * 100));
+                return '<div class="target-card ' + d.key + '"><div class="target-header"><div class="target-icon ' + d.key + '"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg></div><div><div class="target-title">' + d.title + '</div><div class="target-subtitle">Goal: ' + d.goal + ' ' + d.unit + '</div></div></div><div class="target-pct">' + p + '%</div><div class="target-bar"><div class="target-fill ' + d.key + '" style="width:' + p + '%"></div></div><div class="target-values"><span class="target-current">' + d.current + ' ' + d.unit + '</span><span class="target-goal">/ ' + d.goal + '</span></div></div>';
+            }).join('');
+        }
+        if ($('targets-insight')) $('targets-insight').innerHTML = '<div class="insight-header"><span class="insight-badge">AI</span><span class="insight-title">Progress</span></div><p class="insight-text">' + Math.round(parseFloat(s.distance) / CONFIG.TARGETS.distance * 100) + '% of distance goal. Need ' + (CONFIG.TARGETS.runs - s.runs) + ' more runs.</p>';
     }
 
-    function safeSetHTML(id, html) {
-        const el = $(id);
-        if (el) el.innerHTML = html;
+    function renderCalendar() {
+        const d = $('calendar-days');
+        if (!d) return;
+        const rd = {};
+        ROUTES.forEach(r => { rd[parseInt(r.date.split('-')[2])] = r.distance; });
+        let h = '';
+        for (let i = 29; i <= 31; i++) h += '<div class="cal-day other"><div class="cal-day-num">' + i + '</div></div>';
+        for (let i = 1; i <= 31; i++) {
+            const t = i === new Date().getDate();
+            const r = rd[i];
+            const c = ['cal-day'];
+            if (t) c.push('today');
+            if (r) c.push('has-run');
+            h += '<div class="' + c.join(' ') + '"><div class="cal-day-num">' + i + '</div></div>';
+        }
+        d.innerHTML = h;
     }
 
-    // ============== STRAVA SYNC ==============
+    function initMap() {
+        if (mapInitialized && map) { map.resize(); return; }
+        const c = $('map');
+        if (!c || typeof mapboxgl === 'undefined') return;
+        try {
+            mapboxgl.accessToken = CONFIG.MAPBOX_TOKEN;
+            map = new mapboxgl.Map({ container: 'map', style: 'mapbox://styles/mapbox/' + mapStyle + '-v11', center: [26.1, 44.41], zoom: 12 });
+            map.on('load', function() { mapInitialized = true; addRoutesToMap(); renderRoutesList(); });
+        } catch (e) { console.error('Map error:', e); }
+    }
+
+    function addRoutesToMap() {
+        if (!map) return;
+        ROUTES.forEach((r, i) => {
+            const sid = 'route-' + r.id;
+            if (map.getSource(sid)) return;
+            map.addSource(sid, { type: 'geojson', data: { type: 'Feature', geometry: { type: 'LineString', coordinates: r.coords } } });
+            map.addLayer({ id: 'layer-' + r.id, type: 'line', source: sid, paint: { 'line-color': CONFIG.ROUTE_COLORS[i % CONFIG.ROUTE_COLORS.length], 'line-width': 4, 'line-opacity': 0.85 } });
+            map.on('click', 'layer-' + r.id, () => openRouteDetail(r));
+            map.on('mouseenter', 'layer-' + r.id, () => { map.getCanvas().style.cursor = 'pointer'; map.setPaintProperty('layer-' + r.id, 'line-width', 6); });
+            map.on('mouseleave', 'layer-' + r.id, () => { map.getCanvas().style.cursor = ''; map.setPaintProperty('layer-' + r.id, 'line-width', 4); });
+        });
+        fitAllRoutes();
+    }
+
+    function clearMapRoutes() {
+        if (!map) return;
+        ROUTES.forEach(r => {
+            const layerId = 'layer-' + r.id;
+            const sourceId = 'route-' + r.id;
+            if (map.getLayer(layerId)) map.removeLayer(layerId);
+            if (map.getSource(sourceId)) map.removeSource(sourceId);
+        });
+    }
+
+    function renderRoutesList() {
+        const list = $('routes-list');
+        if (list) {
+            list.innerHTML = ROUTES.map(r => '<div class="route-item" data-id="' + r.id + '"><div class="route-item-name">' + r.name + '</div><div class="route-item-meta"><span>' + r.date + '</span><span>' + r.distance + ' km</span><span>' + r.pace + '</span></div></div>').join('');
+        }
+    }
+
+    function openRouteDetail(r) {
+        if (!r) return;
+        $$('.route-item').forEach(c => c.classList.remove('active'));
+        const el = document.querySelector('.route-item[data-id="' + r.id + '"]');
+        if (el) el.classList.add('active');
+        if ($('detail-title')) $('detail-title').textContent = r.name;
+        if ($('d-dist')) $('d-dist').textContent = r.distance + ' km';
+        if ($('d-pace')) $('d-pace').textContent = r.pace;
+        if ($('d-time')) $('d-time').textContent = r.time;
+        if ($('d-hr')) $('d-hr').textContent = r.hr + ' bpm';
+        if ($('d-date')) $('d-date').textContent = r.date;
+        if ($('d-maxhr')) $('d-maxhr').textContent = r.maxHr + ' bpm';
+        if ($('d-elev')) $('d-elev').textContent = r.elevation + 'm';
+        if ($('d-cal')) $('d-cal').textContent = r.calories + ' kcal';
+        if ($('strava-link')) $('strava-link').href = 'https://www.strava.com/activities/' + r.id;
+        if ($('route-detail')) $('route-detail').classList.add('open');
+        if (map && r.coords && r.coords.length) {
+            const b = r.coords.reduce((b, c) => b.extend(c), new mapboxgl.LngLatBounds(r.coords[0], r.coords[0]));
+            map.fitBounds(b, { padding: 60 });
+        }
+    }
+
+    function closeRouteDetail() {
+        if ($('route-detail')) $('route-detail').classList.remove('open');
+        $$('.route-item').forEach(c => c.classList.remove('active'));
+    }
+
+    function fitAllRoutes() {
+        if (!map) return;
+        let a = [];
+        ROUTES.forEach(r => { if (r.coords) a = a.concat(r.coords); });
+        if (!a.length) return;
+        const b = a.reduce((b, c) => b.extend(c), new mapboxgl.LngLatBounds(a[0], a[0]));
+        map.fitBounds(b, { padding: 40 });
+    }
+
+    function toggleMapStyle() {
+        if (!map) return;
+        mapStyle = mapStyle === 'dark' ? 'light' : 'dark';
+        map.setStyle('mapbox://styles/mapbox/' + mapStyle + '-v11');
+        map.once('style.load', addRoutesToMap);
+    }
+
+    function decodePolyline(encoded) {
+        const coords = [];
+        let index = 0, lat = 0, lng = 0;
+        while (index < encoded.length) {
+            let b, shift = 0, result = 0;
+            do { b = encoded.charCodeAt(index++) - 63; result |= (b & 0x1f) << shift; shift += 5; } while (b >= 0x20);
+            lat += (result & 1) ? ~(result >> 1) : (result >> 1);
+            shift = 0; result = 0;
+            do { b = encoded.charCodeAt(index++) - 63; result |= (b & 0x1f) << shift; shift += 5; } while (b >= 0x20);
+            lng += (result & 1) ? ~(result >> 1) : (result >> 1);
+            coords.push([lng / 1e5, lat / 1e5]);
+        }
+        return coords;
+    }
+
     async function syncStrava() {
         const btn = $('sync-btn');
         if (!btn || btn.classList.contains('syncing')) return;
@@ -600,10 +707,9 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
         btn.classList.add('syncing');
         const span = btn.querySelector('span');
         if (span) span.textContent = 'Syncing...';
-        showToast('Connecting to Strava...');
+        showToast('🔄 Connecting to Strava...', 'info');
 
         try {
-            // Step 1: Get fresh access token
             const tokenRes = await fetch(CONFIG.STRAVA.AUTH_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -617,28 +723,24 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
             
             if (!tokenRes.ok) throw new Error('Token refresh failed');
             const tokenData = await tokenRes.json();
-            if (!tokenData.access_token) throw new Error('No access token received');
+            if (!tokenData.access_token) throw new Error('No access token');
 
-            showToast('Fetching activities...');
+            showToast('📥 Fetching activities...', 'info');
 
-            // Step 2: Fetch activities
-            const activitiesRes = await fetch(`${CONFIG.STRAVA.API_URL}/athlete/activities?per_page=50`, {
-                headers: { 'Authorization': `Bearer ${tokenData.access_token}` }
+            const activitiesRes = await fetch(CONFIG.STRAVA.API_URL + '/athlete/activities?per_page=50', {
+                headers: { 'Authorization': 'Bearer ' + tokenData.access_token }
             });
             
             if (!activitiesRes.ok) throw new Error('Failed to fetch activities');
             const activities = await activitiesRes.json();
-            
-            if (!Array.isArray(activities)) throw new Error('Invalid response from Strava');
+            if (!Array.isArray(activities)) throw new Error('Invalid response');
 
-            // Step 3: Filter runs from January 2026
             const januaryRuns = activities.filter(a => {
                 if (a.type !== 'Run') return false;
                 const date = new Date(a.start_date_local);
                 return date.getFullYear() === 2026 && date.getMonth() === 0;
             });
 
-            // Step 4: Transform to our format
             const newRoutes = januaryRuns.map(a => {
                 const date = new Date(a.start_date_local);
                 const dateStr = date.toISOString().split('T')[0];
@@ -648,348 +750,129 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
                 const hours = Math.floor(a.moving_time / 3600);
                 const mins = Math.floor((a.moving_time % 3600) / 60);
                 const secs = a.moving_time % 60;
-                const timeStr = hours > 0 
-                    ? `${hours}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`
-                    : `${mins}:${secs.toString().padStart(2,'0')}`;
-
+                const timeStr = hours > 0 ? hours + ':' + mins.toString().padStart(2,'0') + ':' + secs.toString().padStart(2,'0') : mins + ':' + secs.toString().padStart(2,'0');
                 return {
                     id: a.id,
                     name: a.name,
                     date: dateStr,
                     distance: parseFloat((a.distance / 1000).toFixed(2)),
-                    pace: `${paceMin}:${paceSec.toString().padStart(2,'0')}/km`,
+                    pace: paceMin + ':' + paceSec.toString().padStart(2,'0') + '/km',
                     time: timeStr,
                     hr: a.average_heartrate || 140,
                     maxHr: a.max_heartrate || 165,
                     elevation: Math.round(a.total_elevation_gain),
                     calories: Math.round(a.kilojoules || a.moving_time * 0.2),
-                    coords: a.map?.summary_polyline ? decodePolyline(a.map.summary_polyline) : []
+                    coords: a.map && a.map.summary_polyline ? decodePolyline(a.map.summary_polyline) : []
                 };
             });
 
-            // Step 5: Update ROUTES array
             if (newRoutes.length > 0) {
-                ROUTES.length = 0; // Clear existing
+                if (mapInitialized && map) clearMapRoutes();
+                ROUTES.length = 0;
                 ROUTES.push(...newRoutes);
-                
-                // Refresh UI
                 updateDashboard();
-                if (state.currentPage === 'maps' && state.mapInitialized) {
-                    // Remove old layers and sources
-                    ROUTES.forEach(r => {
-                        const layerId = `layer-${r.id}`;
-                        const sourceId = `route-${r.id}`;
-                        if (state.map.getLayer(layerId)) state.map.removeLayer(layerId);
-                        if (state.map.getSource(sourceId)) state.map.removeSource(sourceId);
-                    });
-                    addRoutesToMap();
-                    renderRoutesList();
-                }
-                if (state.currentPage === 'predictions') {
-                    updateTargets();
-                    renderCalendar();
-                }
+                if (mapInitialized && map) { addRoutesToMap(); renderRoutesList(); }
+                updateTargets();
+                renderCalendar();
             }
 
-            showToast(`✅ Synced ${newRoutes.length} runs from Strava!`, 'success');
+            showToast('✅ Synced ' + newRoutes.length + ' runs from Strava!', 'success');
 
         } catch (e) {
             console.error('Strava sync error:', e);
-            showToast(`❌ Sync failed: ${e.message}`, 'error');
+            showToast('❌ Sync failed: ' + e.message, 'error');
         } finally {
             btn.classList.remove('syncing');
-            const span = btn.querySelector('span');
             if (span) span.textContent = 'Sync Strava';
         }
     }
 
-    // Decode Google polyline to coordinates
-    function decodePolyline(encoded) {
-        const coords = [];
-        let index = 0, lat = 0, lng = 0;
-        
-        while (index < encoded.length) {
-            let b, shift = 0, result = 0;
-            do {
-                b = encoded.charCodeAt(index++) - 63;
-                result |= (b & 0x1f) << shift;
-                shift += 5;
-            } while (b >= 0x20);
-            lat += (result & 1) ? ~(result >> 1) : (result >> 1);
-            
-            shift = 0;
-            result = 0;
-            do {
-                b = encoded.charCodeAt(index++) - 63;
-                result |= (b & 0x1f) << shift;
-                shift += 5;
-            } while (b >= 0x20);
-            lng += (result & 1) ? ~(result >> 1) : (result >> 1);
-            
-            coords.push([lng / 1e5, lat / 1e5]);
-        }
-        return coords;
-    }
-
-    // ============== NAVIGATION ==============
     function navigateTo(page) {
-        state.currentPage = page;
-        
-        $$('.nav-item').forEach(item => {
-            const isActive = item.dataset.page === page;
-            item.classList.toggle('active', isActive);
-            item.setAttribute('aria-current', isActive ? 'page' : 'false');
-        });
-
-        $$('.page-panel').forEach(panel => panel.classList.remove('active'));
-        $(`page-${page}`)?.classList.add('active');
-
+        $$('.nav-item').forEach(i => { i.classList.toggle('active', i.dataset.page === page); });
+        $$('.page-panel').forEach(p => p.classList.remove('active'));
+        const panel = $('page-' + page);
+        if (panel) panel.classList.add('active');
         const titles = { dashboard: 'Dashboard', maps: 'Running Maps', predictions: 'Predictions', health: 'Health', ai: 'AI Coach' };
-        safeSetText('page-title', titles[page] || 'Dashboard');
-
+        if ($('page-title')) $('page-title').textContent = titles[page] || 'Dashboard';
         closeMobileSidebar();
         closeRouteDetail();
-
         if (page === 'maps') setTimeout(initMap, 200);
         if (page === 'predictions') { updateTargets(); renderCalendar(); }
     }
 
-    // ============== UI CONTROLS ==============
-    function toggleSidebar() {
-        $('sidebar')?.classList.toggle('collapsed');
-    }
+    function toggleSidebar() { $('sidebar').classList.toggle('collapsed'); }
+    function openMobileSidebar() { $('sidebar').classList.add('mobile-open'); $('sidebar-overlay').classList.add('show'); }
+    function closeMobileSidebar() { $('sidebar').classList.remove('mobile-open'); $('sidebar-overlay').classList.remove('show'); }
+    function toggleTheme() { const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', t); try { localStorage.setItem('theme', t); } catch(e) {} }
+    function toggleProfileDropdown() { $('profileDropdown').classList.toggle('open'); }
+    function toggleChat() { const p = $('chat-panel'); if (p) { p.classList.toggle('show'); if (p.classList.contains('show')) $('chat-input').focus(); } }
 
-    function openMobileSidebar() {
-        $('sidebar')?.classList.add('mobile-open');
-        $('sidebar-overlay')?.classList.add('show');
-    }
-
-    function closeMobileSidebar() {
-        $('sidebar')?.classList.remove('mobile-open');
-        $('sidebar-overlay')?.classList.remove('show');
-    }
-
-    function toggleTheme() {
-        const html = document.documentElement;
-        const newTheme = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-        html.setAttribute('data-theme', newTheme);
-        try { localStorage.setItem('theme', newTheme); } catch (e) {}
-    }
-
-    function toggleProfileDropdown() {
-        const dropdown = $('profileDropdown');
-        if (!dropdown) return;
-        const isOpen = dropdown.classList.toggle('open');
-        $('profile-btn')?.setAttribute('aria-expanded', isOpen);
-    }
-
-    function toggleChat() {
-        const panel = $('chat-panel');
-        if (!panel) return;
-        const isOpen = panel.classList.toggle('show');
-        if (isOpen) $('chat-input')?.focus();
-    }
-
-    // ============== CHAT ==============
-    function addChatMessage(text, type) {
-        const container = $('chat-messages');
-        if (!container) return null;
-
-        const msg = document.createElement('div');
-        msg.className = `chat-msg ${type}`;
-        msg.textContent = text;
-        container.appendChild(msg);
-        container.scrollTop = container.scrollHeight;
-        return msg;
-    }
-
-    function addLoadingMessage() {
-        const container = $('chat-messages');
-        if (!container) return null;
-
-        const msg = document.createElement('div');
-        msg.className = 'chat-msg bot loading';
-        msg.innerHTML = '<span></span><span></span><span></span>';
-        container.appendChild(msg);
-        container.scrollTop = container.scrollHeight;
-        return msg;
-    }
+    function addMsg(text, type) { const c = $('chat-messages'); if (!c) return; const d = document.createElement('div'); d.className = 'chat-msg ' + type; d.textContent = text; c.appendChild(d); c.scrollTop = c.scrollHeight; return d; }
+    function addLoadingMsg() { const c = $('chat-messages'); if (!c) return; const d = document.createElement('div'); d.className = 'chat-msg bot loading'; d.innerHTML = '<span></span><span></span><span></span>'; c.appendChild(d); c.scrollTop = c.scrollHeight; return d; }
 
     async function sendMessage() {
         const input = $('chat-input');
-        if (!input) return;
-
-        const message = input.value.trim();
-        if (!message || state.isTyping) return;
-
-        addChatMessage(message, 'user');
-        input.value = '';
-        state.isTyping = true;
-        $('chat-send')?.setAttribute('disabled', 'true');
-
-        const loading = addLoadingMessage();
+        const msg = input.value.trim();
+        if (!msg || isTyping) return;
+        addMsg(msg, 'user'); input.value = ''; isTyping = true;
+        const loading = addLoadingMsg();
         const stats = calcStats();
-
         try {
-            const response = await fetch(CONFIG.GROQ.API_URL, {
+            const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${CONFIG.GROQ.API_KEY}`
-                },
-                body: JSON.stringify({
-                    model: CONFIG.GROQ.MODEL,
-                    messages: [
-                        { role: 'system', content: `You are a running coach. The user has ${stats.runs} runs in January, ${stats.distance}km total, ${stats.elevation}m elevation. Be concise and helpful.` },
-                        { role: 'user', content: message }
-                    ],
-                    max_tokens: 300,
-                    temperature: 0.7
-                })
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + CONFIG.GROQ_API_KEY },
+                body: JSON.stringify({ model: 'llama-3.3-70b-versatile', messages: [{ role: 'system', content: 'Running coach. User has ' + stats.runs + ' runs, ' + stats.distance + 'km in Jan. Be concise.' }, { role: 'user', content: msg }], max_tokens: 300 })
             });
-
-            loading?.remove();
-
-            if (!response.ok) throw new Error('API request failed');
-
-            const data = await response.json();
-            const reply = data.choices?.[0]?.message?.content || 'Sorry, I could not process that.';
-            addChatMessage(reply, 'bot');
-        } catch (e) {
-            loading?.remove();
-            addChatMessage('Connection error. Please try again.', 'bot');
-            console.error('Chat error:', e);
-        } finally {
-            state.isTyping = false;
-            $('chat-send')?.removeAttribute('disabled');
-        }
+            if (loading) loading.remove();
+            const data = await res.json();
+            addMsg(data.choices[0].message.content, 'bot');
+        } catch (e) { if (loading) loading.remove(); addMsg('Error: ' + e.message, 'bot'); }
+        isTyping = false;
     }
 
-    // ============== EVENT LISTENERS ==============
     function initEventListeners() {
-        // Navigation
-        $$('.nav-item').forEach(item => {
-            item.addEventListener('click', (e) => {
-                e.preventDefault();
-                navigateTo(item.dataset.page);
-            });
-        });
-
-        // Sidebar
-        $('sidebar-toggle')?.addEventListener('click', toggleSidebar);
-        $('mobile-menu-btn')?.addEventListener('click', openMobileSidebar);
-        $('sidebar-overlay')?.addEventListener('click', closeMobileSidebar);
-
-        // Theme & Profile
-        $('theme-toggle')?.addEventListener('click', toggleTheme);
-        $('profile-btn')?.addEventListener('click', toggleProfileDropdown);
-        $('logout-btn')?.addEventListener('click', () => location.reload());
-
-        // Strava sync
-        $('sync-btn')?.addEventListener('click', syncStrava);
-
-        // Map controls
-        $('fit-routes-btn')?.addEventListener('click', fitAllRoutes);
-        $('toggle-style-btn')?.addEventListener('click', toggleMapStyle);
-
-        // Route detail
-        $('close-detail-btn')?.addEventListener('click', closeRouteDetail);
-
-        // Activity list clicks (delegated)
-        $('activity-list')?.addEventListener('click', (e) => {
+        $$('.nav-item').forEach(item => item.addEventListener('click', e => { e.preventDefault(); navigateTo(item.dataset.page); }));
+        if ($('sidebar-toggle')) $('sidebar-toggle').addEventListener('click', toggleSidebar);
+        if ($('mobile-menu-btn')) $('mobile-menu-btn').addEventListener('click', openMobileSidebar);
+        if ($('sidebar-overlay')) $('sidebar-overlay').addEventListener('click', closeMobileSidebar);
+        if ($('theme-toggle')) $('theme-toggle').addEventListener('click', toggleTheme);
+        if ($('profile-btn')) $('profile-btn').addEventListener('click', toggleProfileDropdown);
+        if ($('logout-btn')) $('logout-btn').addEventListener('click', () => location.reload());
+        if ($('sync-btn')) $('sync-btn').addEventListener('click', syncStrava);
+        if ($('fit-routes-btn')) $('fit-routes-btn').addEventListener('click', fitAllRoutes);
+        if ($('toggle-style-btn')) $('toggle-style-btn').addEventListener('click', toggleMapStyle);
+        if ($('close-detail-btn')) $('close-detail-btn').addEventListener('click', closeRouteDetail);
+        if ($('activity-list')) $('activity-list').addEventListener('click', e => {
             const item = e.target.closest('.activity-item');
-            if (item) {
-                const id = parseInt(item.dataset.id);
-                const route = ROUTES.find(r => r.id === id);
-                if (route) {
-                    navigateTo('maps');
-                    setTimeout(() => openRouteDetail(route), 300);
-                }
-            }
+            if (item) { const r = ROUTES.find(r => r.id === parseInt(item.dataset.id)); if (r) { navigateTo('maps'); setTimeout(() => openRouteDetail(r), 300); } }
         });
-
-        // Routes list clicks (delegated)
-        $('routes-list')?.addEventListener('click', (e) => {
+        if ($('routes-list')) $('routes-list').addEventListener('click', e => {
             const item = e.target.closest('.route-item');
-            if (item) {
-                const id = parseInt(item.dataset.id);
-                const route = ROUTES.find(r => r.id === id);
-                if (route) openRouteDetail(route);
-            }
+            if (item) { const r = ROUTES.find(r => r.id === parseInt(item.dataset.id)); if (r) openRouteDetail(r); }
         });
-
-        // Chat
-        $('chat-fab')?.addEventListener('click', toggleChat);
-        $('chat-close')?.addEventListener('click', toggleChat);
-        $('open-chat-btn')?.addEventListener('click', toggleChat);
-        $('chat-send')?.addEventListener('click', sendMessage);
-        $('chat-input')?.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage();
-        });
-
-        // Tabs
-        $$('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                $$('.tab-btn').forEach(b => {
-                    b.classList.remove('active');
-                    b.setAttribute('aria-selected', 'false');
-                });
-                $$('.tab-panel').forEach(p => p.classList.remove('active'));
-                
-                btn.classList.add('active');
-                btn.setAttribute('aria-selected', 'true');
-                $(`tab-${btn.dataset.tab}`)?.classList.add('active');
-            });
-        });
-
-        // Global keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                $('chat-panel')?.classList.remove('show');
-                closeRouteDetail();
-                closeMobileSidebar();
-                $('profileDropdown')?.classList.remove('open');
-            }
-        });
-
-        // Close dropdown on outside click
-        document.addEventListener('click', (e) => {
-            const dropdown = $('profileDropdown');
-            if (dropdown && !dropdown.contains(e.target)) {
-                dropdown.classList.remove('open');
-                $('profile-btn')?.setAttribute('aria-expanded', 'false');
-            }
-        });
+        if ($('chat-fab')) $('chat-fab').addEventListener('click', toggleChat);
+        if ($('chat-close')) $('chat-close').addEventListener('click', toggleChat);
+        if ($('open-chat-btn')) $('open-chat-btn').addEventListener('click', toggleChat);
+        if ($('chat-send')) $('chat-send').addEventListener('click', sendMessage);
+        if ($('chat-input')) $('chat-input').addEventListener('keypress', e => { if (e.key === 'Enter') sendMessage(); });
+        $$('.tab-btn').forEach(btn => btn.addEventListener('click', () => {
+            $$('.tab-btn').forEach(b => b.classList.remove('active'));
+            $$('.tab-panel').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            const panel = $('tab-' + btn.dataset.tab);
+            if (panel) panel.classList.add('active');
+        }));
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') { if ($('chat-panel')) $('chat-panel').classList.remove('show'); closeRouteDetail(); closeMobileSidebar(); } });
+        document.addEventListener('click', e => { const dd = $('profileDropdown'); if (dd && !dd.contains(e.target)) dd.classList.remove('open'); });
     }
 
-    // ============== INITIALIZATION ==============
     function init() {
-        // Apply saved theme
-        try {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) document.documentElement.setAttribute('data-theme', savedTheme);
-        } catch (e) {}
-
-        // Set today's date
-        const dateEl = $('today-date');
-        if (dateEl) {
-            dateEl.textContent = new Date().toLocaleDateString('en-US', {
-                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-            });
-        }
-
-        // Initialize components
+        try { const t = localStorage.getItem('theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch(e) {}
+        if ($('today-date')) $('today-date').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
         updateDashboard();
         initEventListeners();
-
-        // Handle hash navigation
-        const hash = window.location.hash.slice(1);
-        if (hash && ['dashboard', 'maps', 'predictions', 'health', 'ai'].includes(hash)) {
-            navigateTo(hash);
-        }
     }
 
-    // Start app when DOM is ready
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
     } else {
