@@ -2,11 +2,7 @@
   "name": "training-intelligence",
   "version": "1.0.0",
   "private": true,
-  "scripts": {
-    "dev": "vercel dev"
-  },
   "dependencies": {
-    "@vercel/postgres": "^0.5.1",
-    "garmin-connect": "^1.6.2"
+    "@vercel/postgres": "^0.10.0"
   }
 }
