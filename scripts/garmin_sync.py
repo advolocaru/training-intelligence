@@ -8,6 +8,7 @@ import os
 import json
 from datetime import datetime, timedelta
 import garth
+from garth import SleepData, DailyStress
 from garth.exc import GarthHTTPError
 import psycopg2
 
@@ -20,25 +21,16 @@ def setup_garth():
     """Setup garth with saved tokens"""
     print("🔐 Loading Garmin tokens...")
     
-    # Create tokens directory
     tokens_dir = '/tmp/garth_tokens'
     os.makedirs(tokens_dir, exist_ok=True)
     
-    # Write token files
     with open(os.path.join(tokens_dir, 'oauth1_token.json'), 'w') as f:
         f.write(OAUTH1_TOKEN)
     with open(os.path.join(tokens_dir, 'oauth2_token.json'), 'w') as f:
         f.write(OAUTH2_TOKEN)
     
-    # Load tokens into garth
     garth.resume(tokens_dir)
-    
-    # Test connection
-    try:
-        garth.client.username
-        print("✅ Garmin tokens loaded successfully!")
-    except:
-        print("✅ Tokens loaded, testing API...")
+    print("✅ Garmin tokens loaded successfully!")
 
 def get_db_connection():
     """Get PostgreSQL connection"""
@@ -53,7 +45,7 @@ def sync_activities(conn, days=30):
     count = 0
     
     try:
-        activities = garth.connectapi(f"/activitylist-service/activities/search/activities", params={"limit": 100})
+        activities = garth.connectapi("/activitylist-service/activities/search/activities", params={"limit": 100})
         
         for act in activities:
             if act.get('activityType', {}).get('typeKey') == 'running':
@@ -101,45 +93,45 @@ def sync_activities(conn, days=30):
     return count
 
 def sync_sleep(conn, days=14):
-    """Sync sleep data from Garmin"""
+    """Sync sleep data from Garmin using SleepData.list()"""
     print(f"\n😴 Fetching sleep data (last {days} days)...")
     
     cursor = conn.cursor()
     count = 0
-    today = datetime.now()
     
-    for i in range(days):
-        date = (today - timedelta(days=i)).strftime('%Y-%m-%d')
-        try:
-            sleep = garth.connectapi(f"/wellness-service/wellness/dailySleepData/{date}")
-            
-            if sleep and 'dailySleepDTO' in sleep:
-                s = sleep['dailySleepDTO']
+    try:
+        end_date = datetime.now().strftime('%Y-%m-%d')
+        sleep_list = SleepData.list(end_date, days)
+        
+        for sleep in sleep_list:
+            try:
+                s = sleep.daily_sleep_dto
+                date = s.calendar_date.strftime('%Y-%m-%d')
                 
-                total_sleep = s.get('sleepTimeSeconds', 0) or 0
-                deep_sleep = s.get('deepSleepSeconds', 0) or 0
-                light_sleep = s.get('lightSleepSeconds', 0) or 0
-                rem_sleep = s.get('remSleepSeconds', 0) or 0
-                awake = s.get('awakeSleepSeconds', 0) or 0
-                
-                score = 0
-                if 'sleepScores' in s and s['sleepScores']:
-                    score = (s['sleepScores'].get('overall', {}) or {}).get('value', 0) or 0
+                total_sleep = s.sleep_time_seconds or 0
+                deep_sleep = s.deep_sleep_seconds or 0
+                light_sleep = s.light_sleep_seconds or 0
+                rem_sleep = s.rem_sleep_seconds or 0
+                awake = s.awake_sleep_seconds or 0
+                score = 0  # Sleep score not always available
                 
                 cursor.execute("""
-                    INSERT INTO sleep (date, total_sleep, deep_sleep, light_sleep, rem_sleep, awake, score, raw_data)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                    INSERT INTO sleep (date, total_sleep, deep_sleep, light_sleep, rem_sleep, awake, score)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s)
                     ON CONFLICT (date) DO UPDATE SET
                         total_sleep = EXCLUDED.total_sleep, deep_sleep = EXCLUDED.deep_sleep,
                         light_sleep = EXCLUDED.light_sleep, rem_sleep = EXCLUDED.rem_sleep,
-                        awake = EXCLUDED.awake, score = EXCLUDED.score, raw_data = EXCLUDED.raw_data
-                """, (date, total_sleep, deep_sleep, light_sleep, rem_sleep, awake, score, json.dumps(sleep)))
+                        awake = EXCLUDED.awake, score = EXCLUDED.score
+                """, (date, total_sleep, deep_sleep, light_sleep, rem_sleep, awake, score))
                 
                 count += 1
-        except Exception as e:
-            pass  # Skip days with no data
+            except Exception as e:
+                print(f"  ⚠️ Error processing sleep: {e}")
+        
+        conn.commit()
+    except Exception as e:
+        print(f"  ⚠️ Sleep error: {e}")
     
-    conn.commit()
     print(f"✅ Synced {count} days of sleep data")
     return count
 
@@ -149,29 +141,32 @@ def sync_stress(conn, days=14):
     
     cursor = conn.cursor()
     count = 0
-    today = datetime.now()
     
-    for i in range(days):
-        date = (today - timedelta(days=i)).strftime('%Y-%m-%d')
-        try:
-            stress = garth.connectapi(f"/wellness-service/wellness/dailyStress/{date}")
-            
-            if stress:
-                avg_stress = stress.get('avgStressLevel', 0) or 0
-                max_stress = stress.get('maxStressLevel', 0) or 0
+    try:
+        end_date = datetime.now().strftime('%Y-%m-%d')
+        stress_list = DailyStress.list(end_date, days)
+        
+        for stress in stress_list:
+            try:
+                date = stress.calendar_date.strftime('%Y-%m-%d')
+                avg_stress = stress.avg_stress_level or 0
+                max_stress = stress.max_stress_level or 0
                 
                 cursor.execute("""
-                    INSERT INTO stress (date, avg_stress, max_stress, raw_data)
-                    VALUES (%s, %s, %s, %s)
+                    INSERT INTO stress (date, avg_stress, max_stress)
+                    VALUES (%s, %s, %s)
                     ON CONFLICT (date) DO UPDATE SET
-                        avg_stress = EXCLUDED.avg_stress, max_stress = EXCLUDED.max_stress, raw_data = EXCLUDED.raw_data
-                """, (date, avg_stress, max_stress, json.dumps(stress)))
+                        avg_stress = EXCLUDED.avg_stress, max_stress = EXCLUDED.max_stress
+                """, (date, avg_stress, max_stress))
                 
                 count += 1
-        except Exception as e:
-            pass  # Skip days with no data
+            except Exception as e:
+                print(f"  ⚠️ Error processing stress: {e}")
+        
+        conn.commit()
+    except Exception as e:
+        print(f"  ⚠️ Stress error: {e}")
     
-    conn.commit()
     print(f"✅ Synced {count} days of stress data")
     return count
 
@@ -180,7 +175,6 @@ def main():
     print("🏃 Garmin Connect Sync")
     print("=" * 50)
     
-    # Validate environment
     if not OAUTH1_TOKEN or not OAUTH2_TOKEN:
         print("❌ Error: GARMIN_OAUTH1_TOKEN and GARMIN_OAUTH2_TOKEN must be set")
         exit(1)
@@ -190,20 +184,16 @@ def main():
         exit(1)
     
     try:
-        # Setup garth with tokens
         setup_garth()
         
-        # Connect to database
         print("\n📊 Connecting to database...")
         conn = get_db_connection()
         print("✅ Database connected!")
         
-        # Sync all data
         activities = sync_activities(conn)
         sleep = sync_sleep(conn)
         stress = sync_stress(conn)
         
-        # Close connection
         conn.close()
         
         print("\n" + "=" * 50)
