@@ -1,89 +1,106 @@
 #!/usr/bin/env python3
 """
 Garmin Connect Sync Script
-Fetches activities, sleep, stress data and saves to Vercel Postgres
+Uses saved OAuth tokens to fetch activities, sleep, stress data
 """
 
 import os
 import json
 from datetime import datetime, timedelta
-from garminconnect import Garmin
+import garth
+from garth.exc import GarthHTTPError
 import psycopg2
-from psycopg2.extras import execute_values
 
 # Configuration from environment
-GARMIN_EMAIL = os.environ.get('GARMIN_EMAIL')
-GARMIN_PASSWORD = os.environ.get('GARMIN_PASSWORD')
 DATABASE_URL = os.environ.get('DATABASE_URL') or os.environ.get('POSTGRES_URL')
+OAUTH1_TOKEN = os.environ.get('GARMIN_OAUTH1_TOKEN')
+OAUTH2_TOKEN = os.environ.get('GARMIN_OAUTH2_TOKEN')
 
-def get_garmin_client():
-    """Initialize and login to Garmin Connect"""
-    print("🔐 Logging into Garmin Connect...")
-    client = Garmin(GARMIN_EMAIL, GARMIN_PASSWORD)
-    client.login()
-    print("✅ Login successful!")
-    return client
+def setup_garth():
+    """Setup garth with saved tokens"""
+    print("🔐 Loading Garmin tokens...")
+    
+    # Create tokens directory
+    tokens_dir = '/tmp/garth_tokens'
+    os.makedirs(tokens_dir, exist_ok=True)
+    
+    # Write token files
+    with open(os.path.join(tokens_dir, 'oauth1_token.json'), 'w') as f:
+        f.write(OAUTH1_TOKEN)
+    with open(os.path.join(tokens_dir, 'oauth2_token.json'), 'w') as f:
+        f.write(OAUTH2_TOKEN)
+    
+    # Load tokens into garth
+    garth.resume(tokens_dir)
+    
+    # Test connection
+    try:
+        garth.client.username
+        print("✅ Garmin tokens loaded successfully!")
+    except:
+        print("✅ Tokens loaded, testing API...")
 
 def get_db_connection():
     """Get PostgreSQL connection"""
-    # Vercel Postgres URLs start with postgres:// but psycopg2 needs postgresql://
     db_url = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
     return psycopg2.connect(db_url)
 
-def sync_activities(client, conn, days=30):
+def sync_activities(conn, days=30):
     """Sync running activities from Garmin"""
-    print(f"\n🏃 Fetching activities (last {days} days)...")
-    
-    activities = client.get_activities(0, 100)  # Last 100 activities
+    print(f"\n🏃 Fetching activities...")
     
     cursor = conn.cursor()
     count = 0
     
-    for act in activities:
-        if act.get('activityType', {}).get('typeKey') == 'running':
-            try:
-                activity_id = act['activityId']
-                name = act.get('activityName', 'Run')
-                distance = round(act.get('distance', 0) / 1000, 2)
-                duration = int(act.get('duration', 0))
-                
-                # Calculate pace
-                if distance > 0:
-                    pace_sec = duration / distance
-                    pace = f"{int(pace_sec // 60)}:{int(pace_sec % 60):02d}/km"
-                else:
-                    pace = "0:00/km"
-                
-                # Get date
-                start_time = act.get('startTimeLocal', act.get('startTimeGMT', ''))
-                if 'T' in start_time:
-                    date = start_time.split('T')[0]
-                else:
-                    date = start_time.split(' ')[0]
-                
-                calories = int(act.get('calories', 0))
-                elevation = int(act.get('elevationGain', 0))
-                avg_hr = int(act.get('averageHR', 0))
-                max_hr = int(act.get('maxHR', 0))
-                
-                cursor.execute("""
-                    INSERT INTO activities (id, source, name, activity_type, date, distance, duration, pace, calories, elevation, avg_hr, max_hr)
-                    VALUES (%s, 'garmin', %s, 'run', %s, %s, %s, %s, %s, %s, %s, %s)
-                    ON CONFLICT (id) DO UPDATE SET
-                        name = EXCLUDED.name, distance = EXCLUDED.distance, duration = EXCLUDED.duration,
-                        pace = EXCLUDED.pace, calories = EXCLUDED.calories, elevation = EXCLUDED.elevation,
-                        avg_hr = EXCLUDED.avg_hr, max_hr = EXCLUDED.max_hr, updated_at = NOW()
-                """, (activity_id, name, date, distance, duration, pace, calories, elevation, avg_hr, max_hr))
-                
-                count += 1
-            except Exception as e:
-                print(f"  ⚠️ Error processing activity: {e}")
+    try:
+        activities = garth.connectapi(f"/activitylist-service/activities/search/activities", params={"limit": 100})
+        
+        for act in activities:
+            if act.get('activityType', {}).get('typeKey') == 'running':
+                try:
+                    activity_id = act['activityId']
+                    name = act.get('activityName', 'Run')
+                    distance = round(act.get('distance', 0) / 1000, 2)
+                    duration = int(act.get('duration', 0))
+                    
+                    if distance > 0:
+                        pace_sec = duration / distance
+                        pace = f"{int(pace_sec // 60)}:{int(pace_sec % 60):02d}/km"
+                    else:
+                        pace = "0:00/km"
+                    
+                    start_time = act.get('startTimeLocal', act.get('startTimeGMT', ''))
+                    if 'T' in str(start_time):
+                        date = str(start_time).split('T')[0]
+                    else:
+                        date = str(start_time).split(' ')[0]
+                    
+                    calories = int(act.get('calories', 0) or 0)
+                    elevation = int(act.get('elevationGain', 0) or 0)
+                    avg_hr = int(act.get('averageHR', 0) or 0)
+                    max_hr = int(act.get('maxHR', 0) or 0)
+                    
+                    cursor.execute("""
+                        INSERT INTO activities (id, source, name, activity_type, date, distance, duration, pace, calories, elevation, avg_hr, max_hr)
+                        VALUES (%s, 'garmin', %s, 'run', %s, %s, %s, %s, %s, %s, %s, %s)
+                        ON CONFLICT (id) DO UPDATE SET
+                            name = EXCLUDED.name, distance = EXCLUDED.distance, duration = EXCLUDED.duration,
+                            pace = EXCLUDED.pace, calories = EXCLUDED.calories, elevation = EXCLUDED.elevation,
+                            avg_hr = EXCLUDED.avg_hr, max_hr = EXCLUDED.max_hr, updated_at = NOW()
+                    """, (activity_id, name, date, distance, duration, pace, calories, elevation, avg_hr, max_hr))
+                    
+                    count += 1
+                except Exception as e:
+                    print(f"  ⚠️ Error processing activity: {e}")
+        
+        conn.commit()
+    except GarthHTTPError as e:
+        print(f"  ⚠️ API Error: {e}")
     
-    conn.commit()
     print(f"✅ Synced {count} running activities")
     return count
 
-def sync_sleep(client, conn, days=14):
+def sync_sleep(conn, days=14):
     """Sync sleep data from Garmin"""
     print(f"\n😴 Fetching sleep data (last {days} days)...")
     
@@ -94,21 +111,20 @@ def sync_sleep(client, conn, days=14):
     for i in range(days):
         date = (today - timedelta(days=i)).strftime('%Y-%m-%d')
         try:
-            sleep = client.get_sleep_data(date)
+            sleep = garth.connectapi(f"/wellness-service/wellness/dailySleepData/{date}")
             
             if sleep and 'dailySleepDTO' in sleep:
                 s = sleep['dailySleepDTO']
                 
-                total_sleep = s.get('sleepTimeSeconds', 0)
-                deep_sleep = s.get('deepSleepSeconds', 0)
-                light_sleep = s.get('lightSleepSeconds', 0)
-                rem_sleep = s.get('remSleepSeconds', 0)
-                awake = s.get('awakeSleepSeconds', 0)
+                total_sleep = s.get('sleepTimeSeconds', 0) or 0
+                deep_sleep = s.get('deepSleepSeconds', 0) or 0
+                light_sleep = s.get('lightSleepSeconds', 0) or 0
+                rem_sleep = s.get('remSleepSeconds', 0) or 0
+                awake = s.get('awakeSleepSeconds', 0) or 0
                 
-                # Get sleep score
                 score = 0
                 if 'sleepScores' in s and s['sleepScores']:
-                    score = s['sleepScores'].get('overall', {}).get('value', 0) or 0
+                    score = (s['sleepScores'].get('overall', {}) or {}).get('value', 0) or 0
                 
                 cursor.execute("""
                     INSERT INTO sleep (date, total_sleep, deep_sleep, light_sleep, rem_sleep, awake, score, raw_data)
@@ -127,7 +143,7 @@ def sync_sleep(client, conn, days=14):
     print(f"✅ Synced {count} days of sleep data")
     return count
 
-def sync_stress(client, conn, days=14):
+def sync_stress(conn, days=14):
     """Sync stress data from Garmin"""
     print(f"\n😰 Fetching stress data (last {days} days)...")
     
@@ -138,7 +154,7 @@ def sync_stress(client, conn, days=14):
     for i in range(days):
         date = (today - timedelta(days=i)).strftime('%Y-%m-%d')
         try:
-            stress = client.get_stress_data(date)
+            stress = garth.connectapi(f"/wellness-service/wellness/dailyStress/{date}")
             
             if stress:
                 avg_stress = stress.get('avgStressLevel', 0) or 0
@@ -165,8 +181,8 @@ def main():
     print("=" * 50)
     
     # Validate environment
-    if not GARMIN_EMAIL or not GARMIN_PASSWORD:
-        print("❌ Error: GARMIN_EMAIL and GARMIN_PASSWORD must be set")
+    if not OAUTH1_TOKEN or not OAUTH2_TOKEN:
+        print("❌ Error: GARMIN_OAUTH1_TOKEN and GARMIN_OAUTH2_TOKEN must be set")
         exit(1)
     
     if not DATABASE_URL:
@@ -174,8 +190,8 @@ def main():
         exit(1)
     
     try:
-        # Connect to Garmin
-        client = get_garmin_client()
+        # Setup garth with tokens
+        setup_garth()
         
         # Connect to database
         print("\n📊 Connecting to database...")
@@ -183,9 +199,9 @@ def main():
         print("✅ Database connected!")
         
         # Sync all data
-        activities = sync_activities(client, conn)
-        sleep = sync_sleep(client, conn)
-        stress = sync_stress(client, conn)
+        activities = sync_activities(conn)
+        sleep = sync_sleep(conn)
+        stress = sync_stress(conn)
         
         # Close connection
         conn.close()
@@ -199,6 +215,8 @@ def main():
         
     except Exception as e:
         print(f"\n❌ Error: {e}")
+        import traceback
+        traceback.print_exc()
         exit(1)
 
 if __name__ == "__main__":
