@@ -1,5 +1,5 @@
 const { sql } = require('@vercel/postgres');
-const GarminConnect = require('garmin-connect').default;
+const { GarminConnect } = require('garmin-connect');
 
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
