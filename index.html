@@ -710,6 +710,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
         showToast('🔄 Connecting to Strava...', 'info');
 
         try {
+            // Get fresh access token
             const tokenRes = await fetch(CONFIG.STRAVA.AUTH_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -725,23 +726,39 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
             const tokenData = await tokenRes.json();
             if (!tokenData.access_token) throw new Error('No access token');
 
-            showToast('📥 Fetching activities...', 'info');
-
-            const activitiesRes = await fetch(CONFIG.STRAVA.API_URL + '/athlete/activities?per_page=50', {
-                headers: { 'Authorization': 'Bearer ' + tokenData.access_token }
-            });
+            // Fetch ALL activities with pagination
+            let allActivities = [];
+            let page = 1;
+            const perPage = 200; // Max allowed by Strava
             
-            if (!activitiesRes.ok) throw new Error('Failed to fetch activities');
-            const activities = await activitiesRes.json();
-            if (!Array.isArray(activities)) throw new Error('Invalid response');
+            showToast('📥 Fetching all activities...', 'info');
 
-            const januaryRuns = activities.filter(a => {
-                if (a.type !== 'Run') return false;
-                const date = new Date(a.start_date_local);
-                return date.getFullYear() === 2026 && date.getMonth() === 0;
-            });
+            while (true) {
+                const activitiesRes = await fetch(
+                    CONFIG.STRAVA.API_URL + '/athlete/activities?per_page=' + perPage + '&page=' + page, 
+                    { headers: { 'Authorization': 'Bearer ' + tokenData.access_token } }
+                );
+                
+                if (!activitiesRes.ok) throw new Error('Failed to fetch page ' + page);
+                const activities = await activitiesRes.json();
+                
+                if (!Array.isArray(activities) || activities.length === 0) break;
+                
+                allActivities = allActivities.concat(activities);
+                showToast('📥 Loaded ' + allActivities.length + ' activities...', 'info');
+                
+                if (activities.length < perPage) break; // Last page
+                page++;
+                
+                // Small delay to avoid rate limiting
+                await new Promise(r => setTimeout(r, 100));
+            }
 
-            const newRoutes = januaryRuns.map(a => {
+            // Filter only runs
+            const allRuns = allActivities.filter(a => a.type === 'Run');
+
+            // Transform to our format
+            const newRoutes = allRuns.map(a => {
                 const date = new Date(a.start_date_local);
                 const dateStr = date.toISOString().split('T')[0];
                 const paceSeconds = a.moving_time / (a.distance / 1000);
@@ -755,16 +772,22 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
                     id: a.id,
                     name: a.name,
                     date: dateStr,
+                    year: date.getFullYear(),
+                    month: date.getMonth(),
                     distance: parseFloat((a.distance / 1000).toFixed(2)),
                     pace: paceMin + ':' + paceSec.toString().padStart(2,'0') + '/km',
                     time: timeStr,
-                    hr: a.average_heartrate || 140,
-                    maxHr: a.max_heartrate || 165,
+                    movingTime: a.moving_time,
+                    hr: a.average_heartrate || 0,
+                    maxHr: a.max_heartrate || 0,
                     elevation: Math.round(a.total_elevation_gain),
                     calories: Math.round(a.kilojoules || a.moving_time * 0.2),
                     coords: a.map && a.map.summary_polyline ? decodePolyline(a.map.summary_polyline) : []
                 };
             });
+
+            // Sort by date (newest first)
+            newRoutes.sort((a, b) => new Date(b.date) - new Date(a.date));
 
             if (newRoutes.length > 0) {
                 if (mapInitialized && map) clearMapRoutes();
@@ -774,9 +797,15 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
                 if (mapInitialized && map) { addRoutesToMap(); renderRoutesList(); }
                 updateTargets();
                 renderCalendar();
+                
+                // Show summary by year
+                const byYear = {};
+                newRoutes.forEach(r => { byYear[r.year] = (byYear[r.year] || 0) + 1; });
+                const yearSummary = Object.entries(byYear).sort((a,b) => b[0]-a[0]).map(([y,c]) => y + ': ' + c).join(', ');
+                console.log('Runs by year:', yearSummary);
             }
 
-            showToast('✅ Synced ' + newRoutes.length + ' runs from Strava!', 'success');
+            showToast('✅ Synced ' + newRoutes.length + ' runs from all time!', 'success');
 
         } catch (e) {
             console.error('Strava sync error:', e);
