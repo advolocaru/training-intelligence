@@ -1,0 +1,12 @@
+{
+  "buildCommand": "npm install",
+  "installCommand": "npm install",
+  "framework": null,
+  "outputDirectory": null,
+  "functions": {
+    "api/**/*.js": {
+      "memory": 1024,
+      "maxDuration": 60
+    }
+  }
+}
