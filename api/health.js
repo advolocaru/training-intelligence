@@ -23,6 +23,12 @@ module.exports = async function handler(req, res) {
       FROM stress ORDER BY date DESC LIMIT ${days}
     `;
 
+    // Get steps data
+    const stepsResult = await sql`
+      SELECT date, total_steps, total_distance, step_goal
+      FROM steps ORDER BY date DESC LIMIT ${days}
+    `;
+
     // Format sleep data (convert seconds to hours)
     const sleep = sleepResult.rows.map(r => ({
       date: r.date,
@@ -33,10 +39,19 @@ module.exports = async function handler(req, res) {
       score: r.score
     }));
 
+    // Format steps data (distance in km)
+    const steps = stepsResult.rows.map(r => ({
+      date: r.date,
+      steps: r.total_steps,
+      distanceKm: (r.total_distance / 1000).toFixed(1),
+      goal: r.step_goal
+    }));
+
     return res.status(200).json({ 
       success: true,
       sleep: sleep,
-      stress: stressResult.rows
+      stress: stressResult.rows,
+      steps: steps
     });
 
   } catch (error) {
