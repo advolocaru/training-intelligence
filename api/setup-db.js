@@ -1,13 +1,11 @@
-import { sql } from '@vercel/postgres';
+const { sql } = require('@vercel/postgres');
 
-export default async function handler(req, res) {
-  // Only allow POST with a secret key for security
+module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ error: 'Method not allowed. Use POST.' });
   }
 
   try {
-    // Create activities table
     await sql`
       CREATE TABLE IF NOT EXISTS activities (
         id BIGINT PRIMARY KEY,
@@ -29,7 +27,6 @@ export default async function handler(req, res) {
       )
     `;
 
-    // Create sleep table
     await sql`
       CREATE TABLE IF NOT EXISTS sleep (
         id SERIAL PRIMARY KEY,
@@ -45,49 +42,28 @@ export default async function handler(req, res) {
       )
     `;
 
-    // Create stress table
     await sql`
       CREATE TABLE IF NOT EXISTS stress (
         id SERIAL PRIMARY KEY,
         date DATE UNIQUE NOT NULL,
         avg_stress INTEGER,
         max_stress INTEGER,
-        rest_stress INTEGER,
-        activity_stress INTEGER,
         raw_data JSONB,
         created_at TIMESTAMP DEFAULT NOW()
       )
     `;
 
-    // Create daily_stats table (body battery, HRV, etc)
-    await sql`
-      CREATE TABLE IF NOT EXISTS daily_stats (
-        id SERIAL PRIMARY KEY,
-        date DATE UNIQUE NOT NULL,
-        body_battery_high INTEGER,
-        body_battery_low INTEGER,
-        resting_hr INTEGER,
-        hrv INTEGER,
-        steps INTEGER,
-        floors INTEGER,
-        intensity_minutes INTEGER,
-        raw_data JSONB,
-        created_at TIMESTAMP DEFAULT NOW()
-      )
-    `;
-
-    // Create index for faster queries
     await sql`CREATE INDEX IF NOT EXISTS idx_activities_date ON activities(date DESC)`;
     await sql`CREATE INDEX IF NOT EXISTS idx_activities_source ON activities(source)`;
 
     return res.status(200).json({ 
       success: true, 
-      message: 'Database tables created successfully',
-      tables: ['activities', 'sleep', 'stress', 'daily_stats']
+      message: 'Database tables created',
+      tables: ['activities', 'sleep', 'stress']
     });
 
   } catch (error) {
-    console.error('Database setup error:', error);
+    console.error('Setup error:', error);
     return res.status(500).json({ error: error.message });
   }
-}
+};
