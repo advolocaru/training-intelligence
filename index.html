@@ -488,6 +488,249 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
             </button>
         </div>
     </div>
+<script>
+(function() {
+    'use strict';
+    
+    // ============== CONFIGURATION ==============
+    const CONFIG = {
+        MAPBOX_TOKEN: 'pk.eyJ1IjoiYWR2b2xvY2FydSIsImEiOiJjbWtyZWs3czcweGIxM2JyMnVqeHBuZTVvIn0.w4FHperuYk67Lr0XW0tR2w',
+        STRAVA: {
+            CLIENT_ID: '197637',
+            CLIENT_SECRET: 'e13dad1ca9458e4c347e0c7def6892c263100224',
+            REFRESH_TOKEN: '10f41798aba4059d9820c79b6d1271ee8dd78971',
+            API_URL: 'https://www.strava.com/api/v3',
+            AUTH_URL: 'https://www.strava.com/oauth/token'
+        },
+        GROQ: {
+            API_KEY: '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',
+            API_URL: 'https://api.groq.com/openai/v1/chat/completions',
+            MODEL: 'llama-3.3-70b-versatile'
+        },
+        MAP: {
+            CENTER: [26.1, 44.41],
+            ZOOM: 12,
+            STYLES: { dark: 'mapbox://styles/mapbox/dark-v11', light: 'mapbox://styles/mapbox/light-v11' }
+        },
+        ROUTE_COLORS: ['#8b5cf6','#22c55e','#3b82f6','#eab308','#ef4444','#ec4899','#06b6d4','#f97316','#84cc16','#6366f1','#14b8a6'],
+        TARGETS: { runs: 15, distance: 150, elevation: 500 }
+    };
+
+    // ============== DATA ==============
+    let ROUTES = [
+        {id:17219006300,name:"Evening Run",date:"2026-01-29",distance:8.82,pace:"5:27/km",time:"48:11",hr:135,maxHr:153,elevation:55,calories:690,coords:[[26.10832,44.40537],[26.10909,44.4067],[26.11058,44.40873],[26.10937,44.40863],[26.10716,44.40763],[26.10787,44.4067],[26.1066,44.40554],[26.10594,44.40467],[26.1025,44.40561],[26.1022,44.40679],[26.10061,44.4066],[26.10201,44.40488],[26.1033,44.40347],[26.10786,44.40406],[26.10821,44.40622],[26.11064,44.40849],[26.10961,44.40869],[26.10728,44.40807],[26.10789,44.40673],[26.10647,44.40567]]},
+        {id:17195617384,name:"Evening Run",date:"2026-01-27",distance:9.48,pace:"5:33/km",time:"52:41",hr:143,maxHr:159,elevation:22,calories:779,coords:[[26.10823,44.40551],[26.10857,44.4065],[26.11062,44.40869],[26.10914,44.40874],[26.10719,44.40763],[26.10738,44.40636],[26.10693,44.40529],[26.10318,44.40525],[26.1024,44.40657],[26.10075,44.40673],[26.10205,44.40486],[26.10417,44.40324],[26.10818,44.40441],[26.10883,44.40661],[26.11054,44.40883],[26.10759,44.40826],[26.10739,44.4071],[26.10658,44.40584],[26.10685,44.40513]]},
+        {id:17174655909,name:"Threshold Run",date:"2026-01-25",distance:11.82,pace:"4:22/km",time:"51:46",hr:172,maxHr:185,elevation:25,calories:959,coords:[[26.10162,44.40697],[26.101,44.40595],[26.10388,44.40326],[26.10823,44.40451],[26.11033,44.40778],[26.11001,44.4089],[26.10727,44.40806],[26.10786,44.40662],[26.10686,44.40545],[26.10314,44.4053],[26.10223,44.40677],[26.10063,44.40629],[26.10288,44.40367],[26.10809,44.40428],[26.10937,44.4069],[26.11013,44.40894],[26.10719,44.40784]]},
+        {id:17140727693,name:"Evening Run",date:"2026-01-22",distance:7.96,pace:"5:20/km",time:"42:35",hr:142,maxHr:159,elevation:27,calories:643,coords:[[26.10841,44.40334],[26.10522,44.40253],[26.10255,44.40321],[26.10163,44.40444],[26.09988,44.40635],[26.0995,44.40774],[26.10129,44.40787],[26.10245,44.40665],[26.10075,44.40676],[26.10157,44.40563],[26.1026,44.40389],[26.10629,44.40342],[26.10825,44.40479],[26.1091,44.40669],[26.11064,44.4085]]},
+        {id:17084185616,name:"Long Run",date:"2026-01-17",distance:17.45,pace:"5:11/km",time:"1:30:32",hr:146,maxHr:178,elevation:81,calories:1384,coords:[[26.1083,44.40538],[26.11063,44.40868],[26.10725,44.40803],[26.10673,44.40598],[26.10516,44.40466],[26.10194,44.40691],[26.1025,44.40405],[26.10816,44.40435],[26.11053,44.4081],[26.10885,44.4091],[26.10488,44.41189],[26.10054,44.4112],[26.09787,44.41048],[26.09672,44.41191],[26.09547,44.41751]]},
+        {id:17037337755,name:"Evening Run",date:"2026-01-13",distance:13.38,pace:"5:51/km",time:"1:18:25",hr:141,maxHr:158,elevation:34,calories:1114,coords:[[26.10767,44.4066],[26.10654,44.40554],[26.10418,44.4048],[26.1023,44.40672],[26.1008,44.40608],[26.10299,44.4036],[26.10824,44.40449],[26.11046,44.40799],[26.109,44.40877],[26.10777,44.40687],[26.10657,44.40551],[26.10409,44.40483],[26.10224,44.40675]]},
+        {id:17013461474,name:"Afternoon Run",date:"2026-01-11",distance:12.9,pace:"5:17/km",time:"1:08:15",hr:145,maxHr:164,elevation:44,calories:1050,coords:[[26.12494,44.40965],[26.12281,44.40906],[26.12107,44.40755],[26.12027,44.40785],[26.1177,44.40737],[26.11607,44.40517],[26.11421,44.40429],[26.11629,44.40482],[26.11415,44.40454],[26.11312,44.40323],[26.1105,44.40347],[26.10844,44.40337]]},
+        {id:16980684622,name:"Afternoon Run",date:"2026-01-08",distance:10.32,pace:"5:27/km",time:"56:14",hr:148,maxHr:180,elevation:37,calories:859,coords:[[26.10829,44.40548],[26.10854,44.40646],[26.11061,44.40865],[26.10936,44.40866],[26.10732,44.4081],[26.10779,44.40687],[26.10664,44.40595],[26.10689,44.40544],[26.1055,44.40466],[26.1026,44.40556],[26.10235,44.40667]]},
+        {id:16958177669,name:"Afternoon Run",date:"2026-01-06",distance:9.05,pace:"4:55/km",time:"44:31",hr:152,maxHr:175,elevation:24,calories:716,coords:[[26.10891,44.40873],[26.10718,44.40793],[26.10788,44.40666],[26.10645,44.40559],[26.10577,44.40467],[26.10232,44.4059],[26.10134,44.407],[26.10072,44.40617],[26.10285,44.40368],[26.10626,44.40339]]},
+        {id:16935502803,name:"Afternoon Run",date:"2026-01-04",distance:11.27,pace:"5:20/km",time:"1:00:09",hr:151,maxHr:160,elevation:42,calories:939,coords:[[26.10827,44.40552],[26.11018,44.40761],[26.10965,44.40872],[26.10716,44.40749],[26.10772,44.4065],[26.10691,44.40525],[26.10254,44.40562],[26.10117,44.40703],[26.10164,44.40537],[26.10422,44.40318]]},
+        {id:16903538401,name:"New Year Run",date:"2026-01-01",distance:7.2,pace:"4:31/km",time:"32:36",hr:153,maxHr:178,elevation:26,calories:542,coords:[[26.10828,44.4054],[26.10822,44.40617],[26.10961,44.407],[26.11067,44.40834],[26.10982,44.40884],[26.1082,44.40844],[26.1071,44.40752],[26.10785,44.40674],[26.10645,44.40579],[26.10694,44.40537]]}
+    ];
+
+    // ============== STATE ==============
+    let state = {
+        map: null,
+        mapStyle: 'dark',
+        mapInitialized: false,
+        isTyping: false,
+        currentPage: 'dashboard'
+    };
+
+    // ============== DOM CACHE ==============
+    const $ = (id) => document.getElementById(id);
+    const $$ = (sel) => document.querySelectorAll(sel);
+
+    // ============== UTILITIES ==============
+    function calcStats() {
+        const totalDistance = ROUTES.reduce((sum, r) => sum + r.distance, 0);
+        const totalElevation = ROUTES.reduce((sum, r) => sum + r.elevation, 0);
+        let totalSeconds = 0;
+        ROUTES.forEach(r => {
+            const parts = r.time.split(':').map(Number);
+            totalSeconds += parts.length === 3 ? parts[0]*3600 + parts[1]*60 + parts[2] : parts[0]*60 + parts[1];
+        });
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        return {
+            runs: ROUTES.length,
+            distance: totalDistance.toFixed(1),
+            elevation: totalElevation,
+            time: `${hours}:${minutes.toString().padStart(2, '0')}`
+        };
+    }
+
+    function formatDate(dateStr) {
+        return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+
+    function showToast(message, type = 'info') {
+        const container = $('toast-container');
+        if (!container) return;
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        toast.setAttribute('role', 'alert');
+        container.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(100%)';
+            setTimeout(() => toast.remove(), 300);
+        }, 4000);
+    }
+
+    function safeSetText(id, text) {
+        const el = $(id);
+        if (el) el.textContent = text;
+    }
+
+    function safeSetHTML(id, html) {
+        const el = $(id);
+        if (el) el.innerHTML = html;
+    }
+
+    // ============== STRAVA SYNC ==============
+    async function syncStrava() {
+        const btn = $('sync-btn');
+        if (!btn || btn.classList.contains('syncing')) return;
+
+        btn.classList.add('syncing');
+        const span = btn.querySelector('span');
+        if (span) span.textContent = 'Syncing...';
+        showToast('Connecting to Strava...');
+
+        try {
+            // Step 1: Get fresh access token
+            const tokenRes = await fetch(CONFIG.STRAVA.AUTH_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({
+                    client_id: CONFIG.STRAVA.CLIENT_ID,
+                    client_secret: CONFIG.STRAVA.CLIENT_SECRET,
+                    refresh_token: CONFIG.STRAVA.REFRESH_TOKEN,
+                    grant_type: 'refresh_token'
+                })
+            });
+            
+            if (!tokenRes.ok) throw new Error('Token refresh failed');
+            const tokenData = await tokenRes.json();
+            if (!tokenData.access_token) throw new Error('No access token received');
+
+            showToast('Fetching activities...');
+
+            // Step 2: Fetch activities
+            const activitiesRes = await fetch(`${CONFIG.STRAVA.API_URL}/athlete/activities?per_page=50`, {
+                headers: { 'Authorization': `Bearer ${tokenData.access_token}` }
+            });
+            
+            if (!activitiesRes.ok) throw new Error('Failed to fetch activities');
+            const activities = await activitiesRes.json();
+            
+            if (!Array.isArray(activities)) throw new Error('Invalid response from Strava');
+
+            // Step 3: Filter runs from January 2026
+            const januaryRuns = activities.filter(a => {
+                if (a.type !== 'Run') return false;
+                const date = new Date(a.start_date_local);
+                return date.getFullYear() === 2026 && date.getMonth() === 0;
+            });
+
+            // Step 4: Transform to our format
+            const newRoutes = januaryRuns.map(a => {
+                const date = new Date(a.start_date_local);
+                const dateStr = date.toISOString().split('T')[0];
+                const paceSeconds = a.moving_time / (a.distance / 1000);
+                const paceMin = Math.floor(paceSeconds / 60);
+                const paceSec = Math.round(paceSeconds % 60);
+                const hours = Math.floor(a.moving_time / 3600);
+                const mins = Math.floor((a.moving_time % 3600) / 60);
+                const secs = a.moving_time % 60;
+                const timeStr = hours > 0 
+                    ? `${hours}:${mins.toString().padStart(2,'0')}:${secs.toString().padStart(2,'0')}`
+                    : `${mins}:${secs.toString().padStart(2,'0')}`;
+
+                return {
+                    id: a.id,
+                    name: a.name,
+                    date: dateStr,
+                    distance: parseFloat((a.distance / 1000).toFixed(2)),
+                    pace: `${paceMin}:${paceSec.toString().padStart(2,'0')}/km`,
+                    time: timeStr,
+                    hr: a.average_heartrate || 140,
+                    maxHr: a.max_heartrate || 165,
+                    elevation: Math.round(a.total_elevation_gain),
+                    calories: Math.round(a.kilojoules || a.moving_time * 0.2),
+                    coords: a.map?.summary_polyline ? decodePolyline(a.map.summary_polyline) : []
+                };
+            });
+
+            // Step 5: Update ROUTES array
+            if (newRoutes.length > 0) {
+                ROUTES.length = 0; // Clear existing
+                ROUTES.push(...newRoutes);
+                
+                // Refresh UI
+                updateDashboard();
+                if (state.currentPage === 'maps' && state.mapInitialized) {
+                    // Remove old layers and sources
+                    ROUTES.forEach(r => {
+                        const layerId = `layer-${r.id}`;
+                        const sourceId = `route-${r.id}`;
+                        if (state.map.getLayer(layerId)) state.map.removeLayer(layerId);
+                        if (state.map.getSource(sourceId)) state.map.removeSource(sourceId);
+                    });
+                    addRoutesToMap();
+                    renderRoutesList();
+                }
+                if (state.currentPage === 'predictions') {
+                    updateTargets();
+                    renderCalendar();
+                }
+            }
+
+            showToast(`✅ Synced ${newRoutes.length} runs from Strava!`, 'success');
+
+        } catch (e) {
+            console.error('Strava sync error:', e);
+            showToast(`❌ Sync failed: ${e.message}`, 'error');
+        } finally {
+            btn.classList.remove('syncing');
+            const span = btn.querySelector('span');
+            if (span) span.textContent = 'Sync Strava';
+        }
+    }
+
+    // Decode Google polyline to coordinates
+    function decodePolyline(encoded) {
+        const coords = [];
+        let index = 0, lat = 0, lng = 0;
+        
+        while (index < encoded.length) {
+            let b, shift = 0, result = 0;
+            do {
+                b = encoded.charCodeAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            lat += (result & 1) ? ~(result >> 1) : (result >> 1);
+            
+            shift = 0;
+            result = 0;
+            do {
+                b = encoded.charCodeAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            lng += (result & 1) ? ~(result >> 1) : (result >> 1);
+            
+            coords.push([lng / 1e5, lat / 1e5]);
+        }
+        return coords;
+    }
+
     // ============== NAVIGATION ==============
     function navigateTo(page) {
         state.currentPage = page;
