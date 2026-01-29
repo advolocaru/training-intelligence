@@ -207,16 +207,17 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 </div>
 
 <script>
+const CONFIG = {
+    MAPBOX_TOKEN: 'pk.eyJ1Ijoidm9sb2NhcnUiLCJhIjoiY201OWZ0b2NjMGd3dDJscTNveGF6YWd1cCJ9.ELUlmjALZSBNFsTqLdBxqA',
+    ROUTE_COLORS: ['#8b5cf6','#22c55e','#3b82f6','#f59e0b','#ef4444','#ec4899','#14b8a6','#f97316']
+};
+
+window.ROUTES = [];
+let HEALTH = { sleep: [], stress: [], steps: [] };
+let map = null, mapInitialized = false;
+let sleepChart = null, stressChart = null, stepsChart = null;
+
 (function() {
-    const CONFIG = {
-        MAPBOX_TOKEN: 'pk.eyJ1Ijoidm9sb2NhcnUiLCJhIjoiY201OWZ0b2NjMGd3dDJscTNveGF6YWd1cCJ9.ELUlmjALZSBNFsTqLdBxqA',
-        ROUTE_COLORS: ['#8b5cf6','#22c55e','#3b82f6','#f59e0b','#ef4444','#ec4899','#14b8a6','#f97316']
-    };
-    
-    let ROUTES = [];
-    let HEALTH = { sleep: [], stress: [], steps: [] };
-    let map = null, mapInitialized = false;
-    let sleepChart = null, stressChart = null, stepsChart = null;
     
     const $ = id => document.getElementById(id);
     const $$ = sel => document.querySelectorAll(sel);
@@ -244,7 +245,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
             const res = await fetch('/api/activities');
             const data = await res.json();
             if (data.success && data.activities) {
-                ROUTES = data.activities.map(a => {
+                window.ROUTES = data.activities.map(a => {
                     // Parse coords - could be encoded polyline string or JSON array
                     let coords = [];
                     if (a.coords) {
@@ -305,23 +306,38 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
     }
     
     function updateDashboard() {
-        if (!ROUTES.length) return;
+        if (!window.ROUTES.length) return;
         
-        const totalDistance = ROUTES.reduce((a, r) => a + (r.distance || 0), 0);
-        const totalElevation = ROUTES.reduce((a, r) => a + (r.elevation || 0), 0);
-        const totalSeconds = ROUTES.reduce((a, r) => a + (r.duration || 0), 0);
-        const hours = Math.floor(totalSeconds / 3600);
-        const mins = Math.floor((totalSeconds % 3600) / 60);
+        // Current month stats
+        const now = new Date();
+        const currentMonth = now.getMonth();
+        const currentYear = now.getFullYear();
         
-        $('stat-runs').textContent = ROUTES.length;
-        $('stat-distance').innerHTML = totalDistance.toFixed(0) + '<span>km</span>';
+        const monthRuns = window.ROUTES.filter(r => {
+            const d = new Date(r.date);
+            return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+        });
+        
+        const monthDistance = monthRuns.reduce((a, r) => a + (r.distance || 0), 0);
+        const monthElevation = monthRuns.reduce((a, r) => a + (r.elevation || 0), 0);
+        const monthSeconds = monthRuns.reduce((a, r) => a + (r.duration || 0), 0);
+        const hours = Math.floor(monthSeconds / 3600);
+        const mins = Math.floor((monthSeconds % 3600) / 60);
+        
+        $('stat-runs').textContent = monthRuns.length;
+        $('stat-distance').innerHTML = monthDistance.toFixed(1) + '<span>km</span>';
         $('stat-time').innerHTML = hours + ':' + mins.toString().padStart(2, '0') + '<span>hrs</span>';
-        $('stat-elevation').innerHTML = totalElevation.toLocaleString() + '<span>m</span>';
+        $('stat-elevation').innerHTML = monthElevation.toLocaleString() + '<span>m</span>';
+        
+        // Update subtitle
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        const subtitle = document.querySelector('.section-subtitle');
+        if (subtitle) subtitle.textContent = monthNames[currentMonth] + ' ' + currentYear + ' • ' + window.ROUTES.length + ' total runs';
     }
     
     function renderActivityList() {
         const list = $('activity-list');
-        if (!list || !ROUTES.length) {
+        if (!list || !window.ROUTES.length) {
             if (list) list.innerHTML = '<div class="loading">No activities found</div>';
             return;
         }
@@ -334,7 +350,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
             return h > 0 ? `${h}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}` : `${m}:${s.toString().padStart(2,'0')}`;
         };
         
-        list.innerHTML = ROUTES.slice(0, 20).map(r => `
+        list.innerHTML = window.ROUTES.slice(0, 20).map(r => `
             <div class="activity-item" data-id="${r.id}">
                 <div class="activity-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
                 <div class="activity-info">
@@ -474,9 +490,9 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
     }
     
     function addRoutesToMap() {
-        if (!map || !ROUTES.length) return;
+        if (!map || !window.ROUTES.length) return;
         
-        const routesWithCoords = ROUTES.filter(r => r.coords && r.coords.length > 2);
+        const routesWithCoords = window.ROUTES.filter(r => r.coords && r.coords.length > 2);
         $('routes-count').textContent = routesWithCoords.length;
         
         routesWithCoords.forEach((r, i) => {
@@ -507,7 +523,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
         const list = $('routes-list');
         if (!list) return;
         
-        const routesWithCoords = ROUTES.filter(r => r.coords && r.coords.length > 2);
+        const routesWithCoords = window.ROUTES.filter(r => r.coords && r.coords.length > 2);
         list.innerHTML = routesWithCoords.slice(0, 50).map(r => `
             <div class="route-item" data-id="${r.id}">
                 <div class="route-item-name">${r.name || 'Run'}</div>
