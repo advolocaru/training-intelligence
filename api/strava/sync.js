@@ -47,18 +47,22 @@ module.exports = async function handler(req, res) {
     let count = 0;
     for (const act of allActivities) {
       if (act.type === 'Run') {
-        const distance = (act.distance / 1000).toFixed(2);
-        const duration = act.moving_time;
+        const distance = parseFloat((act.distance / 1000).toFixed(2));
+        const duration = Math.round(act.moving_time);
         const paceSeconds = act.moving_time / (act.distance / 1000);
         const paceMin = Math.floor(paceSeconds / 60);
         const paceSec = Math.round(paceSeconds % 60);
         const pace = paceMin + ':' + paceSec.toString().padStart(2, '0') + '/km';
         const date = act.start_date_local.split('T')[0];
-        const coords = act.map && act.map.summary_polyline ? act.map.summary_polyline : '';
+        const coords = (act.map && act.map.summary_polyline) ? act.map.summary_polyline : '';
+        const calories = Math.round(act.kilojoules || 0);
+        const elevation = Math.round(act.total_elevation_gain || 0);
+        const avgHr = Math.round(act.average_heartrate || 0);
+        const maxHr = Math.round(act.max_heartrate || 0);
 
         await sql`
           INSERT INTO activities (id, source, name, activity_type, date, distance, duration, pace, calories, elevation, avg_hr, max_hr, coords)
-          VALUES (${act.id}, 'strava', ${act.name}, 'run', ${date}, ${distance}, ${duration}, ${pace}, ${Math.round(act.kilojoules || 0)}, ${Math.round(act.total_elevation_gain || 0)}, ${act.average_heartrate || 0}, ${act.max_heartrate || 0}, ${coords})
+          VALUES (${act.id}, 'strava', ${act.name}, 'run', ${date}, ${distance}, ${duration}, ${pace}, ${calories}, ${elevation}, ${avgHr}, ${maxHr}, ${coords})
           ON CONFLICT (id) DO UPDATE SET
             name = EXCLUDED.name, distance = EXCLUDED.distance, duration = EXCLUDED.duration,
             pace = EXCLUDED.pace, calories = EXCLUDED.calories, elevation = EXCLUDED.elevation,
