@@ -1,6 +1,6 @@
-import { sql } from '@vercel/postgres';
+const { sql } = require('@vercel/postgres');
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
   
@@ -23,7 +23,7 @@ export default async function handler(req, res) {
       FROM stress ORDER BY date DESC LIMIT ${days}
     `;
 
-    // Format sleep data
+    // Format sleep data (convert seconds to hours)
     const sleep = sleepResult.rows.map(r => ({
       date: r.date,
       totalHours: (r.total_sleep / 3600).toFixed(1),
@@ -35,7 +35,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json({ 
       success: true,
-      sleep,
+      sleep: sleep,
       stress: stressResult.rows
     });
 
@@ -43,4 +43,4 @@ export default async function handler(req, res) {
     console.error('Error fetching health data:', error);
     return res.status(500).json({ error: error.message });
   }
-}
+};
