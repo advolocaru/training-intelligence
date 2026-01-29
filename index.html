@@ -221,25 +221,65 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
     const $ = id => document.getElementById(id);
     const $$ = sel => document.querySelectorAll(sel);
     
+    // Decode polyline string to coordinates array
+    function decodePolyline(encoded) {
+        if (!encoded || typeof encoded !== 'string') return [];
+        const coords = [];
+        let index = 0, lat = 0, lng = 0;
+        while (index < encoded.length) {
+            let b, shift = 0, result = 0;
+            do { b = encoded.charCodeAt(index++) - 63; result |= (b & 0x1f) << shift; shift += 5; } while (b >= 0x20);
+            lat += (result & 1) ? ~(result >> 1) : (result >> 1);
+            shift = 0; result = 0;
+            do { b = encoded.charCodeAt(index++) - 63; result |= (b & 0x1f) << shift; shift += 5; } while (b >= 0x20);
+            lng += (result & 1) ? ~(result >> 1) : (result >> 1);
+            coords.push([lng / 1e5, lat / 1e5]);
+        }
+        return coords;
+    }
+    
     // Load activities from API
     async function loadActivities() {
         try {
             const res = await fetch('/api/activities');
             const data = await res.json();
             if (data.success && data.activities) {
-                ROUTES = data.activities.map(a => ({
-                    id: a.id,
-                    name: a.name,
-                    date: a.date,
-                    distance: parseFloat(a.distance),
-                    pace: a.pace,
-                    duration: a.duration,
-                    hr: a.avg_hr,
-                    maxHr: a.max_hr,
-                    elevation: a.elevation,
-                    calories: a.calories,
-                    coords: a.coords ? (typeof a.coords === 'string' ? JSON.parse(a.coords) : a.coords) : []
-                }));
+                ROUTES = data.activities.map(a => {
+                    // Parse coords - could be encoded polyline string or JSON array
+                    let coords = [];
+                    if (a.coords) {
+                        if (typeof a.coords === 'string') {
+                            // Check if it's JSON array or polyline
+                            if (a.coords.startsWith('[')) {
+                                try { coords = JSON.parse(a.coords); } catch(e) {}
+                            } else {
+                                coords = decodePolyline(a.coords);
+                            }
+                        } else if (Array.isArray(a.coords)) {
+                            coords = a.coords;
+                        }
+                    }
+                    
+                    // Format date
+                    let dateStr = a.date;
+                    if (dateStr && dateStr.includes('T')) {
+                        dateStr = dateStr.split('T')[0];
+                    }
+                    
+                    return {
+                        id: a.id,
+                        name: a.name,
+                        date: dateStr,
+                        distance: parseFloat(a.distance) || 0,
+                        pace: a.pace,
+                        duration: parseInt(a.duration) || 0,
+                        hr: a.avg_hr,
+                        maxHr: a.max_hr,
+                        elevation: parseInt(a.elevation) || 0,
+                        calories: parseInt(a.calories) || 0,
+                        coords: coords
+                    };
+                });
                 updateDashboard();
                 renderActivityList();
             }
