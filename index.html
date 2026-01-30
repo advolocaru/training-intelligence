@@ -20,7 +20,6 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .sidebar{width:var(--sidebar-width);height:100vh;position:fixed;left:0;top:0;background:var(--bg-surface);border-right:1px solid var(--border-color);display:flex;flex-direction:column;transition:width var(--transition-base);z-index:100}
 .sidebar.collapsed{width:var(--sidebar-collapsed)}
 .sidebar-header{height:var(--topbar-height);padding:0 var(--gap-md);display:flex;align-items:center;gap:var(--gap-sm);border-bottom:1px solid var(--border-subtle)}
-/* 2D Flat Logo with initials */
 .sidebar-logo{width:36px;height:36px;background:var(--bg-elevated);border:2px solid var(--accent);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--accent);flex-shrink:0;letter-spacing:-0.5px}
 .sidebar-brand{font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;transition:opacity var(--transition-fast)}
 .sidebar.collapsed .sidebar-brand{opacity:0;width:0}
@@ -59,6 +58,17 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .sync-btn.syncing{pointer-events:none;opacity:0.7}
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 .sync-btn.syncing svg{animation:spin 1s linear infinite}
+.user-menu{position:relative}
+.user-btn{width:40px;height:40px;border-radius:var(--radius-sm);background:var(--accent-muted);border:1px solid var(--accent);color:var(--accent);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--transition-fast)}
+.user-btn:hover{background:var(--accent);color:white}
+.user-dropdown{position:absolute;top:calc(100% + 8px);right:0;width:200px;background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);opacity:0;visibility:hidden;transform:translateY(-10px);transition:all var(--transition-fast);z-index:100}
+.user-menu.open .user-dropdown{opacity:1;visibility:visible;transform:translateY(0)}
+.user-dropdown-item{display:flex;align-items:center;gap:var(--gap-sm);padding:12px var(--gap-md);color:var(--text-secondary);cursor:pointer;transition:all var(--transition-fast);text-decoration:none}
+.user-dropdown-item:first-child{border-radius:var(--radius-md) var(--radius-md) 0 0}
+.user-dropdown-item:last-child{border-radius:0 0 var(--radius-md) var(--radius-md)}
+.user-dropdown-item:hover{background:var(--bg-surface-hover);color:var(--text-primary)}
+.user-dropdown-item svg{width:18px;height:18px;flex-shrink:0}
+.user-dropdown-divider{height:1px;background:var(--border-color);margin:4px 0}
 .page-content{padding:var(--gap-lg)}
 .page-panel{display:none;animation:fadeIn var(--transition-base)}
 .page-panel.active{display:block}
@@ -78,6 +88,33 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .stat-card-value{font-size:32px;font-weight:700;margin-bottom:var(--gap-xs)}
 .stat-card-value span{font-size:18px;color:var(--text-secondary)}
 .stat-card-label{color:var(--text-secondary);font-size:13px}
+.predictions-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--gap-md);margin-bottom:var(--gap-lg)}
+.prediction-card{background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:var(--card-padding);text-align:center;transition:all var(--transition-fast)}
+.prediction-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:var(--accent)}
+.prediction-card-icon{width:56px;height:56px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto var(--gap-md)}
+.prediction-card-icon.race-5k{background:var(--success-muted);color:var(--success)}
+.prediction-card-icon.race-10k{background:var(--info-muted);color:var(--info)}
+.prediction-card-icon.race-half{background:var(--warning-muted);color:var(--warning)}
+.prediction-card-icon.race-full{background:var(--error-muted);color:var(--error)}
+.prediction-card-label{font-size:12px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:var(--gap-xs)}
+.prediction-card-value{font-size:28px;font-weight:700;margin-bottom:var(--gap-xs)}
+.prediction-card-pace{font-size:13px;color:var(--text-secondary)}
+.training-recommendations{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--gap-md);margin-bottom:var(--gap-lg)}
+.recommendation-card{background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:var(--card-padding)}
+.recommendation-card-header{display:flex;align-items:center;gap:var(--gap-sm);margin-bottom:var(--gap-md)}
+.recommendation-card-icon{width:40px;height:40px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;background:var(--accent-muted);color:var(--accent)}
+.recommendation-card-title{font-weight:600}
+.recommendation-list{display:flex;flex-direction:column;gap:var(--gap-sm)}
+.recommendation-item{display:flex;align-items:flex-start;gap:var(--gap-sm);padding:var(--gap-sm);background:var(--bg-primary);border-radius:var(--radius-sm)}
+.recommendation-item-icon{width:20px;height:20px;color:var(--success);flex-shrink:0;margin-top:2px}
+.recommendation-item-text{font-size:13px;color:var(--text-secondary);line-height:1.4}
+.weekly-forecast{background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:var(--card-padding)}
+.forecast-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:var(--gap-sm);margin-top:var(--gap-md)}
+.forecast-day{text-align:center;padding:var(--gap-sm);border-radius:var(--radius-sm);background:var(--bg-primary)}
+.forecast-day.today{background:var(--accent-muted);border:1px solid var(--accent)}
+.forecast-day-name{font-size:11px;color:var(--text-tertiary);text-transform:uppercase;margin-bottom:4px}
+.forecast-day-type{font-size:12px;font-weight:500;color:var(--text-primary)}
+.forecast-day-detail{font-size:11px;color:var(--text-secondary);margin-top:2px}
 .health-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--gap-md);margin-bottom:var(--gap-lg)}
 .health-card{background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:var(--card-padding)}
 .health-card-icon{width:48px;height:48px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;margin-bottom:var(--gap-md)}
@@ -115,12 +152,10 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .route-item-meta{font-size:11px;color:var(--text-secondary);display:flex;gap:var(--gap-md)}
 .map-layout{display:flex}
 .flex-1{flex:1}
-/* Coming Soon placeholder */
 .coming-soon{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 40px;text-align:center;background:var(--bg-surface);border:1px dashed var(--border-color);border-radius:var(--radius-md)}
 .coming-soon-icon{width:64px;height:64px;background:var(--accent-muted);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:var(--gap-md);color:var(--accent)}
 .coming-soon-title{font-size:20px;font-weight:600;margin-bottom:var(--gap-sm)}
 .coming-soon-text{color:var(--text-secondary);max-width:400px}
-/* AI Assistant styles */
 .ai-chat{display:flex;flex-direction:column;height:calc(100vh - var(--topbar-height) - var(--gap-lg) * 2);background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);overflow:hidden}
 .ai-chat-header{padding:var(--gap-md);border-bottom:1px solid var(--border-color);display:flex;align-items:center;gap:var(--gap-sm)}
 .ai-chat-avatar{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--info));border-radius:50%;display:flex;align-items:center;justify-content:center;color:white}
@@ -135,43 +170,36 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .ai-chat-input input:focus{outline:none;border-color:var(--accent)}
 .ai-chat-input button{padding:12px 20px;background:var(--accent);border:none;border-radius:var(--radius-sm);color:white;font-weight:500;cursor:pointer;transition:all var(--transition-fast)}
 .ai-chat-input button:hover{background:var(--accent-hover)}
-@media(max-width:1200px){.stats-grid,.health-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:768px){.stats-grid,.health-grid{grid-template-columns:1fr}.sidebar{transform:translateX(-100%)}.sidebar.mobile-open{transform:translateX(0)}.main-content{margin-left:0!important}.map-layout{flex-direction:column}.routes-sidebar{width:100%;margin-left:0;margin-top:var(--gap-md);max-height:300px}}
+@media(max-width:1200px){.stats-grid,.health-grid,.predictions-grid{grid-template-columns:repeat(2,1fr)}.training-recommendations{grid-template-columns:1fr}}
+@media(max-width:768px){.stats-grid,.health-grid,.predictions-grid{grid-template-columns:1fr}.sidebar{transform:translateX(-100%)}.sidebar.mobile-open{transform:translateX(0)}.main-content{margin-left:0!important}.map-layout{flex-direction:column}.routes-sidebar{width:100%;margin-left:0;margin-top:var(--gap-md);max-height:300px}.forecast-grid{grid-template-columns:repeat(4,1fr)}}
 </style>
 </head>
 <body>
 <div class="app-container">
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <!-- 2D Flat Logo with initials only -->
             <div class="sidebar-logo">TI</div>
             <span class="sidebar-brand">Training Intelligence</span>
         </div>
         <nav class="sidebar-nav">
-            <!-- 1. MAIN Section -->
             <div class="nav-section">
                 <div class="nav-section-title">Main</div>
                 <a class="nav-item active" data-page="dashboard"><span class="nav-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span><span class="nav-item-text">Dashboard</span></a>
                 <a class="nav-item" data-page="activities"><span class="nav-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg></span><span class="nav-item-text">Activities</span></a>
+                <a class="nav-item" data-page="predictions"><span class="nav-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span><span class="nav-item-text">Predictions</span></a>
             </div>
-            
-            <!-- 2. HEALTH Section -->
             <div class="nav-section">
                 <div class="nav-section-title">Health</div>
                 <a class="nav-item" data-page="health"><span class="nav-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span><span class="nav-item-text">Health</span></a>
                 <a class="nav-item disabled" data-page="mental"><span class="nav-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></span><span class="nav-item-text">Mental</span><span class="nav-item-badge">Soon</span></a>
-                <a class="nav-item disabled" data-page="nutrition"><span class="nav-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></span><span class="nav-item-text">Nutrition</span><span class="nav-item-badge">Soon</span></a>
-                <a class="nav-item disabled" data-page="injuries"><span class="nav-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></svg></span><span class="nav-item-text">Injuries</span><span class="nav-item-badge">Soon</span></a>
+                <a class="nav-item disabled" data-page="nutrition"><span class="nav-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg></span><span class="nav-item-text">Nutrition</span><span class="nav-item-badge">Soon</span></a>
+                <a class="nav-item disabled" data-page="injuries"><span class="nav-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/></svg></span><span class="nav-item-text">Injuries</span><span class="nav-item-badge">Soon</span></a>
                 <a class="nav-item disabled" data-page="medical"><span class="nav-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span><span class="nav-item-text">Medical</span><span class="nav-item-badge">Soon</span></a>
             </div>
-            
-            <!-- 3. INSIGHTS Section -->
             <div class="nav-section">
                 <div class="nav-section-title">Insights</div>
                 <a class="nav-item" data-page="ai-assistant"><span class="nav-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/><circle cx="7.5" cy="14.5" r="1.5"/><circle cx="16.5" cy="14.5" r="1.5"/></svg></span><span class="nav-item-text">AI Assistant</span></a>
             </div>
-            
-            <!-- 4. ACCOUNT Section -->
             <div class="nav-section">
                 <div class="nav-section-title">Account</div>
                 <a class="nav-item disabled" data-page="account"><span class="nav-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span class="nav-item-text">Account</span><span class="nav-item-badge">Soon</span></a>
@@ -181,35 +209,36 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
             <button class="sidebar-toggle" id="sidebar-toggle"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg><span class="toggle-text">Collapse</span></button>
         </div>
     </aside>
-
     <main class="main-content">
         <header class="topbar">
-            <div class="topbar-left">
-                <h1 class="page-title" id="page-title">Dashboard</h1>
-            </div>
+            <div class="topbar-left"><h1 class="page-title" id="page-title">Dashboard</h1></div>
             <div class="topbar-right">
                 <button class="sync-btn" id="sync-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg><span>Sync Strava</span></button>
                 <button class="topbar-btn" id="theme-toggle" title="Toggle theme"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button>
+                <div class="user-menu" id="user-menu">
+                    <button class="user-btn" id="user-btn" title="User menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+                    <div class="user-dropdown">
+                        <a class="user-dropdown-item" href="#" data-action="profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Profile</span></a>
+                        <a class="user-dropdown-item" href="#" data-action="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Settings</span></a>
+                        <div class="user-dropdown-divider"></div>
+                        <a class="user-dropdown-item" href="#" data-action="logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg><span>Logout</span></a>
+                    </div>
+                </div>
             </div>
         </header>
-
         <div class="page-content">
             <!-- Dashboard Page -->
             <div class="page-panel active" id="page-dashboard">
-                <div class="section-header">
-                    <div><h2 class="section-title">Running Overview</h2><p class="section-subtitle">Your all-time running statistics</p></div>
-                </div>
+                <div class="section-header"><div><h2 class="section-title">Running Overview</h2><p class="section-subtitle">Your monthly running statistics</p></div></div>
                 <div class="stats-grid" id="stats-grid">
                     <div class="stat-card"><div class="stat-card-header"><div class="stat-card-icon runs"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div></div><div class="stat-card-value" id="stat-runs">--</div><div class="stat-card-label">Total Runs</div></div>
                     <div class="stat-card"><div class="stat-card-header"><div class="stat-card-icon distance"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></div></div><div class="stat-card-value" id="stat-distance">--<span>km</span></div><div class="stat-card-label">Total Distance</div></div>
                     <div class="stat-card"><div class="stat-card-header"><div class="stat-card-icon time"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div></div><div class="stat-card-value" id="stat-time">--<span>hrs</span></div><div class="stat-card-label">Total Time</div></div>
                     <div class="stat-card"><div class="stat-card-header"><div class="stat-card-icon elevation"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20l8-16 4 8 6-6"/></svg></div></div><div class="stat-card-value" id="stat-elevation">--<span>m</span></div><div class="stat-card-label">Total Elevation</div></div>
                 </div>
-                
                 <div class="section-header"><h2 class="section-title">Recent Activities</h2></div>
                 <div class="activity-list" id="activity-list"><div class="loading"><div class="loading-spinner"></div>Loading activities...</div></div>
             </div>
-
             <!-- Activities/Maps Page -->
             <div class="page-panel" id="page-activities">
                 <div class="section-header"><h2 class="section-title">Running Routes</h2></div>
@@ -221,530 +250,73 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
                     </div>
                 </div>
             </div>
-
+            <!-- Predictions Page -->
+            <div class="page-panel" id="page-predictions">
+                <div class="section-header"><div><h2 class="section-title">Race Predictions</h2><p class="section-subtitle">Estimated finish times based on your training data</p></div></div>
+                <div class="predictions-grid">
+                    <div class="prediction-card"><div class="prediction-card-icon race-5k"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="prediction-card-label">5K</div><div class="prediction-card-value" id="pred-5k">--:--</div><div class="prediction-card-pace" id="pred-5k-pace">-- /km pace</div></div>
+                    <div class="prediction-card"><div class="prediction-card-icon race-10k"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="prediction-card-label">10K</div><div class="prediction-card-value" id="pred-10k">--:--</div><div class="prediction-card-pace" id="pred-10k-pace">-- /km pace</div></div>
+                    <div class="prediction-card"><div class="prediction-card-icon race-half"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="prediction-card-label">Half Marathon</div><div class="prediction-card-value" id="pred-half">--:--</div><div class="prediction-card-pace" id="pred-half-pace">-- /km pace</div></div>
+                    <div class="prediction-card"><div class="prediction-card-icon race-full"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="prediction-card-label">Marathon</div><div class="prediction-card-value" id="pred-full">--:--</div><div class="prediction-card-pace" id="pred-full-pace">-- /km pace</div></div>
+                </div>
+                <div class="training-recommendations">
+                    <div class="recommendation-card"><div class="recommendation-card-header"><div class="recommendation-card-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div><div class="recommendation-card-title">Speed Work</div></div><div class="recommendation-list" id="speed-recommendations"><div class="recommendation-item"><div class="recommendation-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div><div class="recommendation-item-text">Loading recommendations...</div></div></div></div>
+                    <div class="recommendation-card"><div class="recommendation-card-header"><div class="recommendation-card-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div class="recommendation-card-title">Endurance Building</div></div><div class="recommendation-list" id="endurance-recommendations"><div class="recommendation-item"><div class="recommendation-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div><div class="recommendation-item-text">Loading recommendations...</div></div></div></div>
+                </div>
+                <div class="weekly-forecast"><div class="section-header" style="margin-bottom:0"><h2 class="section-title">Weekly Training Plan</h2></div><div class="forecast-grid" id="weekly-plan"><div class="forecast-day"><div class="forecast-day-name">Mon</div><div class="forecast-day-type">--</div><div class="forecast-day-detail">--</div></div><div class="forecast-day"><div class="forecast-day-name">Tue</div><div class="forecast-day-type">--</div><div class="forecast-day-detail">--</div></div><div class="forecast-day"><div class="forecast-day-name">Wed</div><div class="forecast-day-type">--</div><div class="forecast-day-detail">--</div></div><div class="forecast-day"><div class="forecast-day-name">Thu</div><div class="forecast-day-type">--</div><div class="forecast-day-detail">--</div></div><div class="forecast-day"><div class="forecast-day-name">Fri</div><div class="forecast-day-type">--</div><div class="forecast-day-detail">--</div></div><div class="forecast-day"><div class="forecast-day-name">Sat</div><div class="forecast-day-type">--</div><div class="forecast-day-detail">--</div></div><div class="forecast-day"><div class="forecast-day-name">Sun</div><div class="forecast-day-type">--</div><div class="forecast-day-detail">--</div></div></div></div>
+            </div>
             <!-- Health Page -->
             <div class="page-panel" id="page-health">
-                <div class="section-header">
-                    <div><h2 class="section-title">Health & Recovery</h2><p class="section-subtitle">Data from Garmin Connect</p></div>
-                </div>
+                <div class="section-header"><div><h2 class="section-title">Health & Recovery</h2><p class="section-subtitle">Data from Garmin Connect</p></div></div>
                 <div class="health-grid" id="health-grid">
                     <div class="health-card"><div class="health-card-icon sleep"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div><div class="health-card-value" id="health-sleep">--</div><div class="health-card-label">Sleep (last night)</div><div class="health-card-sub" id="health-sleep-detail">Deep: -- | REM: --</div></div>
                     <div class="health-card"><div class="health-card-icon stress"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/></svg></div><div class="health-card-value" id="health-stress">--</div><div class="health-card-label">Avg Stress</div><div class="health-card-sub" id="health-stress-detail">Max: --</div></div>
                     <div class="health-card"><div class="health-card-icon steps"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 4v16M7 4v16M19 4v16"/></svg></div><div class="health-card-value" id="health-steps">--</div><div class="health-card-label">Steps (today)</div><div class="health-card-sub" id="health-steps-detail">Goal: --</div></div>
                     <div class="health-card"><div class="health-card-icon hrv"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="health-card-value" id="health-distance">--</div><div class="health-card-label">Distance (steps)</div><div class="health-card-sub" id="health-distance-detail">km walked</div></div>
                 </div>
-                
-                <div class="chart-card">
-                    <div class="chart-card-header"><span class="chart-card-title">Sleep Trend (14 days)</span></div>
-                    <div class="chart-container"><canvas id="sleep-chart"></canvas></div>
-                </div>
-                
-                <div class="chart-card">
-                    <div class="chart-card-header"><span class="chart-card-title">Stress Trend (14 days)</span></div>
-                    <div class="chart-container"><canvas id="stress-chart"></canvas></div>
-                </div>
-                
-                <div class="chart-card">
-                    <div class="chart-card-header"><span class="chart-card-title">Steps Trend (14 days)</span></div>
-                    <div class="chart-container"><canvas id="steps-chart"></canvas></div>
-                </div>
+                <div class="chart-card"><div class="chart-card-header"><span class="chart-card-title">Sleep Trend (14 days)</span></div><div class="chart-container"><canvas id="sleep-chart"></canvas></div></div>
+                <div class="chart-card"><div class="chart-card-header"><span class="chart-card-title">Stress Trend (14 days)</span></div><div class="chart-container"><canvas id="stress-chart"></canvas></div></div>
+                <div class="chart-card"><div class="chart-card-header"><span class="chart-card-title">Steps Trend (14 days)</span></div><div class="chart-container"><canvas id="steps-chart"></canvas></div></div>
             </div>
-
-            <!-- Mental Page (Coming Soon) -->
-            <div class="page-panel" id="page-mental">
-                <div class="coming-soon">
-                    <div class="coming-soon-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div>
-                    <div class="coming-soon-title">Mental Health Tracking</div>
-                    <div class="coming-soon-text">Track your mental wellbeing, mood patterns, and stress levels. Coming soon with meditation and mindfulness integrations.</div>
-                </div>
-            </div>
-
-            <!-- Nutrition Page (Coming Soon) -->
-            <div class="page-panel" id="page-nutrition">
-                <div class="coming-soon">
-                    <div class="coming-soon-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></div>
-                    <div class="coming-soon-title">Nutrition Tracking</div>
-                    <div class="coming-soon-text">Log your meals, track macros, and get personalized nutrition recommendations based on your training load.</div>
-                </div>
-            </div>
-
-            <!-- Injuries Page (Coming Soon) -->
-            <div class="page-panel" id="page-injuries">
-                <div class="coming-soon">
-                    <div class="coming-soon-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/></svg></div>
-                    <div class="coming-soon-title">Injury Management</div>
-                    <div class="coming-soon-text">Track injuries, recovery progress, and get AI-powered recommendations for prevention and rehabilitation.</div>
-                </div>
-            </div>
-
-            <!-- Medical Page (Coming Soon) -->
-            <div class="page-panel" id="page-medical">
-                <div class="coming-soon">
-                    <div class="coming-soon-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
-                    <div class="coming-soon-title">Medical Records</div>
-                    <div class="coming-soon-text">Store and manage your medical records, doctor visits, and health screenings in one secure place.</div>
-                </div>
-            </div>
-
+            <!-- Coming Soon Pages -->
+            <div class="page-panel" id="page-mental"><div class="coming-soon"><div class="coming-soon-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></div><div class="coming-soon-title">Mental Health Tracking</div><div class="coming-soon-text">Track your mental wellbeing, mood patterns, and stress levels. Coming soon with meditation integrations.</div></div></div>
+            <div class="page-panel" id="page-nutrition"><div class="coming-soon"><div class="coming-soon-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg></div><div class="coming-soon-title">Nutrition Tracking</div><div class="coming-soon-text">Log your meals, track macros, and get personalized nutrition recommendations.</div></div></div>
+            <div class="page-panel" id="page-injuries"><div class="coming-soon"><div class="coming-soon-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/></svg></div><div class="coming-soon-title">Injury Management</div><div class="coming-soon-text">Track injuries and recovery progress with AI-powered recommendations.</div></div></div>
+            <div class="page-panel" id="page-medical"><div class="coming-soon"><div class="coming-soon-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div class="coming-soon-title">Medical Records</div><div class="coming-soon-text">Store and manage your medical records, doctor visits, and health screenings.</div></div></div>
+            <div class="page-panel" id="page-account"><div class="coming-soon"><div class="coming-soon-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="coming-soon-title">Account Settings</div><div class="coming-soon-text">Manage your profile, connected services, and notification preferences.</div></div></div>
             <!-- AI Assistant Page -->
             <div class="page-panel" id="page-ai-assistant">
-                <div class="ai-chat">
-                    <div class="ai-chat-header">
-                        <div class="ai-chat-avatar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/></svg></div>
-                        <div>
-                            <div class="ai-chat-title">Training Intelligence AI</div>
-                            <div class="ai-chat-status">● Online</div>
-                        </div>
-                    </div>
-                    <div class="ai-chat-messages" id="ai-messages">
-                        <div class="ai-message assistant">Hello! I'm your AI training assistant. I can help you analyze your running performance, suggest training plans, answer questions about recovery, and provide personalized insights based on your data. How can I help you today?</div>
-                    </div>
-                    <div class="ai-chat-input">
-                        <input type="text" id="ai-input" placeholder="Ask about your training, recovery, or get suggestions...">
-                        <button id="ai-send">Send</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Account Page (Coming Soon) -->
-            <div class="page-panel" id="page-account">
-                <div class="coming-soon">
-                    <div class="coming-soon-icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-                    <div class="coming-soon-title">Account Settings</div>
-                    <div class="coming-soon-text">Manage your profile, connected services, notification preferences, and privacy settings.</div>
-                </div>
+                <div class="ai-chat"><div class="ai-chat-header"><div class="ai-chat-avatar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/></svg></div><div><div class="ai-chat-title">Training Intelligence AI</div><div class="ai-chat-status">● Online</div></div></div><div class="ai-chat-messages" id="ai-messages"><div class="ai-message assistant">Hello! I'm your AI training assistant. I can help you analyze your running performance, suggest training plans, and provide personalized insights. How can I help you today?</div></div><div class="ai-chat-input"><input type="text" id="ai-input" placeholder="Ask about your training, recovery, or get suggestions..."><button id="ai-send">Send</button></div></div>
             </div>
         </div>
     </main>
 </div>
-
 <script>
-const CONFIG = {
-    MAPBOX_TOKEN: 'pk.eyJ1IjoiYWR2b2xvY2FydSIsImEiOiJjbWwwMzR3ajIwNnl5M2VxeTZ2eGppejQ2In0.A_2Sbqri_ip3kQFOqRM8DA',
-    ROUTE_COLORS: ['#8b5cf6','#22c55e','#3b82f6','#f59e0b','#ef4444','#ec4899','#14b8a6','#f97316']
-};
-
-window.ROUTES = [];
-let HEALTH = { sleep: [], stress: [], steps: [] };
-let map = null, mapInitialized = false;
-let sleepChart = null, stressChart = null, stepsChart = null;
-
-(function() {
-    
-    const $ = id => document.getElementById(id);
-    const $$ = sel => document.querySelectorAll(sel);
-    
-    // Decode polyline string to coordinates array
-    function decodePolyline(encoded) {
-        if (!encoded || typeof encoded !== 'string') return [];
-        const coords = [];
-        let index = 0, lat = 0, lng = 0;
-        while (index < encoded.length) {
-            let b, shift = 0, result = 0;
-            do { b = encoded.charCodeAt(index++) - 63; result |= (b & 0x1f) << shift; shift += 5; } while (b >= 0x20);
-            lat += (result & 1) ? ~(result >> 1) : (result >> 1);
-            shift = 0; result = 0;
-            do { b = encoded.charCodeAt(index++) - 63; result |= (b & 0x1f) << shift; shift += 5; } while (b >= 0x20);
-            lng += (result & 1) ? ~(result >> 1) : (result >> 1);
-            coords.push([lng / 1e5, lat / 1e5]);
-        }
-        return coords;
-    }
-    
-    // Load activities from API
-    async function loadActivities() {
-        try {
-            const res = await fetch('/api/activities');
-            const data = await res.json();
-            if (data.success && data.activities) {
-                window.ROUTES = data.activities.map(a => {
-                    let coords = [];
-                    if (a.coords) {
-                        if (typeof a.coords === 'string') {
-                            if (a.coords.startsWith('[')) {
-                                try { coords = JSON.parse(a.coords); } catch(e) {}
-                            } else {
-                                coords = decodePolyline(a.coords);
-                            }
-                        } else if (Array.isArray(a.coords)) {
-                            coords = a.coords;
-                        }
-                    }
-                    
-                    let dateStr = a.date;
-                    if (dateStr && dateStr.includes('T')) {
-                        dateStr = dateStr.split('T')[0];
-                    }
-                    
-                    return {
-                        id: a.id,
-                        name: a.name,
-                        date: dateStr,
-                        distance: parseFloat(a.distance) || 0,
-                        pace: a.pace,
-                        duration: parseInt(a.duration) || 0,
-                        hr: a.avg_hr,
-                        maxHr: a.max_hr,
-                        elevation: parseInt(a.elevation) || 0,
-                        calories: parseInt(a.calories) || 0,
-                        coords: coords
-                    };
-                });
-                updateDashboard();
-                renderActivityList();
-            }
-        } catch (e) {
-            console.error('Error loading activities:', e);
-            $('activity-list').innerHTML = '<div class="loading">Error loading activities</div>';
-        }
-    }
-    
-    // Load health data from API
-    async function loadHealthData() {
-        try {
-            const res = await fetch('/api/health');
-            const data = await res.json();
-            if (data.success) {
-                HEALTH = data;
-                updateHealthCards();
-                renderHealthCharts();
-            }
-        } catch (e) {
-            console.error('Error loading health data:', e);
-        }
-    }
-    
-    function updateDashboard() {
-        if (!window.ROUTES.length) return;
-        
-        const now = new Date();
-        const currentMonth = now.getMonth();
-        const currentYear = now.getFullYear();
-        
-        const monthRuns = window.ROUTES.filter(r => {
-            const d = new Date(r.date);
-            return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-        });
-        
-        const monthDistance = monthRuns.reduce((a, r) => a + (r.distance || 0), 0);
-        const monthElevation = monthRuns.reduce((a, r) => a + (r.elevation || 0), 0);
-        const monthSeconds = monthRuns.reduce((a, r) => a + (r.duration || 0), 0);
-        const hours = Math.floor(monthSeconds / 3600);
-        const mins = Math.floor((monthSeconds % 3600) / 60);
-        
-        $('stat-runs').textContent = monthRuns.length;
-        $('stat-distance').innerHTML = monthDistance.toFixed(1) + '<span>km</span>';
-        $('stat-time').innerHTML = hours + ':' + mins.toString().padStart(2, '0') + '<span>hrs</span>';
-        $('stat-elevation').innerHTML = monthElevation.toLocaleString() + '<span>m</span>';
-        
-        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-        const subtitle = document.querySelector('.section-subtitle');
-        if (subtitle) subtitle.textContent = monthNames[currentMonth] + ' ' + currentYear + ' • ' + window.ROUTES.length + ' total runs';
-    }
-    
-    function renderActivityList() {
-        const list = $('activity-list');
-        if (!list || !window.ROUTES.length) {
-            if (list) list.innerHTML = '<div class="loading">No activities found</div>';
-            return;
-        }
-        
-        const formatTime = (secs) => {
-            if (!secs) return '--';
-            const h = Math.floor(secs / 3600);
-            const m = Math.floor((secs % 3600) / 60);
-            const s = secs % 60;
-            return h > 0 ? `${h}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}` : `${m}:${s.toString().padStart(2,'0')}`;
-        };
-        
-        list.innerHTML = window.ROUTES.slice(0, 20).map(r => `
-            <div class="activity-item" data-id="${r.id}">
-                <div class="activity-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-                <div class="activity-info">
-                    <div class="activity-name">${r.name || 'Run'}</div>
-                    <div class="activity-meta">${r.date}</div>
-                </div>
-                <div class="activity-stats">
-                    <div class="activity-stat"><div class="activity-stat-value">${r.distance?.toFixed(1) || '--'}km</div><div class="activity-stat-label">Distance</div></div>
-                    <div class="activity-stat"><div class="activity-stat-value">${r.pace || '--'}</div><div class="activity-stat-label">Pace</div></div>
-                    <div class="activity-stat"><div class="activity-stat-value">${formatTime(r.duration)}</div><div class="activity-stat-label">Time</div></div>
-                </div>
-            </div>
-        `).join('');
-    }
-    
-    function updateHealthCards() {
-        if (HEALTH.sleep && HEALTH.sleep.length > 0) {
-            const latest = HEALTH.sleep[0];
-            $('health-sleep').textContent = latest.totalHours + 'h';
-            $('health-sleep-detail').textContent = `Deep: ${latest.deepHours}h | REM: ${latest.remHours}h`;
-        }
-        
-        if (HEALTH.stress && HEALTH.stress.length > 0) {
-            const latest = HEALTH.stress[0];
-            $('health-stress').textContent = latest.avg_stress;
-            $('health-stress-detail').textContent = `Max: ${latest.max_stress}`;
-        }
-        
-        if (HEALTH.steps && HEALTH.steps.length > 0) {
-            const latest = HEALTH.steps[0];
-            $('health-steps').textContent = latest.steps?.toLocaleString() || '--';
-            $('health-steps-detail').textContent = `Goal: ${latest.goal?.toLocaleString() || '--'}`;
-            $('health-distance').textContent = latest.distanceKm || '--';
-        }
-    }
-    
-    function renderHealthCharts() {
-        const chartOptions = {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { legend: { display: false } },
-            scales: {
-                x: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#888' } },
-                y: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#888' } }
-            }
-        };
-        
-        if (HEALTH.sleep && HEALTH.sleep.length > 0) {
-            const ctx = $('sleep-chart').getContext('2d');
-            const labels = HEALTH.sleep.map(s => s.date?.split('-').slice(1).join('/')).reverse();
-            const data = HEALTH.sleep.map(s => parseFloat(s.totalHours)).reverse();
-            
-            if (sleepChart) sleepChart.destroy();
-            sleepChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels,
-                    datasets: [{
-                        data,
-                        backgroundColor: 'rgba(168, 85, 247, 0.6)',
-                        borderColor: '#a855f7',
-                        borderWidth: 1,
-                        borderRadius: 4
-                    }]
-                },
-                options: { ...chartOptions, scales: { ...chartOptions.scales, y: { ...chartOptions.scales.y, min: 0, max: 10 } } }
-            });
-        }
-        
-        if (HEALTH.stress && HEALTH.stress.length > 0) {
-            const ctx = $('stress-chart').getContext('2d');
-            const labels = HEALTH.stress.map(s => s.date?.split('-').slice(1).join('/')).reverse();
-            const data = HEALTH.stress.map(s => s.avg_stress).reverse();
-            
-            if (stressChart) stressChart.destroy();
-            stressChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels,
-                    datasets: [{
-                        data,
-                        borderColor: '#ef4444',
-                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                        fill: true,
-                        tension: 0.3
-                    }]
-                },
-                options: { ...chartOptions, scales: { ...chartOptions.scales, y: { ...chartOptions.scales.y, min: 0, max: 100 } } }
-            });
-        }
-        
-        if (HEALTH.steps && HEALTH.steps.length > 0) {
-            const ctx = $('steps-chart').getContext('2d');
-            const labels = HEALTH.steps.map(s => s.date?.split('-').slice(1).join('/')).reverse();
-            const data = HEALTH.steps.map(s => s.steps).reverse();
-            const goals = HEALTH.steps.map(s => s.goal).reverse();
-            
-            if (stepsChart) stepsChart.destroy();
-            stepsChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels,
-                    datasets: [
-                        { data, backgroundColor: 'rgba(34, 197, 94, 0.6)', borderColor: '#22c55e', borderWidth: 1, borderRadius: 4, label: 'Steps' },
-                        { data: goals, type: 'line', borderColor: '#888', borderDash: [5, 5], pointRadius: 0, label: 'Goal' }
-                    ]
-                },
-                options: chartOptions
-            });
-        }
-    }
-    
-    function initMap() {
-        if (mapInitialized || !$('map')) return;
-        if (typeof mapboxgl === 'undefined') { setTimeout(initMap, 500); return; }
-        
-        try {
-            mapboxgl.accessToken = CONFIG.MAPBOX_TOKEN;
-            map = new mapboxgl.Map({
-                container: 'map',
-                style: 'mapbox://styles/mapbox/dark-v11',
-                center: [26.1, 44.41],
-                zoom: 12
-            });
-            map.on('load', () => {
-                mapInitialized = true;
-                addRoutesToMap();
-                renderRoutesList();
-            });
-        } catch (e) { console.error('Map error:', e); }
-    }
-    
-    function addRoutesToMap() {
-        if (!map || !window.ROUTES.length) return;
-        
-        const routesWithCoords = window.ROUTES.filter(r => r.coords && r.coords.length > 2);
-        $('routes-count').textContent = routesWithCoords.length;
-        
-        routesWithCoords.forEach((r, i) => {
-            const sid = 'route-' + r.id;
-            if (map.getSource(sid)) return;
-            
-            map.addSource(sid, {
-                type: 'geojson',
-                data: { type: 'Feature', geometry: { type: 'LineString', coordinates: r.coords } }
-            });
-            map.addLayer({
-                id: 'layer-' + r.id,
-                type: 'line',
-                source: sid,
-                paint: { 'line-color': CONFIG.ROUTE_COLORS[i % CONFIG.ROUTE_COLORS.length], 'line-width': 3, 'line-opacity': 0.8 }
-            });
-        });
-        
-        const allCoords = routesWithCoords.flatMap(r => r.coords);
-        if (allCoords.length) {
-            const bounds = allCoords.reduce((b, c) => b.extend(c), new mapboxgl.LngLatBounds(allCoords[0], allCoords[0]));
-            map.fitBounds(bounds, { padding: 40 });
-        }
-    }
-    
-    function renderRoutesList() {
-        const list = $('routes-list');
-        if (!list) return;
-        
-        const routesWithCoords = window.ROUTES.filter(r => r.coords && r.coords.length > 2);
-        list.innerHTML = routesWithCoords.slice(0, 50).map(r => `
-            <div class="route-item" data-id="${r.id}">
-                <div class="route-item-name">${r.name || 'Run'}</div>
-                <div class="route-item-meta"><span>${r.date}</span><span>${r.distance?.toFixed(1) || '--'}km</span><span>${r.pace || '--'}</span></div>
-            </div>
-        `).join('');
-    }
-    
-    async function syncStrava() {
-        const btn = $('sync-btn');
-        if (!btn || btn.classList.contains('syncing')) return;
-        
-        btn.classList.add('syncing');
-        btn.querySelector('span').textContent = 'Syncing...';
-        
-        try {
-            const res = await fetch('/api/strava/sync', { method: 'POST' });
-            const data = await res.json();
-            if (data.success) {
-                alert('✅ Synced ' + data.total + ' runs from Strava!');
-                loadActivities();
-            } else {
-                alert('❌ Sync failed: ' + (data.error || 'Unknown error'));
-            }
-        } catch (e) {
-            alert('❌ Sync error: ' + e.message);
-        } finally {
-            btn.classList.remove('syncing');
-            btn.querySelector('span').textContent = 'Sync Strava';
-        }
-    }
-    
-    function navigateTo(page) {
-        $$('.nav-item').forEach(i => i.classList.toggle('active', i.dataset.page === page));
-        $$('.page-panel').forEach(p => p.classList.remove('active'));
-        const panel = $('page-' + page);
-        if (panel) panel.classList.add('active');
-        
-        const titles = { 
-            dashboard: 'Dashboard', 
-            activities: 'Activities & Maps', 
-            health: 'Health & Recovery',
-            mental: 'Mental Health',
-            nutrition: 'Nutrition',
-            injuries: 'Injury Management',
-            medical: 'Medical Records',
-            'ai-assistant': 'AI Assistant',
-            account: 'Account Settings'
-        };
-        $('page-title').textContent = titles[page] || 'Dashboard';
-        
-        if (page === 'activities') setTimeout(initMap, 200);
-    }
-    
-    function toggleSidebar() { $('sidebar').classList.toggle('collapsed'); }
-    function toggleTheme() {
-        const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-        document.documentElement.setAttribute('data-theme', t);
-        try { localStorage.setItem('theme', t); } catch(e) {}
-    }
-    
-    // AI Chat functionality
-    function initAIChat() {
-        const input = $('ai-input');
-        const sendBtn = $('ai-send');
-        const messages = $('ai-messages');
-        
-        if (!input || !sendBtn || !messages) return;
-        
-        const sendMessage = () => {
-            const text = input.value.trim();
-            if (!text) return;
-            
-            // Add user message
-            messages.innerHTML += `<div class="ai-message user">${text}</div>`;
-            input.value = '';
-            messages.scrollTop = messages.scrollHeight;
-            
-            // Simulate AI response (replace with real API call)
-            setTimeout(() => {
-                const responses = [
-                    "Based on your recent training data, I recommend taking an easy recovery day tomorrow. Your stress levels have been elevated.",
-                    "Great question! Looking at your running patterns, you tend to perform best in the morning hours. Consider scheduling your key workouts then.",
-                    "Your weekly mileage has increased by 15% this month. Remember the 10% rule to avoid overtraining injuries.",
-                    "I notice your sleep quality dipped last week. Sleep is crucial for recovery - aim for 7-9 hours consistently.",
-                    "Your pace has improved by 8% over the last 3 months! Keep up the consistent training."
-                ];
-                const response = responses[Math.floor(Math.random() * responses.length)];
-                messages.innerHTML += `<div class="ai-message assistant">${response}</div>`;
-                messages.scrollTop = messages.scrollHeight;
-            }, 1000);
-        };
-        
-        sendBtn.addEventListener('click', sendMessage);
-        input.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage();
-        });
-    }
-    
-    function init() {
-        try { const t = localStorage.getItem('theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch(e) {}
-        
-        // Event listeners - only for non-disabled items
-        $$('.nav-item:not(.disabled)').forEach(item => item.addEventListener('click', e => { e.preventDefault(); navigateTo(item.dataset.page); }));
-        if ($('sidebar-toggle')) $('sidebar-toggle').addEventListener('click', toggleSidebar);
-        if ($('theme-toggle')) $('theme-toggle').addEventListener('click', toggleTheme);
-        if ($('sync-btn')) $('sync-btn').addEventListener('click', syncStrava);
-        
-        // Initialize AI Chat
-        initAIChat();
-        
-        // Load data
-        loadActivities();
-        loadHealthData();
-    }
-    
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
-    }
+const CONFIG={MAPBOX_TOKEN:'pk.eyJ1IjoiYWR2b2xvY2FydSIsImEiOiJjbWwwMzR3ajIwNnl5M2VxeTZ2eGppejQ2In0.A_2Sbqri_ip3kQFOqRM8DA',ROUTE_COLORS:['#8b5cf6','#22c55e','#3b82f6','#f59e0b','#ef4444','#ec4899','#14b8a6','#f97316']};
+window.ROUTES=[];let HEALTH={sleep:[],stress:[],steps:[]};let map=null,mapInitialized=false;let sleepChart=null,stressChart=null,stepsChart=null;
+(function(){
+const $=id=>document.getElementById(id);const $$=sel=>document.querySelectorAll(sel);
+function decodePolyline(encoded){if(!encoded||typeof encoded!=='string')return[];const coords=[];let index=0,lat=0,lng=0;while(index<encoded.length){let b,shift=0,result=0;do{b=encoded.charCodeAt(index++)-63;result|=(b&0x1f)<<shift;shift+=5;}while(b>=0x20);lat+=(result&1)?~(result>>1):(result>>1);shift=0;result=0;do{b=encoded.charCodeAt(index++)-63;result|=(b&0x1f)<<shift;shift+=5;}while(b>=0x20);lng+=(result&1)?~(result>>1):(result>>1);coords.push([lng/1e5,lat/1e5]);}return coords;}
+async function loadActivities(){try{const res=await fetch('/api/activities');const data=await res.json();if(data.success&&data.activities){window.ROUTES=data.activities.map(a=>{let coords=[];if(a.coords){if(typeof a.coords==='string'){if(a.coords.startsWith('[')){try{coords=JSON.parse(a.coords);}catch(e){}}else{coords=decodePolyline(a.coords);}}else if(Array.isArray(a.coords)){coords=a.coords;}}let dateStr=a.date;if(dateStr&&dateStr.includes('T')){dateStr=dateStr.split('T')[0];}return{id:a.id,name:a.name,date:dateStr,distance:parseFloat(a.distance)||0,pace:a.pace,duration:parseInt(a.duration)||0,hr:a.avg_hr,maxHr:a.max_hr,elevation:parseInt(a.elevation)||0,calories:parseInt(a.calories)||0,coords:coords};});updateDashboard();renderActivityList();updatePredictions();}}catch(e){console.error('Error loading activities:',e);$('activity-list').innerHTML='<div class="loading">Error loading activities</div>';}}
+async function loadHealthData(){try{const res=await fetch('/api/health');const data=await res.json();if(data.success){HEALTH=data;updateHealthCards();renderHealthCharts();}}catch(e){console.error('Error loading health data:',e);}}
+function updateDashboard(){if(!window.ROUTES.length)return;const now=new Date();const currentMonth=now.getMonth();const currentYear=now.getFullYear();const monthRuns=window.ROUTES.filter(r=>{const d=new Date(r.date);return d.getMonth()===currentMonth&&d.getFullYear()===currentYear;});const monthDistance=monthRuns.reduce((a,r)=>a+(r.distance||0),0);const monthElevation=monthRuns.reduce((a,r)=>a+(r.elevation||0),0);const monthSeconds=monthRuns.reduce((a,r)=>a+(r.duration||0),0);const hours=Math.floor(monthSeconds/3600);const mins=Math.floor((monthSeconds%3600)/60);$('stat-runs').textContent=monthRuns.length;$('stat-distance').innerHTML=monthDistance.toFixed(1)+'<span>km</span>';$('stat-time').innerHTML=hours+':'+mins.toString().padStart(2,'0')+'<span>hrs</span>';$('stat-elevation').innerHTML=monthElevation.toLocaleString()+'<span>m</span>';const monthNames=['January','February','March','April','May','June','July','August','September','October','November','December'];const subtitle=document.querySelector('.section-subtitle');if(subtitle)subtitle.textContent=monthNames[currentMonth]+' '+currentYear+' • '+window.ROUTES.length+' total runs';}
+function renderActivityList(){const list=$('activity-list');if(!list||!window.ROUTES.length){if(list)list.innerHTML='<div class="loading">No activities found</div>';return;}const formatTime=(secs)=>{if(!secs)return'--';const h=Math.floor(secs/3600);const m=Math.floor((secs%3600)/60);const s=secs%60;return h>0?h+':'+m.toString().padStart(2,'0')+':'+s.toString().padStart(2,'0'):m+':'+s.toString().padStart(2,'0');};list.innerHTML=window.ROUTES.slice(0,20).map(r=>'<div class="activity-item" data-id="'+r.id+'"><div class="activity-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="activity-info"><div class="activity-name">'+(r.name||'Run')+'</div><div class="activity-meta">'+r.date+'</div></div><div class="activity-stats"><div class="activity-stat"><div class="activity-stat-value">'+(r.distance?.toFixed(1)||'--')+'km</div><div class="activity-stat-label">Distance</div></div><div class="activity-stat"><div class="activity-stat-value">'+(r.pace||'--')+'</div><div class="activity-stat-label">Pace</div></div><div class="activity-stat"><div class="activity-stat-value">'+formatTime(r.duration)+'</div><div class="activity-stat-label">Time</div></div></div></div>').join('');}
+function updatePredictions(){if(!window.ROUTES.length)return;const thirtyDaysAgo=new Date();thirtyDaysAgo.setDate(thirtyDaysAgo.getDate()-30);const recentRuns=window.ROUTES.filter(r=>{const d=new Date(r.date);return d>=thirtyDaysAgo&&r.distance>=3;});if(recentRuns.length===0)return;let totalPaceSeconds=0;let paceCount=0;recentRuns.forEach(r=>{if(r.pace){const parts=r.pace.split(':');if(parts.length===2){const mins=parseInt(parts[0]);const secs=parseInt(parts[1].replace('/km',''));totalPaceSeconds+=mins*60+secs;paceCount++;}}else if(r.duration&&r.distance){totalPaceSeconds+=r.duration/r.distance;paceCount++;}});if(paceCount===0)return;const avgPaceSeconds=totalPaceSeconds/paceCount;const formatRaceTime=(seconds)=>{const h=Math.floor(seconds/3600);const m=Math.floor((seconds%3600)/60);const s=Math.floor(seconds%60);if(h>0){return h+':'+m.toString().padStart(2,'0')+':'+s.toString().padStart(2,'0');}return m+':'+s.toString().padStart(2,'0');};const formatPace=(seconds)=>{const m=Math.floor(seconds/60);const s=Math.floor(seconds%60);return m+':'+s.toString().padStart(2,'0')+'/km';};const racePaceFactor=0.92;const racePace=avgPaceSeconds*racePaceFactor;const time5k=racePace*5;$('pred-5k').textContent=formatRaceTime(time5k);$('pred-5k-pace').textContent=formatPace(racePace);const pace10k=racePace*Math.pow(10/5,0.06);const time10k=pace10k*10;$('pred-10k').textContent=formatRaceTime(time10k);$('pred-10k-pace').textContent=formatPace(pace10k);const paceHalf=racePace*Math.pow(21.0975/5,0.06);const timeHalf=paceHalf*21.0975;$('pred-half').textContent=formatRaceTime(timeHalf);$('pred-half-pace').textContent=formatPace(paceHalf);const paceFull=racePace*Math.pow(42.195/5,0.06);const timeFull=paceFull*42.195;$('pred-full').textContent=formatRaceTime(timeFull);$('pred-full-pace').textContent=formatPace(paceFull);updateRecommendations(avgPaceSeconds,recentRuns);updateWeeklyPlan(avgPaceSeconds);}
+function updateRecommendations(avgPace,recentRuns){const speedRecs=$('speed-recommendations');const enduranceRecs=$('endurance-recommendations');const easyPace=avgPace*1.15;const tempoPace=avgPace*0.95;const intervalPace=avgPace*0.85;const formatPace=(s)=>{const m=Math.floor(s/60);const sec=Math.floor(s%60);return m+':'+sec.toString().padStart(2,'0')+'/km';};const weeklyDistance=recentRuns.reduce((a,r)=>a+(r.distance||0),0)/4;speedRecs.innerHTML='<div class="recommendation-item"><div class="recommendation-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div><div class="recommendation-item-text">Interval training: 6x800m at '+formatPace(intervalPace)+' with 400m recovery jog</div></div><div class="recommendation-item"><div class="recommendation-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div><div class="recommendation-item-text">Tempo run: 20-30 min at '+formatPace(tempoPace)+' (comfortably hard)</div></div><div class="recommendation-item"><div class="recommendation-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div><div class="recommendation-item-text">Fartlek: 40 min with 8-10 surges of 1-2 min at 5K pace</div></div>';enduranceRecs.innerHTML='<div class="recommendation-item"><div class="recommendation-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div><div class="recommendation-item-text">Long run: '+Math.round(weeklyDistance*0.3)+'km at '+formatPace(easyPace)+' (easy, conversational)</div></div><div class="recommendation-item"><div class="recommendation-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div><div class="recommendation-item-text">Weekly target: '+Math.round(weeklyDistance*1.1)+'km (10% increase from current)</div></div><div class="recommendation-item"><div class="recommendation-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div><div class="recommendation-item-text">Recovery runs: 5-6km at '+formatPace(easyPace*1.1)+' on easy days</div></div>';}
+function updateWeeklyPlan(avgPace){const weeklyPlan=$('weekly-plan');const today=new Date().getDay();const dayIndex=today===0?6:today-1;const plan=[{type:'Easy Run',detail:'6-8km'},{type:'Intervals',detail:'6x800m'},{type:'Recovery',detail:'5km easy'},{type:'Tempo',detail:'8km tempo'},{type:'Rest',detail:'Cross-train'},{type:'Long Run',detail:'14-16km'},{type:'Rest',detail:'Active recovery'}];weeklyPlan.innerHTML=plan.map((day,i)=>'<div class="forecast-day '+(i===dayIndex?'today':'')+'"><div class="forecast-day-name">'+['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][i]+'</div><div class="forecast-day-type">'+day.type+'</div><div class="forecast-day-detail">'+day.detail+'</div></div>').join('');}
+function updateHealthCards(){if(HEALTH.sleep&&HEALTH.sleep.length>0){const latest=HEALTH.sleep[0];$('health-sleep').textContent=latest.totalHours+'h';$('health-sleep-detail').textContent='Deep: '+latest.deepHours+'h | REM: '+latest.remHours+'h';}if(HEALTH.stress&&HEALTH.stress.length>0){const latest=HEALTH.stress[0];$('health-stress').textContent=latest.avg_stress;$('health-stress-detail').textContent='Max: '+latest.max_stress;}if(HEALTH.steps&&HEALTH.steps.length>0){const latest=HEALTH.steps[0];$('health-steps').textContent=latest.steps?.toLocaleString()||'--';$('health-steps-detail').textContent='Goal: '+(latest.goal?.toLocaleString()||'--');$('health-distance').textContent=latest.distanceKm||'--';}}
+function renderHealthCharts(){const chartOptions={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(255,255,255,0.1)'},ticks:{color:'#888'}},y:{grid:{color:'rgba(255,255,255,0.1)'},ticks:{color:'#888'}}}};if(HEALTH.sleep&&HEALTH.sleep.length>0){const ctx=$('sleep-chart').getContext('2d');const labels=HEALTH.sleep.map(s=>s.date?.split('-').slice(1).join('/')).reverse();const data=HEALTH.sleep.map(s=>parseFloat(s.totalHours)).reverse();if(sleepChart)sleepChart.destroy();sleepChart=new Chart(ctx,{type:'bar',data:{labels,datasets:[{data,backgroundColor:'rgba(168,85,247,0.6)',borderColor:'#a855f7',borderWidth:1,borderRadius:4}]},options:{...chartOptions,scales:{...chartOptions.scales,y:{...chartOptions.scales.y,min:0,max:10}}}});}if(HEALTH.stress&&HEALTH.stress.length>0){const ctx=$('stress-chart').getContext('2d');const labels=HEALTH.stress.map(s=>s.date?.split('-').slice(1).join('/')).reverse();const data=HEALTH.stress.map(s=>s.avg_stress).reverse();if(stressChart)stressChart.destroy();stressChart=new Chart(ctx,{type:'line',data:{labels,datasets:[{data,borderColor:'#ef4444',backgroundColor:'rgba(239,68,68,0.1)',fill:true,tension:0.3}]},options:{...chartOptions,scales:{...chartOptions.scales,y:{...chartOptions.scales.y,min:0,max:100}}}});}if(HEALTH.steps&&HEALTH.steps.length>0){const ctx=$('steps-chart').getContext('2d');const labels=HEALTH.steps.map(s=>s.date?.split('-').slice(1).join('/')).reverse();const data=HEALTH.steps.map(s=>s.steps).reverse();const goals=HEALTH.steps.map(s=>s.goal).reverse();if(stepsChart)stepsChart.destroy();stepsChart=new Chart(ctx,{type:'bar',data:{labels,datasets:[{data,backgroundColor:'rgba(34,197,94,0.6)',borderColor:'#22c55e',borderWidth:1,borderRadius:4,label:'Steps'},{data:goals,type:'line',borderColor:'#888',borderDash:[5,5],pointRadius:0,label:'Goal'}]},options:chartOptions});}}
+function initMap(){if(mapInitialized||!$('map'))return;if(typeof mapboxgl==='undefined'){setTimeout(initMap,500);return;}try{mapboxgl.accessToken=CONFIG.MAPBOX_TOKEN;map=new mapboxgl.Map({container:'map',style:'mapbox://styles/mapbox/dark-v11',center:[26.1,44.41],zoom:12});map.on('load',()=>{mapInitialized=true;addRoutesToMap();renderRoutesList();});}catch(e){console.error('Map error:',e);}}
+function addRoutesToMap(){if(!map||!window.ROUTES.length)return;const routesWithCoords=window.ROUTES.filter(r=>r.coords&&r.coords.length>2);$('routes-count').textContent=routesWithCoords.length;routesWithCoords.forEach((r,i)=>{const sid='route-'+r.id;if(map.getSource(sid))return;map.addSource(sid,{type:'geojson',data:{type:'Feature',geometry:{type:'LineString',coordinates:r.coords}}});map.addLayer({id:'layer-'+r.id,type:'line',source:sid,paint:{'line-color':CONFIG.ROUTE_COLORS[i%CONFIG.ROUTE_COLORS.length],'line-width':3,'line-opacity':0.8}});});const allCoords=routesWithCoords.flatMap(r=>r.coords);if(allCoords.length){const bounds=allCoords.reduce((b,c)=>b.extend(c),new mapboxgl.LngLatBounds(allCoords[0],allCoords[0]));map.fitBounds(bounds,{padding:40});}}
+function renderRoutesList(){const list=$('routes-list');if(!list)return;const routesWithCoords=window.ROUTES.filter(r=>r.coords&&r.coords.length>2);list.innerHTML=routesWithCoords.slice(0,50).map(r=>'<div class="route-item" data-id="'+r.id+'"><div class="route-item-name">'+(r.name||'Run')+'</div><div class="route-item-meta"><span>'+r.date+'</span><span>'+(r.distance?.toFixed(1)||'--')+'km</span><span>'+(r.pace||'--')+'</span></div></div>').join('');}
+async function syncStrava(){const btn=$('sync-btn');if(!btn||btn.classList.contains('syncing'))return;btn.classList.add('syncing');btn.querySelector('span').textContent='Syncing...';try{const res=await fetch('/api/strava/sync',{method:'POST'});const data=await res.json();if(data.success){alert('✅ Synced '+data.total+' runs from Strava!');loadActivities();}else{alert('❌ Sync failed: '+(data.error||'Unknown error'));}}catch(e){alert('❌ Sync error: '+e.message);}finally{btn.classList.remove('syncing');btn.querySelector('span').textContent='Sync Strava';}}
+function navigateTo(page){$$('.nav-item').forEach(i=>i.classList.toggle('active',i.dataset.page===page));$$('.page-panel').forEach(p=>p.classList.remove('active'));const panel=$('page-'+page);if(panel)panel.classList.add('active');const titles={dashboard:'Dashboard',activities:'Activities & Maps',predictions:'Race Predictions',health:'Health & Recovery',mental:'Mental Health',nutrition:'Nutrition',injuries:'Injury Management',medical:'Medical Records','ai-assistant':'AI Assistant',account:'Account Settings'};$('page-title').textContent=titles[page]||'Dashboard';if(page==='activities')setTimeout(initMap,200);if(page==='predictions')updatePredictions();}
+function toggleSidebar(){$('sidebar').classList.toggle('collapsed');}
+function toggleTheme(){const t=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',t);try{localStorage.setItem('theme',t);}catch(e){}}
+function initUserMenu(){const userMenu=$('user-menu');const userBtn=$('user-btn');if(!userMenu||!userBtn)return;userBtn.addEventListener('click',(e)=>{e.stopPropagation();userMenu.classList.toggle('open');});document.addEventListener('click',(e)=>{if(!userMenu.contains(e.target)){userMenu.classList.remove('open');}});$$('.user-dropdown-item').forEach(item=>{item.addEventListener('click',(e)=>{e.preventDefault();const action=item.dataset.action;userMenu.classList.remove('open');switch(action){case'profile':alert('Profile - Coming Soon!\n\nManage your athlete profile, personal records, and training history.');break;case'settings':alert('Settings - Coming Soon!\n\nConfigure notifications, connected services, and app preferences.');break;case'logout':if(confirm('Are you sure you want to logout?')){alert('Logout functionality will be available when authentication is implemented.');}break;}});});}
+function initAIChat(){const input=$('ai-input');const sendBtn=$('ai-send');const messages=$('ai-messages');if(!input||!sendBtn||!messages)return;const sendMessage=()=>{const text=input.value.trim();if(!text)return;messages.innerHTML+='<div class="ai-message user">'+text+'</div>';input.value='';messages.scrollTop=messages.scrollHeight;setTimeout(()=>{const responses=["Based on your recent training data, I recommend taking an easy recovery day tomorrow.","Great question! Looking at your running patterns, you tend to perform best in the morning hours.","Your weekly mileage has increased by 15% this month. Remember the 10% rule to avoid overtraining.","I notice your sleep quality dipped last week. Sleep is crucial for recovery - aim for 7-9 hours consistently.","Your pace has improved by 8% over the last 3 months! Keep up the consistent training."];const response=responses[Math.floor(Math.random()*responses.length)];messages.innerHTML+='<div class="ai-message assistant">'+response+'</div>';messages.scrollTop=messages.scrollHeight;},1000);};sendBtn.addEventListener('click',sendMessage);input.addEventListener('keypress',(e)=>{if(e.key==='Enter')sendMessage();});}
+function init(){try{const t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}$$('.nav-item:not(.disabled)').forEach(item=>item.addEventListener('click',e=>{e.preventDefault();navigateTo(item.dataset.page);}));if($('sidebar-toggle'))$('sidebar-toggle').addEventListener('click',toggleSidebar);if($('theme-toggle'))$('theme-toggle').addEventListener('click',toggleTheme);if($('sync-btn'))$('sync-btn').addEventListener('click',syncStrava);initUserMenu();initAIChat();loadActivities();loadHealthData();}
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',init);}else{init();}
 })();
 </script>
 </body>
