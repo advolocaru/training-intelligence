@@ -141,10 +141,10 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .activity-stat-label{font-size:11px;color:var(--text-tertiary)}
 .loading{display:flex;align-items:center;justify-content:center;padding:40px;color:var(--text-secondary)}
 .loading-spinner{width:24px;height:24px;border:3px solid var(--border-color);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin-right:12px}
-.map-layout{position:relative;height:calc(100vh - var(--topbar-height) - 40px);margin:-20px;overflow:hidden}
+.map-layout{position:relative;height:calc(100vh - var(--topbar-height));margin:-20px;overflow:hidden}
 .map-container{position:absolute;inset:0;background:var(--bg-surface)}
 #map{width:100%;height:100%}
-.map-toolbar{position:absolute;top:20px;left:20px;right:340px;z-index:100;display:flex;align-items:center;gap:var(--gap-md);padding:12px 16px;background:rgba(20,20,32,0.9);backdrop-filter:blur(12px);border:1px solid var(--border-color);border-radius:var(--radius-md);box-shadow:0 4px 24px rgba(0,0,0,0.3)}
+.map-toolbar{display:none}
 .map-search{flex:1;position:relative}
 .map-search input{width:100%;padding:10px 16px 10px 40px;background:var(--bg-primary);border:1px solid var(--border-color);border-radius:var(--radius-sm);color:var(--text-primary);font-size:14px;transition:all var(--transition-fast)}
 .map-search input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-muted)}
@@ -157,38 +157,52 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .map-filter-btn{padding:8px 14px;background:var(--bg-primary);border:1px solid var(--border-color);border-radius:var(--radius-sm);color:var(--text-secondary);font-size:13px;cursor:pointer;transition:all var(--transition-fast);display:flex;align-items:center;gap:6px}
 .map-filter-btn:hover{background:var(--bg-surface-hover);border-color:var(--accent);color:var(--text-primary)}
 .map-filter-btn.active{background:var(--accent-muted);border-color:var(--accent);color:var(--accent)}
-.routes-sidebar{position:absolute;top:0;right:0;bottom:0;width:320px;z-index:100;background:var(--bg-surface);border-left:1px solid var(--border-color);display:flex;flex-direction:column;overflow:hidden}
-.routes-header{padding:16px 20px;border-bottom:1px solid var(--border-color);font-weight:600;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
-.routes-header-title{display:flex;align-items:center;gap:8px}
+.routes-sidebar{position:absolute;top:0;right:0;bottom:0;width:380px;z-index:100;background:var(--bg-surface);border-left:1px solid var(--border-color);display:flex;flex-direction:column;overflow:hidden}
+.routes-header{padding:16px;border-bottom:1px solid var(--border-color);flex-shrink:0}
+.routes-header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.routes-header-title{display:flex;align-items:center;gap:8px;font-weight:600}
 .routes-back{display:none;width:28px;height:28px;border-radius:50%;background:var(--bg-primary);border:1px solid var(--border-color);color:var(--text-secondary);cursor:pointer;align-items:center;justify-content:center;transition:all var(--transition-fast)}
 .routes-back:hover{background:var(--bg-surface-hover);color:var(--accent);border-color:var(--accent)}
 .routes-sidebar.expanded .routes-back{display:flex}
 .routes-sidebar.expanded .routes-header-text{display:none}
+.routes-sidebar.expanded .routes-search{display:none}
+.routes-sidebar.expanded .routes-header-top{margin-bottom:0}
 .routes-count{font-size:12px;color:var(--text-tertiary);font-weight:400}
-.routes-list{flex:1;overflow-y:auto;padding:8px}
+.routes-search{position:relative}
+.routes-search input{width:100%;padding:10px 12px 10px 36px;background:var(--bg-primary);border:1px solid var(--border-color);border-radius:var(--radius-sm);color:var(--text-primary);font-size:13px;transition:all var(--transition-fast)}
+.routes-search input:focus{outline:none;border-color:var(--accent);background:var(--bg-surface)}
+.routes-search input::placeholder{color:var(--text-tertiary)}
+.routes-search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-tertiary);pointer-events:none}
+.routes-search-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:20px;height:20px;border-radius:50%;background:transparent;border:none;color:var(--text-tertiary);cursor:pointer;display:none;align-items:center;justify-content:center;transition:all var(--transition-fast)}
+.routes-search-clear:hover{background:var(--bg-surface-hover);color:var(--text-primary)}
+.routes-list{flex:1;overflow-y:auto;padding:8px 12px}
 .routes-list::-webkit-scrollbar{width:6px}
-.routes-list::-webkit-scrollbar-track{background:transparent}
-.routes-list::-webkit-scrollbar-thumb{background:var(--border-color);border-radius:3px}
-.routes-list::-webkit-scrollbar-thumb:hover{background:var(--text-tertiary)}
+.routes-list::-webkit-scrollbar-track{background:var(--bg-primary);border-radius:3px}
+.routes-list::-webkit-scrollbar-thumb{background:var(--accent-muted);border-radius:3px;border:1px solid var(--bg-surface)}
+.routes-list::-webkit-scrollbar-thumb:hover{background:var(--accent)}
 .routes-sidebar.expanded .routes-list{display:none}
-.route-item{padding:12px 14px;margin-bottom:4px;background:var(--bg-primary);border-radius:var(--radius-sm);cursor:pointer;transition:all var(--transition-fast);border:1px solid transparent;position:relative}
-.route-item:hover{background:var(--bg-surface-hover);border-color:var(--border-color)}
+.route-item{padding:14px;margin-bottom:6px;background:var(--bg-primary);border-radius:var(--radius-sm);cursor:pointer;transition:all var(--transition-fast);border:1px solid var(--border-color);position:relative}
+.route-item:hover{background:var(--bg-surface-hover);border-color:var(--accent-muted)}
 .route-item.active{background:var(--accent-muted);border-color:var(--accent)}
-.route-item.active::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:3px;background:var(--accent);border-radius:0 2px 2px 0}
+.route-item.active::before{content:'';position:absolute;left:0;top:10px;bottom:10px;width:3px;background:var(--accent);border-radius:0 2px 2px 0}
 .route-item.has-pr{border-color:var(--warning)}
-.route-item.has-pr::after{content:'PR';position:absolute;top:8px;right:8px;font-size:9px;font-weight:700;color:var(--warning);background:rgba(234,179,8,0.15);padding:2px 6px;border-radius:3px;letter-spacing:0.5px}
-.route-item-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
-.route-item-name{font-weight:600;font-size:13px;color:var(--text-primary);line-height:1.3;flex:1;padding-right:8px}
+.route-item.has-pr::after{content:'PR';position:absolute;top:10px;right:10px;font-size:9px;font-weight:700;color:var(--warning);background:rgba(234,179,8,0.15);padding:2px 6px;border-radius:3px;letter-spacing:0.5px}
+.route-item-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.route-item-name{font-weight:600;font-size:14px;color:var(--text-primary);line-height:1.3;flex:1;padding-right:8px}
 .route-item-date{font-size:11px;color:var(--text-tertiary);white-space:nowrap}
-.route-item-stats{display:flex;gap:var(--gap-md);font-size:12px;color:var(--text-secondary)}
+.route-item-stats{display:flex;gap:16px;font-size:12px;color:var(--text-secondary)}
 .route-item-stat{display:flex;align-items:center;gap:4px}
-.route-item-stat svg{width:12px;height:12px;opacity:0.7}
+.route-item-stat svg{width:12px;height:12px;opacity:0.6}
 .route-detail{display:none;flex:1;overflow-y:auto;padding:0}
+.route-detail::-webkit-scrollbar{width:6px}
+.route-detail::-webkit-scrollbar-track{background:var(--bg-primary);border-radius:3px}
+.route-detail::-webkit-scrollbar-thumb{background:var(--accent-muted);border-radius:3px}
+.route-detail::-webkit-scrollbar-thumb:hover{background:var(--accent)}
 .routes-sidebar.expanded .route-detail{display:block}
-.route-detail-header{padding:20px;background:linear-gradient(135deg,var(--accent-muted) 0%,transparent 70%);border-bottom:1px solid var(--border-color)}
+.route-detail-header{padding:20px;background:var(--bg-primary);border-bottom:1px solid var(--border-color)}
 .route-detail-title{font-size:18px;font-weight:700;margin-bottom:4px}
 .route-detail-date{font-size:13px;color:var(--text-secondary)}
-.route-detail-pr-badge{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:4px 10px;background:linear-gradient(135deg,rgba(234,179,8,0.2),rgba(234,179,8,0.1));border:1px solid var(--warning);border-radius:20px;font-size:11px;font-weight:600;color:var(--warning)}
+.route-detail-pr-badge{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:4px 10px;background:rgba(234,179,8,0.15);border:1px solid var(--warning);border-radius:20px;font-size:11px;font-weight:600;color:var(--warning)}
 .route-detail-pr-badge svg{width:12px;height:12px}
 .route-detail-body{padding:20px}
 .route-detail-section{margin-bottom:20px}
@@ -196,7 +210,8 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .route-detail-section-title{font-size:11px;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:12px;display:flex;align-items:center;gap:8px}
 .route-detail-section-title svg{width:14px;height:14px;opacity:0.6}
 .route-detail-stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.route-detail-stat{background:var(--bg-primary);padding:14px 12px;border-radius:var(--radius-sm);text-align:center;border:1px solid var(--border-color)}
+.route-detail-stat{background:var(--bg-surface);padding:14px 12px;border-radius:var(--radius-sm);text-align:center;border:1px solid var(--border-color);cursor:pointer;transition:all var(--transition-fast)}
+.route-detail-stat:hover{border-color:var(--accent);transform:translateY(-2px)}
 .route-detail-stat-value{font-size:20px;font-weight:700;color:var(--text-primary);margin-bottom:2px}
 .route-detail-stat-label{font-size:10px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.03em}
 .route-detail-stat.primary{background:var(--accent-muted);border-color:var(--accent)}
@@ -204,12 +219,25 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .route-detail-stat.pr{background:rgba(234,179,8,0.1);border-color:var(--warning)}
 .route-detail-stat.pr .route-detail-stat-value{color:var(--warning)}
 .route-detail-stat.pr::after{content:'PR';font-size:8px;font-weight:700;color:var(--warning);margin-left:4px;vertical-align:super}
-.route-detail-actions{padding:20px;border-top:1px solid var(--border-color);display:flex;gap:10px;margin-top:auto}
+.route-detail-actions{padding:16px 20px;border-top:1px solid var(--border-color);display:flex;gap:10px}
 .route-detail-btn{flex:1;padding:12px 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;transition:all var(--transition-fast);display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none}
 .route-detail-btn.primary{background:var(--accent);border:none;color:white}
 .route-detail-btn.primary:hover{background:var(--accent-hover)}
 .route-detail-btn.secondary{background:transparent;border:1px solid var(--border-color);color:var(--text-secondary)}
 .route-detail-btn.secondary:hover{border-color:var(--accent);color:var(--accent)}
+.metric-popup{position:absolute;right:400px;top:50%;transform:translateY(-50%);width:280px;background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);box-shadow:0 8px 32px rgba(0,0,0,0.4);z-index:300;opacity:0;visibility:hidden;transition:all 0.2s ease}
+.metric-popup.visible{opacity:1;visibility:visible}
+.metric-popup-header{padding:16px;border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center}
+.metric-popup-title{font-weight:600;font-size:14px}
+.metric-popup-close{width:24px;height:24px;border-radius:50%;background:transparent;border:none;color:var(--text-tertiary);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.metric-popup-close:hover{background:var(--bg-primary);color:var(--text-primary)}
+.metric-popup-body{padding:16px}
+.metric-popup-value{font-size:32px;font-weight:700;color:var(--accent);margin-bottom:4px}
+.metric-popup-label{font-size:12px;color:var(--text-secondary);margin-bottom:16px}
+.metric-popup-chart{height:80px;background:var(--bg-primary);border-radius:var(--radius-sm);display:flex;align-items:flex-end;padding:8px;gap:4px}
+.metric-popup-bar{flex:1;background:var(--accent-muted);border-radius:2px 2px 0 0;transition:height 0.3s ease}
+.metric-popup-comparison{margin-top:12px;padding-top:12px;border-top:1px solid var(--border-color);font-size:12px;color:var(--text-secondary)}
+.metric-popup-comparison span{color:var(--success);font-weight:600}
 .no-routes{padding:40px 20px;text-align:center;color:var(--text-tertiary)}
 .no-routes svg{width:48px;height:48px;margin-bottom:12px;opacity:0.5}
 .flex-1{flex:1}
@@ -233,7 +261,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .ai-chat-input button:hover{background:var(--accent-hover)}
 /* Monthly Targets */.targets-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap-md);margin-bottom:var(--gap-lg)}.target-card{background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:var(--card-padding);position:relative;overflow:hidden}.target-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:var(--radius-md) 0 0 var(--radius-md)}.target-card.runs::before{background:var(--accent)}.target-card.distance::before{background:var(--success)}.target-card.elevation::before{background:var(--warning)}.target-header{display:flex;align-items:center;gap:var(--gap-sm);margin-bottom:var(--gap-xs)}.target-ring{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative}.target-ring svg{position:absolute;width:40px;height:40px;transform:rotate(-90deg)}.target-ring .ring-bg{stroke:var(--bg-primary);stroke-width:3;fill:none}.target-ring .ring-progress{stroke-width:3;fill:none;stroke-linecap:round;transition:stroke-dashoffset 0.5s ease}.target-card.runs .ring-progress{stroke:var(--accent)}.target-card.distance .ring-progress{stroke:var(--success)}.target-card.elevation .ring-progress{stroke:var(--warning)}.target-info h3{font-size:14px;font-weight:600;color:var(--text-primary)}.target-info p{font-size:12px;color:var(--text-secondary)}.target-percentage{font-size:48px;font-weight:700;margin:var(--gap-md) 0 var(--gap-sm)}.target-card.runs .target-percentage{color:var(--accent)}.target-card.distance .target-percentage{color:var(--success)}.target-card.elevation .target-percentage{color:var(--warning)}.target-card.completed .target-percentage{color:var(--success)!important}.target-progress-bar{height:6px;background:var(--bg-primary);border-radius:3px;overflow:hidden;margin-bottom:var(--gap-sm)}.target-progress-fill{height:100%;border-radius:3px;transition:width 0.5s ease}.target-card.runs .target-progress-fill{background:linear-gradient(90deg,var(--accent),var(--accent-hover))}.target-card.distance .target-progress-fill{background:linear-gradient(90deg,var(--success),#4ade80)}.target-card.elevation .target-progress-fill{background:linear-gradient(90deg,var(--warning),#fde047)}.target-card.completed .target-progress-fill{background:linear-gradient(90deg,var(--success),#4ade80)!important}.target-stats{display:flex;justify-content:space-between;font-size:13px;color:var(--text-secondary)}.target-stats span:last-child{color:var(--text-tertiary)}.ai-progress-card{background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(6,182,212,0.05));border:1px solid transparent;border-radius:var(--radius-md);padding:var(--card-padding);margin-bottom:var(--gap-lg);position:relative;overflow:hidden}.ai-progress-card::before{content:'';position:absolute;inset:0;border-radius:var(--radius-md);padding:1px;background:linear-gradient(135deg,rgba(139,92,246,0.5),rgba(6,182,212,0.3),rgba(139,92,246,0.2));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}.ai-progress-card::after{content:'';position:absolute;top:0;right:0;bottom:0;left:0;background:repeating-linear-gradient(135deg,transparent,transparent 2px,rgba(139,92,246,0.03) 2px,rgba(139,92,246,0.03) 4px);pointer-events:none;opacity:0.5}.ai-progress-header{display:flex;align-items:center;gap:var(--gap-sm);margin-bottom:var(--gap-md);position:relative;z-index:1}.ai-progress-badge{background:linear-gradient(135deg,var(--accent),var(--info));color:white;font-size:10px;font-weight:700;padding:4px 10px;border-radius:var(--radius-xs);text-transform:uppercase;letter-spacing:0.05em;box-shadow:0 2px 8px rgba(139,92,246,0.3)}.ai-progress-title{font-size:18px;font-weight:600}.ai-progress-text{color:var(--text-secondary);font-size:14px;line-height:1.6;position:relative;z-index:1}.calendar-card{background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:var(--card-padding)}.calendar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--gap-md)}.calendar-title{font-size:18px;font-weight:600}.calendar-nav{display:flex;gap:var(--gap-xs)}.calendar-nav button{width:32px;height:32px;border:1px solid var(--border-color);background:var(--bg-primary);border-radius:var(--radius-xs);color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--transition-fast)}.calendar-nav button:hover{background:var(--bg-surface-hover);color:var(--text-primary);border-color:var(--accent)}.calendar-weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:var(--gap-sm)}.calendar-weekday{text-align:center;font-size:11px;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;padding:var(--gap-sm) 0}.calendar-days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.calendar-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-sm);font-size:13px;color:var(--text-secondary);position:relative;cursor:default;transition:all var(--transition-fast)}.calendar-day.other-month{color:var(--text-tertiary);opacity:0.4}.calendar-day.today{background:var(--accent-muted);color:var(--accent);font-weight:600;border:1px solid var(--accent)}.calendar-day.has-activity{background:var(--success-muted);color:var(--success);font-weight:500}.calendar-day.has-activity::after{content:'';position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:4px;height:4px;background:var(--success);border-radius:50%}.calendar-day.today.has-activity{background:linear-gradient(135deg,var(--accent-muted),var(--success-muted));border-color:var(--success)}
 @media(max-width:1200px){.stats-grid,.health-grid,.predictions-grid{grid-template-columns:repeat(2,1fr)}.training-recommendations{grid-template-columns:1fr}.routes-sidebar{width:260px}}
-@media(max-width:900px){.map-layout{height:calc(100vh - var(--topbar-height) - 60px)}.map-toolbar{left:10px;right:10px;top:10px;flex-wrap:wrap;padding:10px}.map-search{min-width:100%;order:1}.map-filters{order:2;margin-top:8px}.routes-sidebar{display:none}}
+@media(max-width:900px){.map-layout{height:calc(100vh - var(--topbar-height))}.routes-sidebar{position:fixed;top:var(--topbar-height);left:0;right:0;bottom:0;width:100%;border-left:none;border-top:1px solid var(--border-color)}.metric-popup{display:none}}
 @media(max-width:768px){.stats-grid,.health-grid,.predictions-grid{grid-template-columns:1fr}.sidebar{transform:translateX(-100%)}.sidebar.mobile-open{transform:translateX(0)}.main-content{margin-left:0!important}.forecast-grid{grid-template-columns:repeat(4,1fr)}.targets-grid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -306,24 +334,20 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
             <div class="page-panel" id="page-activities">
                 <div class="map-layout">
                     <div class="map-container"><div id="map"></div></div>
-                    <div class="map-toolbar">
-                        <div class="map-search">
-                            <svg class="map-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                            <input type="text" id="route-search" placeholder="Search routes by name...">
-                            <button class="map-search-clear" id="search-clear" style="display:none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-                        </div>
-                        <div class="map-filters">
-                            <button class="map-filter-btn" id="filter-month"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>This Month</button>
-                            <button class="map-filter-btn" id="filter-all"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>All Routes</button>
-                        </div>
-                    </div>
                     <div class="routes-sidebar" id="routes-sidebar">
                         <div class="routes-header">
-                            <div class="routes-header-title">
-                                <button class="routes-back" id="routes-back"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
-                                <span class="routes-header-text">Routes</span>
+                            <div class="routes-header-top">
+                                <div class="routes-header-title">
+                                    <button class="routes-back" id="routes-back"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
+                                    <span class="routes-header-text">Activities</span>
+                                </div>
+                                <span class="routes-count" id="routes-count">0 runs</span>
                             </div>
-                            <span class="routes-count" id="routes-count">0 runs</span>
+                            <div class="routes-search">
+                                <svg class="routes-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                                <input type="text" id="route-search" placeholder="Search activities...">
+                                <button class="routes-search-clear" id="search-clear"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+                            </div>
                         </div>
                         <div class="routes-list" id="routes-list"><div class="loading"><div class="loading-spinner"></div>Loading...</div></div>
                         <div class="route-detail" id="route-detail">
@@ -336,25 +360,39 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
                                 <div class="route-detail-section">
                                     <div class="route-detail-section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Performance</div>
                                     <div class="route-detail-stats-grid">
-                                        <div class="route-detail-stat primary"><div class="route-detail-stat-value" id="detail-distance">--</div><div class="route-detail-stat-label">Distance</div></div>
-                                        <div class="route-detail-stat"><div class="route-detail-stat-value" id="detail-pace">--</div><div class="route-detail-stat-label">Pace</div></div>
-                                        <div class="route-detail-stat"><div class="route-detail-stat-value" id="detail-duration">--</div><div class="route-detail-stat-label">Duration</div></div>
-                                        <div class="route-detail-stat"><div class="route-detail-stat-value" id="detail-elevation">--</div><div class="route-detail-stat-label">Elevation</div></div>
+                                        <div class="route-detail-stat primary" data-metric="distance"><div class="route-detail-stat-value" id="detail-distance">--</div><div class="route-detail-stat-label">Distance</div></div>
+                                        <div class="route-detail-stat" data-metric="pace"><div class="route-detail-stat-value" id="detail-pace">--</div><div class="route-detail-stat-label">Pace</div></div>
+                                        <div class="route-detail-stat" data-metric="duration"><div class="route-detail-stat-value" id="detail-duration">--</div><div class="route-detail-stat-label">Duration</div></div>
+                                        <div class="route-detail-stat" data-metric="elevation"><div class="route-detail-stat-value" id="detail-elevation">--</div><div class="route-detail-stat-label">Elevation</div></div>
                                     </div>
                                 </div>
                                 <div class="route-detail-section">
                                     <div class="route-detail-section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Health</div>
                                     <div class="route-detail-stats-grid">
-                                        <div class="route-detail-stat"><div class="route-detail-stat-value" id="detail-hr">--</div><div class="route-detail-stat-label">Avg HR</div></div>
-                                        <div class="route-detail-stat"><div class="route-detail-stat-value" id="detail-maxhr">--</div><div class="route-detail-stat-label">Max HR</div></div>
-                                        <div class="route-detail-stat"><div class="route-detail-stat-value" id="detail-calories">--</div><div class="route-detail-stat-label">Calories</div></div>
-                                        <div class="route-detail-stat"><div class="route-detail-stat-value" id="detail-cadence">--</div><div class="route-detail-stat-label">Cadence</div></div>
+                                        <div class="route-detail-stat" data-metric="hr"><div class="route-detail-stat-value" id="detail-hr">--</div><div class="route-detail-stat-label">Avg HR</div></div>
+                                        <div class="route-detail-stat" data-metric="maxhr"><div class="route-detail-stat-value" id="detail-maxhr">--</div><div class="route-detail-stat-label">Max HR</div></div>
+                                        <div class="route-detail-stat" data-metric="calories"><div class="route-detail-stat-value" id="detail-calories">--</div><div class="route-detail-stat-label">Calories</div></div>
+                                        <div class="route-detail-stat" data-metric="cadence"><div class="route-detail-stat-value" id="detail-cadence">--</div><div class="route-detail-stat-label">Cadence</div></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="route-detail-actions">
                                 <a href="#" target="_blank" class="route-detail-btn primary" id="detail-strava"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>View on Strava</a>
                                 <button class="route-detail-btn secondary" id="detail-zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>Fit Map</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="metric-popup" id="metric-popup">
+                        <div class="metric-popup-header">
+                            <span class="metric-popup-title" id="popup-title">Distance</span>
+                            <button class="metric-popup-close" id="popup-close"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+                        </div>
+                        <div class="metric-popup-body">
+                            <div class="metric-popup-value" id="popup-value">5.24 km</div>
+                            <div class="metric-popup-label" id="popup-label">This activity</div>
+                            <div class="metric-popup-chart" id="popup-chart"></div>
+                            <div class="metric-popup-comparison" id="popup-comparison">
+                                <span>+12%</span> vs your monthly average
                             </div>
                         </div>
                     </div>
@@ -461,7 +499,10 @@ function updateMapVisibility(){if(!map)return;const now=new Date();const current
 function searchRoutes(query){const q=query.toLowerCase();const routesWithCoords=window.ROUTES.filter(r=>r.coords&&r.coords.length>2).sort((a,b)=>new Date(b.date)-new Date(a.date));const filtered=q?routesWithCoords.filter(r=>(r.name||'').toLowerCase().includes(q)):routesWithCoords;renderRoutesListFiltered(filtered);if(q&&filtered.length){filtered.slice(0,10).forEach((r,i)=>{if(!map.getSource('route-'+r.id)){addRouteLayer(r,i);}});const coords=filtered.slice(0,5).flatMap(r=>r.coords);if(coords.length){const bounds=coords.reduce((b,c)=>b.extend(c),new mapboxgl.LngLatBounds(coords[0],coords[0]));map.fitBounds(bounds,{padding:80,duration:600});}}window.ROUTES.forEach(r=>{const layerId='layer-'+r.id;if(!map||!map.getLayer(layerId))return;const match=!q||(r.name||'').toLowerCase().includes(q);map.setPaintProperty(layerId,'line-opacity',match?0.8:0.15);});}
 function renderRoutesListFiltered(routes){const list=$('routes-list');if(!list)return;if(!routes.length){list.innerHTML='<div class="no-routes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 20l-5.447-2.724A1 1 0 0 1 3 16.382V5.618a1 1 0 0 1 1.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0 0 21 18.382V7.618a1 1 0 0 0-.553-.894L15 4m0 13V4m0 0L9 7"/></svg><div>No routes found</div></div>';return;}list.innerHTML=routes.slice(0,50).map(r=>{const active=selectedRouteId===r.id?' active':'';return '<div class="route-item'+active+'" data-id="'+r.id+'"><div class="route-item-header"><div class="route-item-name">'+(r.name||'Run')+'</div><div class="route-item-date">'+r.date+'</div></div><div class="route-item-stats"><div class="route-item-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>'+(r.distance?.toFixed(1)||'--')+' km</div><div class="route-item-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'+(r.pace||'--')+'</div></div></div>';}).join('');list.querySelectorAll('.route-item').forEach(item=>{const rid=item.dataset.id;item.addEventListener('click',()=>selectRoute(rid));item.addEventListener('mouseenter',()=>{if(String(selectedRouteId)!==rid)highlightRoute(rid,true);});item.addEventListener('mouseleave',()=>{if(String(selectedRouteId)!==rid)highlightRoute(rid,false);});});}
 function renderRoutesList(){const routesWithCoords=window.ROUTES.filter(r=>r.coords&&r.coords.length>2);let filtered=routesWithCoords;if(routeFilter==='month'){const now=new Date();const currentMonth=now.getMonth();const currentYear=now.getFullYear();filtered=routesWithCoords.filter(r=>{const d=new Date(r.date);return d.getMonth()===currentMonth&&d.getFullYear()===currentYear;});}renderRoutesListFiltered(filtered);}
-function initMapInteractions(){const searchInput=$('route-search');const clearBtn=$('search-clear');if(searchInput){searchInput.addEventListener('input',(e)=>{const val=e.target.value;searchRoutes(val);if(clearBtn)clearBtn.style.display=val?'flex':'none';});}if(clearBtn){clearBtn.addEventListener('click',()=>{searchInput.value='';clearBtn.style.display='none';searchRoutes('');searchInput.focus();});}const filterMonth=$('filter-month');const filterAll=$('filter-all');if(filterMonth)filterMonth.addEventListener('click',()=>filterRoutes('month'));if(filterAll)filterAll.addEventListener('click',()=>filterRoutes('all'));const backBtn=$('routes-back');if(backBtn)backBtn.addEventListener('click',hideRouteDetail);const zoomBtn=$('detail-zoom');if(zoomBtn)zoomBtn.addEventListener('click',()=>{if(selectedRouteId){const route=window.ROUTES.find(r=>String(r.id)===String(selectedRouteId));if(route&&route.coords&&route.coords.length>2){const bounds=route.coords.reduce((b,c)=>b.extend(c),new mapboxgl.LngLatBounds(route.coords[0],route.coords[0]));map.fitBounds(bounds,{padding:80,duration:600});}}});document.addEventListener('keydown',(e)=>{if(e.key==='Escape')hideRouteDetail();});filterRoutes('all');}
+function initMapInteractions(){const searchInput=$('route-search');const clearBtn=$('search-clear');if(searchInput){searchInput.addEventListener('input',(e)=>{const val=e.target.value;searchRoutes(val);if(clearBtn)clearBtn.style.display=val?'flex':'none';});}if(clearBtn){clearBtn.addEventListener('click',()=>{searchInput.value='';clearBtn.style.display='none';searchRoutes('');searchInput.focus();});}const backBtn=$('routes-back');if(backBtn)backBtn.addEventListener('click',hideRouteDetail);const zoomBtn=$('detail-zoom');if(zoomBtn)zoomBtn.addEventListener('click',()=>{if(selectedRouteId){const route=window.ROUTES.find(r=>String(r.id)===String(selectedRouteId));if(route&&route.coords&&route.coords.length>2){const bounds=route.coords.reduce((b,c)=>b.extend(c),new mapboxgl.LngLatBounds(route.coords[0],route.coords[0]));map.fitBounds(bounds,{padding:{top:80,bottom:80,left:80,right:400},duration:600});}}});const popupClose=$('popup-close');if(popupClose)popupClose.addEventListener('click',hideMetricPopup);$$('.route-detail-stat').forEach(stat=>{stat.addEventListener('click',()=>{const metric=stat.dataset.metric;if(metric)showMetricPopup(metric);});});document.addEventListener('keydown',(e)=>{if(e.key==='Escape'){hideRouteDetail();hideMetricPopup();}});renderRoutesList();}
+function showMetricPopup(metric){const popup=$('metric-popup');if(!popup||!selectedRouteId)return;const route=window.ROUTES.find(r=>String(r.id)===String(selectedRouteId));if(!route)return;const metrics={distance:{title:'Distance',value:(route.distance?.toFixed(2)||'--')+' km',unit:'km'},pace:{title:'Pace',value:route.pace||'--',unit:'/km'},duration:{title:'Duration',value:formatDuration(route.duration),unit:''},elevation:{title:'Elevation',value:(route.elevation||'--')+' m',unit:'m'},hr:{title:'Avg Heart Rate',value:(route.hr||'--')+' bpm',unit:'bpm'},maxhr:{title:'Max Heart Rate',value:(route.maxHr||'--')+' bpm',unit:'bpm'},calories:{title:'Calories',value:(route.calories||'--')+' kcal',unit:'kcal'},cadence:{title:'Cadence',value:(route.cadence||'--')+' spm',unit:'spm'}};const m=metrics[metric];if(!m)return;$('popup-title').textContent=m.title;$('popup-value').textContent=m.value;const recentRuns=window.ROUTES.filter(r=>r[metric]||r.distance).slice(0,10);const chart=$('popup-chart');chart.innerHTML='';const maxVal=Math.max(...recentRuns.map(r=>metric==='distance'?r.distance:(r[metric]||0)));recentRuns.reverse().forEach(r=>{const val=metric==='distance'?r.distance:(r[metric]||0);const pct=maxVal>0?(val/maxVal)*100:0;const bar=document.createElement('div');bar.className='metric-popup-bar';bar.style.height=pct+'%';bar.style.background=String(r.id)===String(selectedRouteId)?'var(--accent)':'var(--accent-muted)';chart.appendChild(bar);});const avg=recentRuns.reduce((a,r)=>a+(metric==='distance'?r.distance:(r[metric]||0)),0)/recentRuns.length;const current=metric==='distance'?route.distance:(route[metric]||0);const diff=avg>0?((current-avg)/avg*100).toFixed(0):0;$('popup-comparison').innerHTML=diff>=0?'<span style=\"color:var(--success)\">+'+diff+'%</span> vs recent average':'<span style=\"color:var(--danger)\">'+diff+'%</span> vs recent average';popup.classList.add('visible');}
+function hideMetricPopup(){const popup=$('metric-popup');if(popup)popup.classList.remove('visible');}
+function formatDuration(secs){if(!secs)return'--';const h=Math.floor(secs/3600);const m=Math.floor((secs%3600)/60);const s=secs%60;return h>0?h+':'+m.toString().padStart(2,'0')+':'+s.toString().padStart(2,'0'):m+':'+s.toString().padStart(2,'0');}
 function updateSyncStatus(){const syncText=$('sync-text');if(!syncText)return;const now=new Date();const today8am=new Date(now);today8am.setHours(8,0,0,0);const yesterday8am=new Date(today8am);yesterday8am.setDate(yesterday8am.getDate()-1);let syncTime;if(now>=today8am){syncTime=today8am;}else{syncTime=yesterday8am;}const isToday=syncTime.toDateString()===now.toDateString();const timeStr=syncTime.toLocaleTimeString('ro-RO',{hour:'2-digit',minute:'2-digit'});if(isToday){syncText.textContent='Last sync: Today '+timeStr;}else{syncText.textContent='Last sync: Yesterday '+timeStr;}}
 const MONTHLY_GOALS={runs:15,distance:150,elevation:500};let calendarMonth=new Date().getMonth();let calendarYear=new Date().getFullYear();function updateTargets(){if(!window.ROUTES.length)return;const now=new Date();const currentMonth=now.getMonth();const currentYear=now.getFullYear();const monthRuns=window.ROUTES.filter(r=>{const d=new Date(r.date);return d.getMonth()===currentMonth&&d.getFullYear()===currentYear;});const runs=monthRuns.length;const distance=monthRuns.reduce((a,r)=>a+(r.distance||0),0);const elevation=monthRuns.reduce((a,r)=>a+(r.elevation||0),0);const runsPct=Math.min(100,Math.round((runs/MONTHLY_GOALS.runs)*100));const distPct=Math.min(100,Math.round((distance/MONTHLY_GOALS.distance)*100));const elevPct=Math.min(100,Math.round((elevation/MONTHLY_GOALS.elevation)*100));const circumference=100.53;$("pct-runs").textContent=runsPct+"%";$("pct-distance").textContent=distPct+"%";$("pct-elevation").textContent=elevPct+"%";$("bar-runs").style.width=runsPct+"%";$("bar-distance").style.width=distPct+"%";$("bar-elevation").style.width=elevPct+"%";$("ring-runs").style.strokeDashoffset=circumference-(circumference*runsPct/100);$("ring-distance").style.strokeDashoffset=circumference-(circumference*distPct/100);$("ring-elevation").style.strokeDashoffset=circumference-(circumference*elevPct/100);$("current-runs").textContent=runs+" runs";$("current-distance").textContent=distance.toFixed(1)+" km";$("current-elevation").textContent=elevation+" m";if(runsPct>=100)$("target-runs").classList.add("completed");else $("target-runs").classList.remove("completed");if(distPct>=100)$("target-distance").classList.add("completed");else $("target-distance").classList.remove("completed");if(elevPct>=100)$("target-elevation").classList.add("completed");else $("target-elevation").classList.remove("completed");const avgPct=Math.round((runsPct+distPct+elevPct)/3);const daysLeft=new Date(currentYear,currentMonth+1,0).getDate()-now.getDate();const runsNeeded=Math.max(0,MONTHLY_GOALS.runs-runs);const distNeeded=Math.max(0,MONTHLY_GOALS.distance-distance).toFixed(1);let progressText="";if(avgPct>=100){progressText="Congratulations! You have achieved all your monthly goals!";}else if(avgPct>=75){progressText=distPct+"% of distance goal. "+runsNeeded+" more runs needed. On track!";}else if(avgPct>=50){progressText=distPct+"% of distance goal. Need "+runsNeeded+" more runs. "+daysLeft+" days left.";}else{progressText=distPct+"% of distance goal. Need "+distNeeded+" km and "+runsNeeded+" more runs.";}$("ai-progress-text").textContent=progressText;const monthNames=["January","February","March","April","May","June","July","August","September","October","November","December"];const subtitle=document.querySelector("#page-predictions .section-subtitle");if(subtitle)subtitle.textContent="Track your "+monthNames[currentMonth]+" goals and training progress";renderCalendar();}function renderCalendar(){const monthNames=["January","February","March","April","May","June","July","August","September","October","November","December"];$("calendar-title").textContent=monthNames[calendarMonth]+" "+calendarYear;const firstDay=new Date(calendarYear,calendarMonth,1);const lastDay=new Date(calendarYear,calendarMonth+1,0);const startDay=(firstDay.getDay()+6)%7;const daysInMonth=lastDay.getDate();const prevMonth=new Date(calendarYear,calendarMonth,0);const daysInPrevMonth=prevMonth.getDate();const activityDates=new Set();if(window.ROUTES){window.ROUTES.forEach(r=>{const d=new Date(r.date);if(d.getMonth()===calendarMonth&&d.getFullYear()===calendarYear){activityDates.add(d.getDate());}});}const today=new Date();const isCurrentMonth=today.getMonth()===calendarMonth&&today.getFullYear()===calendarYear;let html="";for(let i=0;i<startDay;i++){const day=daysInPrevMonth-startDay+1+i;html+="<div class=\"calendar-day other-month\">"+day+"</div>";}for(let day=1;day<=daysInMonth;day++){const classes=["calendar-day"];if(isCurrentMonth&&day===today.getDate())classes.push("today");if(activityDates.has(day))classes.push("has-activity");html+="<div class=\""+classes.join(" ")+"\">"+day+"</div>";}const totalCells=startDay+daysInMonth;const remaining=totalCells%7===0?0:7-(totalCells%7);for(let i=1;i<=remaining;i++){html+="<div class=\"calendar-day other-month\">"+i+"</div>";}$("calendar-days").innerHTML=html;}function initCalendar(){if($("cal-prev"))$("cal-prev").addEventListener("click",()=>{calendarMonth--;if(calendarMonth<0){calendarMonth=11;calendarYear--;}renderCalendar();});if($("cal-next"))$("cal-next").addEventListener("click",()=>{calendarMonth++;if(calendarMonth>11){calendarMonth=0;calendarYear++;}renderCalendar();});}
 function navigateTo(page){$$('.nav-item').forEach(i=>i.classList.toggle('active',i.dataset.page===page));$$('.page-panel').forEach(p=>p.classList.remove('active'));const panel=$('page-'+page);if(panel)panel.classList.add('active');const titles={dashboard:'Dashboard',activities:'Activities & Maps',predictions:'Monthly Targets',health:'Health & Recovery',mental:'Mental Health',nutrition:'Nutrition',injuries:'Injury Management',medical:'Medical Records','ai-assistant':'AI Assistant',account:'Account Settings'};$('page-title').textContent=titles[page]||'Dashboard';if(page==='activities')setTimeout(initMap,200);if(page==='predictions')updateTargets();}
