@@ -141,9 +141,10 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .activity-stat-label{font-size:11px;color:var(--text-tertiary)}
 .loading{display:flex;align-items:center;justify-content:center;padding:40px;color:var(--text-secondary)}
 .loading-spinner{width:24px;height:24px;border:3px solid var(--border-color);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin-right:12px}
-.map-layout{display:flex;height:calc(100vh - var(--topbar-height) - 120px);gap:0;position:relative}
-.map-main{flex:1;display:flex;flex-direction:column;position:relative}
-.map-toolbar{display:flex;align-items:center;gap:var(--gap-md);padding:var(--gap-md);background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);margin-bottom:var(--gap-md)}
+.map-layout{position:relative;height:calc(100vh - var(--topbar-height) - 40px);margin:-20px;overflow:hidden}
+.map-container{position:absolute;inset:0;background:var(--bg-surface)}
+#map{width:100%;height:100%}
+.map-toolbar{position:absolute;top:20px;left:20px;right:340px;z-index:100;display:flex;align-items:center;gap:var(--gap-md);padding:12px 16px;background:rgba(20,20,32,0.85);backdrop-filter:blur(12px);border:1px solid var(--border-color);border-radius:var(--radius-md);box-shadow:0 4px 24px rgba(0,0,0,0.3)}
 .map-search{flex:1;position:relative}
 .map-search input{width:100%;padding:10px 16px 10px 40px;background:var(--bg-primary);border:1px solid var(--border-color);border-radius:var(--radius-sm);color:var(--text-primary);font-size:14px;transition:all var(--transition-fast)}
 .map-search input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-muted)}
@@ -153,9 +154,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .map-filter-btn{padding:8px 14px;background:var(--bg-primary);border:1px solid var(--border-color);border-radius:var(--radius-sm);color:var(--text-secondary);font-size:13px;cursor:pointer;transition:all var(--transition-fast);display:flex;align-items:center;gap:6px}
 .map-filter-btn:hover{background:var(--bg-surface-hover);border-color:var(--accent);color:var(--text-primary)}
 .map-filter-btn.active{background:var(--accent-muted);border-color:var(--accent);color:var(--accent)}
-.map-container{flex:1;border-radius:var(--radius-md);overflow:hidden;background:var(--bg-surface);border:1px solid var(--border-color);position:relative}
-#map{width:100%;height:100%}
-.routes-sidebar{width:300px;background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);margin-left:var(--gap-md);display:flex;flex-direction:column;overflow:hidden}
+.routes-sidebar{position:absolute;top:20px;right:20px;bottom:20px;width:300px;z-index:100;background:rgba(20,20,32,0.9);backdrop-filter:blur(12px);border:1px solid var(--border-color);border-radius:var(--radius-md);display:flex;flex-direction:column;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.3)}
 .routes-header{padding:var(--gap-md);border-bottom:1px solid var(--border-color);font-weight:600;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
 .routes-count{font-size:12px;color:var(--text-tertiary);font-weight:400}
 .routes-list{flex:1;overflow-y:auto;padding:var(--gap-xs)}
@@ -163,8 +162,8 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .routes-list::-webkit-scrollbar-track{background:transparent}
 .routes-list::-webkit-scrollbar-thumb{background:var(--border-color);border-radius:3px}
 .routes-list::-webkit-scrollbar-thumb:hover{background:var(--text-tertiary)}
-.route-item{padding:12px 14px;margin:4px;background:var(--bg-primary);border-radius:var(--radius-sm);cursor:pointer;transition:all var(--transition-fast);border:1px solid transparent;position:relative}
-.route-item:hover{background:var(--bg-surface-hover);border-color:var(--border-color);transform:translateX(2px)}
+.route-item{padding:12px 14px;margin:4px;background:rgba(10,10,20,0.6);border-radius:var(--radius-sm);cursor:pointer;transition:all var(--transition-fast);border:1px solid transparent;position:relative}
+.route-item:hover{background:var(--bg-surface-hover);border-color:var(--border-color);transform:translateX(-2px)}
 .route-item.active{background:var(--accent-muted);border-color:var(--accent)}
 .route-item.active::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:3px;background:var(--accent);border-radius:0 2px 2px 0}
 .route-item-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
@@ -173,24 +172,28 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .route-item-stats{display:flex;gap:var(--gap-md);font-size:12px;color:var(--text-secondary)}
 .route-item-stat{display:flex;align-items:center;gap:4px}
 .route-item-stat svg{width:12px;height:12px;opacity:0.7}
-.route-detail-card{position:absolute;z-index:1000;background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:0;width:320px;box-shadow:0 8px 32px rgba(0,0,0,0.3);opacity:0;visibility:hidden;transition:all 0.2s ease;overflow:hidden}
-.route-detail-card.visible{opacity:1;visibility:visible}
-.route-detail-header{padding:16px;background:linear-gradient(135deg,var(--accent-muted),transparent);border-bottom:1px solid var(--border-color)}
-.route-detail-title{font-size:16px;font-weight:700;margin-bottom:4px}
-.route-detail-date{font-size:12px;color:var(--text-secondary)}
-.route-detail-body{padding:16px}
-.route-detail-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px}
-.route-detail-stat{background:var(--bg-primary);padding:12px;border-radius:var(--radius-sm);text-align:center}
-.route-detail-stat-value{font-size:18px;font-weight:700;color:var(--text-primary);margin-bottom:2px}
-.route-detail-stat-label{font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.03em}
+.route-detail-card{position:absolute;z-index:200;top:20px;right:340px;bottom:20px;width:380px;background:rgba(20,20,32,0.95);backdrop-filter:blur(16px);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:0;box-shadow:-8px 0 32px rgba(0,0,0,0.4);transform:translateX(calc(100% + 20px));opacity:0;visibility:hidden;transition:all 0.3s cubic-bezier(0.4,0,0.2,1);overflow:hidden;display:flex;flex-direction:column}
+.route-detail-card.visible{transform:translateX(0);opacity:1;visibility:visible}
+.route-detail-header{padding:20px;background:linear-gradient(135deg,var(--accent-muted),transparent);border-bottom:1px solid var(--border-color);flex-shrink:0}
+.route-detail-title{font-size:18px;font-weight:700;margin-bottom:4px}
+.route-detail-date{font-size:13px;color:var(--text-secondary)}
+.route-detail-body{padding:20px;flex:1;overflow-y:auto}
+.route-detail-section{margin-bottom:20px}
+.route-detail-section-title{font-size:11px;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.route-detail-section-title svg{width:14px;height:14px;opacity:0.7}
+.route-detail-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.route-detail-stat{background:rgba(10,10,20,0.6);padding:14px;border-radius:var(--radius-sm);text-align:center;border:1px solid var(--border-color)}
+.route-detail-stat-value{font-size:20px;font-weight:700;color:var(--text-primary);margin-bottom:2px}
+.route-detail-stat-label{font-size:10px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.03em}
+.route-detail-stat.primary{border-color:var(--accent);background:var(--accent-muted)}
 .route-detail-stat.primary .route-detail-stat-value{color:var(--accent)}
-.route-detail-actions{display:flex;gap:var(--gap-sm)}
-.route-detail-btn{flex:1;padding:10px 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;transition:all var(--transition-fast);display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none}
+.route-detail-actions{display:flex;gap:var(--gap-sm);padding:20px;border-top:1px solid var(--border-color);flex-shrink:0;background:rgba(10,10,20,0.4)}
+.route-detail-btn{flex:1;padding:12px 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;transition:all var(--transition-fast);display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none}
 .route-detail-btn.primary{background:var(--accent);border:none;color:white}
 .route-detail-btn.primary:hover{background:var(--accent-hover)}
 .route-detail-btn.secondary{background:transparent;border:1px solid var(--border-color);color:var(--text-secondary)}
 .route-detail-btn.secondary:hover{border-color:var(--accent);color:var(--accent)}
-.route-detail-close{position:absolute;top:12px;right:12px;width:28px;height:28px;border-radius:50%;background:var(--bg-primary);border:1px solid var(--border-color);color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--transition-fast)}
+.route-detail-close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;background:var(--bg-primary);border:1px solid var(--border-color);color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--transition-fast);z-index:10}
 .route-detail-close:hover{background:var(--bg-surface-hover);color:var(--text-primary);border-color:var(--accent)}
 .no-routes{padding:40px 20px;text-align:center;color:var(--text-tertiary)}
 .no-routes svg{width:48px;height:48px;margin-bottom:12px;opacity:0.5}
@@ -215,7 +218,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .ai-chat-input button:hover{background:var(--accent-hover)}
 /* Monthly Targets */.targets-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap-md);margin-bottom:var(--gap-lg)}.target-card{background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:var(--card-padding);position:relative;overflow:hidden}.target-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:var(--radius-md) 0 0 var(--radius-md)}.target-card.runs::before{background:var(--accent)}.target-card.distance::before{background:var(--success)}.target-card.elevation::before{background:var(--warning)}.target-header{display:flex;align-items:center;gap:var(--gap-sm);margin-bottom:var(--gap-xs)}.target-ring{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative}.target-ring svg{position:absolute;width:40px;height:40px;transform:rotate(-90deg)}.target-ring .ring-bg{stroke:var(--bg-primary);stroke-width:3;fill:none}.target-ring .ring-progress{stroke-width:3;fill:none;stroke-linecap:round;transition:stroke-dashoffset 0.5s ease}.target-card.runs .ring-progress{stroke:var(--accent)}.target-card.distance .ring-progress{stroke:var(--success)}.target-card.elevation .ring-progress{stroke:var(--warning)}.target-info h3{font-size:14px;font-weight:600;color:var(--text-primary)}.target-info p{font-size:12px;color:var(--text-secondary)}.target-percentage{font-size:48px;font-weight:700;margin:var(--gap-md) 0 var(--gap-sm)}.target-card.runs .target-percentage{color:var(--accent)}.target-card.distance .target-percentage{color:var(--success)}.target-card.elevation .target-percentage{color:var(--warning)}.target-card.completed .target-percentage{color:var(--success)!important}.target-progress-bar{height:6px;background:var(--bg-primary);border-radius:3px;overflow:hidden;margin-bottom:var(--gap-sm)}.target-progress-fill{height:100%;border-radius:3px;transition:width 0.5s ease}.target-card.runs .target-progress-fill{background:linear-gradient(90deg,var(--accent),var(--accent-hover))}.target-card.distance .target-progress-fill{background:linear-gradient(90deg,var(--success),#4ade80)}.target-card.elevation .target-progress-fill{background:linear-gradient(90deg,var(--warning),#fde047)}.target-card.completed .target-progress-fill{background:linear-gradient(90deg,var(--success),#4ade80)!important}.target-stats{display:flex;justify-content:space-between;font-size:13px;color:var(--text-secondary)}.target-stats span:last-child{color:var(--text-tertiary)}.ai-progress-card{background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(6,182,212,0.05));border:1px solid transparent;border-radius:var(--radius-md);padding:var(--card-padding);margin-bottom:var(--gap-lg);position:relative;overflow:hidden}.ai-progress-card::before{content:'';position:absolute;inset:0;border-radius:var(--radius-md);padding:1px;background:linear-gradient(135deg,rgba(139,92,246,0.5),rgba(6,182,212,0.3),rgba(139,92,246,0.2));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}.ai-progress-card::after{content:'';position:absolute;top:0;right:0;bottom:0;left:0;background:repeating-linear-gradient(135deg,transparent,transparent 2px,rgba(139,92,246,0.03) 2px,rgba(139,92,246,0.03) 4px);pointer-events:none;opacity:0.5}.ai-progress-header{display:flex;align-items:center;gap:var(--gap-sm);margin-bottom:var(--gap-md);position:relative;z-index:1}.ai-progress-badge{background:linear-gradient(135deg,var(--accent),var(--info));color:white;font-size:10px;font-weight:700;padding:4px 10px;border-radius:var(--radius-xs);text-transform:uppercase;letter-spacing:0.05em;box-shadow:0 2px 8px rgba(139,92,246,0.3)}.ai-progress-title{font-size:18px;font-weight:600}.ai-progress-text{color:var(--text-secondary);font-size:14px;line-height:1.6;position:relative;z-index:1}.calendar-card{background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:var(--card-padding)}.calendar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--gap-md)}.calendar-title{font-size:18px;font-weight:600}.calendar-nav{display:flex;gap:var(--gap-xs)}.calendar-nav button{width:32px;height:32px;border:1px solid var(--border-color);background:var(--bg-primary);border-radius:var(--radius-xs);color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--transition-fast)}.calendar-nav button:hover{background:var(--bg-surface-hover);color:var(--text-primary);border-color:var(--accent)}.calendar-weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:var(--gap-sm)}.calendar-weekday{text-align:center;font-size:11px;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;padding:var(--gap-sm) 0}.calendar-days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.calendar-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-sm);font-size:13px;color:var(--text-secondary);position:relative;cursor:default;transition:all var(--transition-fast)}.calendar-day.other-month{color:var(--text-tertiary);opacity:0.4}.calendar-day.today{background:var(--accent-muted);color:var(--accent);font-weight:600;border:1px solid var(--accent)}.calendar-day.has-activity{background:var(--success-muted);color:var(--success);font-weight:500}.calendar-day.has-activity::after{content:'';position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:4px;height:4px;background:var(--success);border-radius:50%}.calendar-day.today.has-activity{background:linear-gradient(135deg,var(--accent-muted),var(--success-muted));border-color:var(--success)}
 @media(max-width:1200px){.stats-grid,.health-grid,.predictions-grid{grid-template-columns:repeat(2,1fr)}.training-recommendations{grid-template-columns:1fr}.routes-sidebar{width:260px}}
-@media(max-width:900px){.map-layout{flex-direction:column;height:auto}.map-main{min-height:500px}.routes-sidebar{width:100%;margin-left:0;margin-top:var(--gap-md);max-height:300px}.map-toolbar{flex-wrap:wrap}.map-search{min-width:200px}.route-detail-card{width:calc(100% - 40px);left:20px!important;right:20px}}
+@media(max-width:900px){.map-layout{height:calc(100vh - var(--topbar-height) - 60px)}.map-toolbar{left:10px;right:10px;top:10px;flex-wrap:wrap;padding:10px}.map-search{min-width:100%;order:1}.map-filters{order:2;margin-top:8px}.routes-sidebar{display:none}.route-detail-card{position:fixed;top:auto;right:10px;bottom:10px;left:10px;width:auto;max-height:50vh;transform:translateY(calc(100% + 20px))}.route-detail-card.visible{transform:translateY(0)}}
 @media(max-width:768px){.stats-grid,.health-grid,.predictions-grid{grid-template-columns:1fr}.sidebar{transform:translateX(-100%)}.sidebar.mobile-open{transform:translateX(0)}.main-content{margin-left:0!important}.forecast-grid{grid-template-columns:repeat(4,1fr)}.targets-grid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -287,44 +290,54 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
             <!-- Activities/Maps Page -->
             <div class="page-panel" id="page-activities">
                 <div class="map-layout">
-                    <div class="map-main">
-                        <div class="map-toolbar">
-                            <div class="map-search">
-                                <svg class="map-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                                <input type="text" id="route-search" placeholder="Search routes by name...">
-                            </div>
-                            <div class="map-filters">
-                                <button class="map-filter-btn" id="filter-month"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>This Month</button>
-                                <button class="map-filter-btn" id="filter-all"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>All Routes</button>
-                            </div>
+                    <div class="map-container"><div id="map"></div></div>
+                    <div class="map-toolbar">
+                        <div class="map-search">
+                            <svg class="map-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                            <input type="text" id="route-search" placeholder="Search routes by name...">
                         </div>
-                        <div class="map-container"><div id="map"></div></div>
-                        <div class="route-detail-card" id="route-detail">
-                            <button class="route-detail-close" id="detail-close"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-                            <div class="route-detail-header">
-                                <div class="route-detail-title" id="detail-title">Morning Run</div>
-                                <div class="route-detail-date" id="detail-date">January 15, 2026</div>
-                            </div>
-                            <div class="route-detail-body">
-                                <div class="route-detail-grid">
-                                    <div class="route-detail-stat primary"><div class="route-detail-stat-value" id="detail-distance">--</div><div class="route-detail-stat-label">Distance</div></div>
-                                    <div class="route-detail-stat"><div class="route-detail-stat-value" id="detail-pace">--</div><div class="route-detail-stat-label">Pace</div></div>
-                                    <div class="route-detail-stat"><div class="route-detail-stat-value" id="detail-duration">--</div><div class="route-detail-stat-label">Duration</div></div>
-                                    <div class="route-detail-stat"><div class="route-detail-stat-value" id="detail-hr">--</div><div class="route-detail-stat-label">Avg HR</div></div>
-                                    <div class="route-detail-stat"><div class="route-detail-stat-value" id="detail-elevation">--</div><div class="route-detail-stat-label">Elevation</div></div>
-                                    <div class="route-detail-stat"><div class="route-detail-stat-value" id="detail-calories">--</div><div class="route-detail-stat-label">Calories</div></div>
-                                </div>
-                                <div class="route-detail-actions">
-                                    <a href="#" target="_blank" class="route-detail-btn primary" id="detail-strava"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>View on Strava</a>
-                                    <button class="route-detail-btn secondary" id="detail-zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>Zoom to Fit</button>
-                                </div>
-                            </div>
+                        <div class="map-filters">
+                            <button class="map-filter-btn" id="filter-month"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>This Month</button>
+                            <button class="map-filter-btn" id="filter-all"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>All Routes</button>
                         </div>
                     </div>
                     <div class="routes-sidebar">
                         <div class="routes-header">Routes <span class="routes-count" id="routes-count">0 runs</span></div>
                         <div class="routes-list" id="routes-list"><div class="loading"><div class="loading-spinner"></div>Loading...</div></div>
                     </div>
+                    <div class="route-detail-card" id="route-detail">
+                        <button class="route-detail-close" id="detail-close"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+                        <div class="route-detail-header">
+                            <div class="route-detail-title" id="detail-title">Morning Run</div>
+                            <div class="route-detail-date" id="detail-date">January 15, 2026</div>
+                        </div>
+                        <div class="route-detail-body">
+                            <div class="route-detail-section">
+                                <div class="route-detail-section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Performance</div>
+                                <div class="route-detail-grid">
+                                    <div class="route-detail-stat primary"><div class="route-detail-stat-value" id="detail-distance">--</div><div class="route-detail-stat-label">Distance</div></div>
+                                    <div class="route-detail-stat"><div class="route-detail-stat-value" id="detail-pace">--</div><div class="route-detail-stat-label">Pace</div></div>
+                                    <div class="route-detail-stat"><div class="route-detail-stat-value" id="detail-duration">--</div><div class="route-detail-stat-label">Duration</div></div>
+                                    <div class="route-detail-stat"><div class="route-detail-stat-value" id="detail-elevation">--</div><div class="route-detail-stat-label">Elevation</div></div>
+                                </div>
+                            </div>
+                            <div class="route-detail-section">
+                                <div class="route-detail-section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Health Metrics</div>
+                                <div class="route-detail-grid">
+                                    <div class="route-detail-stat"><div class="route-detail-stat-value" id="detail-hr">--</div><div class="route-detail-stat-label">Avg HR</div></div>
+                                    <div class="route-detail-stat"><div class="route-detail-stat-value" id="detail-maxhr">--</div><div class="route-detail-stat-label">Max HR</div></div>
+                                    <div class="route-detail-stat"><div class="route-detail-stat-value" id="detail-calories">--</div><div class="route-detail-stat-label">Calories</div></div>
+                                    <div class="route-detail-stat"><div class="route-detail-stat-value" id="detail-cadence">--</div><div class="route-detail-stat-label">Cadence</div></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="route-detail-actions">
+                            <a href="#" target="_blank" class="route-detail-btn primary" id="detail-strava"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>View on Strava</a>
+                            <button class="route-detail-btn secondary" id="detail-zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>Fit Map</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
                 </div>
             </div>
             <!-- Predictions Page -->
@@ -420,7 +433,7 @@ let selectedRouteId=null;let routeFilter='all';
 function addRoutesToMap(){if(!map||!window.ROUTES.length)return;const routesWithCoords=window.ROUTES.filter(r=>r.coords&&r.coords.length>2);$('routes-count').textContent=routesWithCoords.length+' runs';routesWithCoords.forEach((r,i)=>{const sid='route-'+r.id;if(map.getSource(sid))return;map.addSource(sid,{type:'geojson',data:{type:'Feature',properties:{id:r.id},geometry:{type:'LineString',coordinates:r.coords}}});map.addLayer({id:'layer-'+r.id,type:'line',source:sid,paint:{'line-color':CONFIG.ROUTE_COLORS[i%CONFIG.ROUTE_COLORS.length],'line-width':3,'line-opacity':0.7}});map.on('click','layer-'+r.id,()=>selectRoute(r.id));map.on('mouseenter','layer-'+r.id,()=>{map.getCanvas().style.cursor='pointer';highlightRoute(r.id,true);});map.on('mouseleave','layer-'+r.id,()=>{map.getCanvas().style.cursor='';if(selectedRouteId!==r.id)highlightRoute(r.id,false);});});const allCoords=routesWithCoords.flatMap(r=>r.coords);if(allCoords.length){const bounds=allCoords.reduce((b,c)=>b.extend(c),new mapboxgl.LngLatBounds(allCoords[0],allCoords[0]));map.fitBounds(bounds,{padding:50});}}
 function highlightRoute(id,highlight){const layerId='layer-'+id;if(!map.getLayer(layerId))return;map.setPaintProperty(layerId,'line-width',highlight?5:3);map.setPaintProperty(layerId,'line-opacity',highlight?1:0.7);}
 function selectRoute(id){const route=window.ROUTES.find(r=>r.id===id);if(!route)return;if(selectedRouteId){highlightRoute(selectedRouteId,false);$$('.route-item.active').forEach(el=>el.classList.remove('active'));}selectedRouteId=id;highlightRoute(id,true);const item=document.querySelector('.route-item[data-id=\"'+id+'\"]');if(item){item.classList.add('active');item.scrollIntoView({behavior:'smooth',block:'nearest'});}showRouteDetail(route);if(route.coords&&route.coords.length>2){const bounds=route.coords.reduce((b,c)=>b.extend(c),new mapboxgl.LngLatBounds(route.coords[0],route.coords[0]));map.fitBounds(bounds,{padding:80,duration:500});}}
-function showRouteDetail(route){const card=$('route-detail');if(!card)return;$('detail-title').textContent=route.name||'Run';const dateObj=new Date(route.date);$('detail-date').textContent=dateObj.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});$('detail-distance').textContent=(route.distance?.toFixed(2)||'--')+' km';$('detail-pace').textContent=route.pace||'--';const mins=Math.floor((route.duration||0)/60);const secs=(route.duration||0)%60;$('detail-duration').textContent=mins+':'+(secs<10?'0':'')+secs;$('detail-hr').textContent=(route.hr||'--')+' bpm';$('detail-elevation').textContent=(route.elevation||'--')+' m';$('detail-calories').textContent=(route.calories||'--')+' kcal';$('detail-strava').href='https://www.strava.com/activities/'+route.id;card.classList.add('visible');const mapRect=$('map').getBoundingClientRect();card.style.left='20px';card.style.bottom='20px';}
+function showRouteDetail(route){const card=$('route-detail');if(!card)return;$('detail-title').textContent=route.name||'Run';const dateObj=new Date(route.date);$('detail-date').textContent=dateObj.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});$('detail-distance').textContent=(route.distance?.toFixed(2)||'--')+' km';$('detail-pace').textContent=route.pace||'--';const mins=Math.floor((route.duration||0)/60);const secs=(route.duration||0)%60;$('detail-duration').textContent=mins+':'+(secs<10?'0':'')+secs;$('detail-elevation').textContent=(route.elevation||'--')+' m';$('detail-hr').textContent=(route.hr||'--');$('detail-maxhr').textContent=(route.maxHr||'--');$('detail-calories').textContent=(route.calories||'--');$('detail-cadence').textContent=(route.cadence||'--');$('detail-strava').href='https://www.strava.com/activities/'+route.id;card.classList.add('visible');}
 function hideRouteDetail(){const card=$('route-detail');if(card)card.classList.remove('visible');if(selectedRouteId){highlightRoute(selectedRouteId,false);$$('.route-item.active').forEach(el=>el.classList.remove('active'));selectedRouteId=null;}}
 function filterRoutes(filter){routeFilter=filter;$$('.map-filter-btn').forEach(b=>b.classList.remove('active'));if(filter==='month')$('filter-month').classList.add('active');else $('filter-all').classList.add('active');renderRoutesList();updateMapVisibility();}
 function updateMapVisibility(){if(!map)return;const now=new Date();const currentMonth=now.getMonth();const currentYear=now.getFullYear();window.ROUTES.forEach(r=>{const layerId='layer-'+r.id;if(!map.getLayer(layerId))return;let visible=true;if(routeFilter==='month'){const d=new Date(r.date);visible=d.getMonth()===currentMonth&&d.getFullYear()===currentYear;}map.setLayoutProperty(layerId,'visibility',visible?'visible':'none');});}
