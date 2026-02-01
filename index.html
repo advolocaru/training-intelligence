@@ -141,105 +141,149 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .activity-stat-label{font-size:11px;color:var(--text-tertiary)}
 .loading{display:flex;align-items:center;justify-content:center;padding:40px;color:var(--text-secondary)}
 .loading-spinner{width:24px;height:24px;border:3px solid var(--border-color);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin-right:12px}
-.map-layout{position:relative;height:calc(100vh - var(--topbar-height));margin:-20px;overflow:hidden}
-.map-container{position:absolute;inset:0;background:var(--bg-surface)}
-#map{width:100%;height:100%}
-.map-toolbar{display:none}
-.map-search{flex:1;position:relative}
-.map-search input{width:100%;padding:10px 16px 10px 40px;background:var(--bg-primary);border:1px solid var(--border-color);border-radius:var(--radius-sm);color:var(--text-primary);font-size:14px;transition:all var(--transition-fast)}
-.map-search input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-muted)}
-.map-search input::placeholder{color:var(--text-tertiary)}
-.map-search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-tertiary);pointer-events:none}
-.map-search-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:24px;height:24px;border:none;background:var(--bg-surface-hover);border-radius:50%;color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--transition-fast)}
-.map-search-clear:hover{background:var(--accent-muted);color:var(--accent)}
-.map-search input{padding-right:40px}
-.map-filters{display:flex;gap:var(--gap-sm)}
-.map-filter-btn{padding:8px 14px;background:var(--bg-primary);border:1px solid var(--border-color);border-radius:var(--radius-sm);color:var(--text-secondary);font-size:13px;cursor:pointer;transition:all var(--transition-fast);display:flex;align-items:center;gap:6px}
-.map-filter-btn:hover{background:var(--bg-surface-hover);border-color:var(--accent);color:var(--text-primary)}
-.map-filter-btn.active{background:var(--accent-muted);border-color:var(--accent);color:var(--accent)}
-.routes-sidebar{position:absolute;top:0;right:0;bottom:0;width:380px;z-index:100;background:var(--bg-surface);border-left:1px solid var(--border-color);display:flex;flex-direction:column;overflow:hidden}
-.routes-header{padding:16px;border-bottom:1px solid var(--border-color);flex-shrink:0}
-.routes-header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.routes-header-title{display:flex;align-items:center;gap:8px;font-weight:600}
-.routes-back{display:none;width:28px;height:28px;border-radius:50%;background:var(--bg-primary);border:1px solid var(--border-color);color:var(--text-secondary);cursor:pointer;align-items:center;justify-content:center;transition:all var(--transition-fast)}
-.routes-back:hover{background:var(--bg-surface-hover);color:var(--accent);border-color:var(--accent)}
-.routes-sidebar.expanded .routes-back{display:flex}
-.routes-sidebar.expanded .routes-header-text{display:none}
-.routes-sidebar.expanded .routes-search{display:none}
-.routes-sidebar.expanded .routes-header-top{margin-bottom:0}
-.routes-count{font-size:12px;color:var(--text-tertiary);font-weight:400}
-.routes-search{position:relative}
-.routes-search input{width:100%;padding:10px 12px 10px 36px;background:var(--bg-primary);border:1px solid var(--border-color);border-radius:var(--radius-sm);color:var(--text-primary);font-size:13px;transition:all var(--transition-fast)}
-.routes-search input:focus{outline:none;border-color:var(--accent);background:var(--bg-surface)}
-.routes-search input::placeholder{color:var(--text-tertiary)}
-.routes-search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-tertiary);pointer-events:none}
-.routes-search-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:20px;height:20px;border-radius:50%;background:transparent;border:none;color:var(--text-tertiary);cursor:pointer;display:none;align-items:center;justify-content:center;transition:all var(--transition-fast)}
-.routes-search-clear:hover{background:var(--bg-surface-hover);color:var(--text-primary)}
-.routes-list{flex:1;overflow-y:auto;padding:8px 12px}
-.routes-list::-webkit-scrollbar{width:6px}
-.routes-list::-webkit-scrollbar-track{background:var(--bg-primary);border-radius:3px}
-.routes-list::-webkit-scrollbar-thumb{background:var(--accent-muted);border-radius:3px;border:1px solid var(--bg-surface)}
-.routes-list::-webkit-scrollbar-thumb:hover{background:var(--accent)}
-.routes-sidebar.expanded .routes-list{display:none}
-.route-item{padding:14px;margin-bottom:6px;background:var(--bg-primary);border-radius:var(--radius-sm);cursor:pointer;transition:all var(--transition-fast);border:1px solid var(--border-color);position:relative}
-.route-item:hover{background:var(--bg-surface-hover);border-color:var(--accent-muted)}
-.route-item.active{background:var(--accent-muted);border-color:var(--accent)}
-.route-item.active::before{content:'';position:absolute;left:0;top:10px;bottom:10px;width:3px;background:var(--accent);border-radius:0 2px 2px 0}
-.route-item.has-pr{border-color:var(--warning)}
-.route-item.has-pr::after{content:'PR';position:absolute;top:10px;right:10px;font-size:9px;font-weight:700;color:var(--warning);background:rgba(234,179,8,0.15);padding:2px 6px;border-radius:3px;letter-spacing:0.5px}
-.route-item-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
-.route-item-name{font-weight:600;font-size:14px;color:var(--text-primary);line-height:1.3;flex:1;padding-right:8px}
-.route-item-date{font-size:11px;color:var(--text-tertiary);white-space:nowrap}
-.route-item-stats{display:flex;gap:16px;font-size:12px;color:var(--text-secondary)}
-.route-item-stat{display:flex;align-items:center;gap:4px}
-.route-item-stat svg{width:12px;height:12px;opacity:0.6}
-.route-detail{display:none;flex:1;overflow-y:auto;padding:0}
-.route-detail::-webkit-scrollbar{width:6px}
-.route-detail::-webkit-scrollbar-track{background:var(--bg-primary);border-radius:3px}
-.route-detail::-webkit-scrollbar-thumb{background:var(--accent-muted);border-radius:3px}
-.route-detail::-webkit-scrollbar-thumb:hover{background:var(--accent)}
-.routes-sidebar.expanded .route-detail{display:block}
-.route-detail-header{padding:20px;background:var(--bg-primary);border-bottom:1px solid var(--border-color)}
-.route-detail-title{font-size:18px;font-weight:700;margin-bottom:4px}
-.route-detail-date{font-size:13px;color:var(--text-secondary)}
-.route-detail-pr-badge{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:4px 10px;background:rgba(234,179,8,0.15);border:1px solid var(--warning);border-radius:20px;font-size:11px;font-weight:600;color:var(--warning)}
-.route-detail-pr-badge svg{width:12px;height:12px}
-.route-detail-body{padding:20px}
-.route-detail-section{margin-bottom:20px}
-.route-detail-section:last-child{margin-bottom:0}
-.route-detail-section-title{font-size:11px;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:12px;display:flex;align-items:center;gap:8px}
-.route-detail-section-title svg{width:14px;height:14px;opacity:0.6}
-.route-detail-stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.route-detail-stat{background:var(--bg-surface);padding:14px 12px;border-radius:var(--radius-sm);text-align:center;border:1px solid var(--border-color);cursor:pointer;transition:all var(--transition-fast)}
-.route-detail-stat:hover{border-color:var(--accent);transform:translateY(-2px)}
-.route-detail-stat-value{font-size:20px;font-weight:700;color:var(--text-primary);margin-bottom:2px}
-.route-detail-stat-label{font-size:10px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.03em}
-.route-detail-stat.primary{background:var(--accent-muted);border-color:var(--accent)}
-.route-detail-stat.primary .route-detail-stat-value{color:var(--accent)}
-.route-detail-stat.pr{background:rgba(234,179,8,0.1);border-color:var(--warning)}
-.route-detail-stat.pr .route-detail-stat-value{color:var(--warning)}
-.route-detail-stat.pr::after{content:'PR';font-size:8px;font-weight:700;color:var(--warning);margin-left:4px;vertical-align:super}
-.route-detail-actions{padding:16px 20px;border-top:1px solid var(--border-color);display:flex;gap:10px}
-.route-detail-btn{flex:1;padding:12px 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;transition:all var(--transition-fast);display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none}
-.route-detail-btn.primary{background:var(--accent);border:none;color:white}
-.route-detail-btn.primary:hover{background:var(--accent-hover)}
-.route-detail-btn.secondary{background:transparent;border:1px solid var(--border-color);color:var(--text-secondary)}
-.route-detail-btn.secondary:hover{border-color:var(--accent);color:var(--accent)}
-.metric-popup{position:absolute;right:400px;top:50%;transform:translateY(-50%);width:280px;background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);box-shadow:0 8px 32px rgba(0,0,0,0.4);z-index:300;opacity:0;visibility:hidden;transition:all 0.2s ease}
-.metric-popup.visible{opacity:1;visibility:visible}
-.metric-popup-header{padding:16px;border-bottom:1px solid var(--border-color);display:flex;justify-content:space-between;align-items:center}
-.metric-popup-title{font-weight:600;font-size:14px}
-.metric-popup-close{width:24px;height:24px;border-radius:50%;background:transparent;border:none;color:var(--text-tertiary);cursor:pointer;display:flex;align-items:center;justify-content:center}
-.metric-popup-close:hover{background:var(--bg-primary);color:var(--text-primary)}
-.metric-popup-body{padding:16px}
-.metric-popup-value{font-size:32px;font-weight:700;color:var(--accent);margin-bottom:4px}
-.metric-popup-label{font-size:12px;color:var(--text-secondary);margin-bottom:16px}
-.metric-popup-chart{height:80px;background:var(--bg-primary);border-radius:var(--radius-sm);display:flex;align-items:flex-end;padding:8px;gap:4px}
-.metric-popup-bar{flex:1;background:var(--accent-muted);border-radius:2px 2px 0 0;transition:height 0.3s ease}
-.metric-popup-comparison{margin-top:12px;padding-top:12px;border-top:1px solid var(--border-color);font-size:12px;color:var(--text-secondary)}
-.metric-popup-comparison span{color:var(--success);font-weight:600}
-.no-routes{padding:40px 20px;text-align:center;color:var(--text-tertiary)}
-.no-routes svg{width:48px;height:48px;margin-bottom:12px;opacity:0.5}
+/* Activities 3-Column Layout */
+.activities-layout{display:flex;height:calc(100vh - var(--topbar-height));margin:-20px;overflow:hidden}
+.activities-col{display:flex;flex-direction:column;overflow:hidden;border-right:1px solid var(--border-color)}
+.activities-col:last-child{border-right:none}
+.activities-col-1{width:300px;min-width:300px;background:var(--bg-surface)}
+.activities-col-2{flex:1;min-width:400px;background:var(--bg-primary)}
+.activities-col-3{width:380px;min-width:380px;background:var(--bg-surface)}
+/* Column 1 - Activity List */
+.act-list-header{padding:16px;border-bottom:1px solid var(--border-color)}
+.act-list-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.act-list-title h3{font-size:15px;font-weight:600;display:flex;align-items:center;gap:8px}
+.act-list-title h3 svg{width:18px;height:18px;opacity:0.6}
+.act-list-count{font-size:12px;color:var(--text-tertiary);background:var(--bg-primary);padding:2px 8px;border-radius:10px}
+.act-search{position:relative}
+.act-search input{width:100%;padding:10px 12px 10px 36px;background:var(--bg-primary);border:1px solid var(--border-color);border-radius:var(--radius-sm);color:var(--text-primary);font-size:13px;transition:all var(--transition-fast)}
+.act-search input:focus{outline:none;border-color:var(--accent);background:var(--bg-surface)}
+.act-search input::placeholder{color:var(--text-tertiary)}
+.act-search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text-tertiary);width:14px;height:14px}
+.act-search-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:20px;height:20px;border-radius:50%;background:transparent;border:none;color:var(--text-tertiary);cursor:pointer;display:none;align-items:center;justify-content:center}
+.act-search-clear:hover{background:var(--bg-surface-hover);color:var(--text-primary)}
+.act-list{flex:1;overflow-y:auto;padding:8px}
+.act-list::-webkit-scrollbar{width:6px}
+.act-list::-webkit-scrollbar-track{background:transparent}
+.act-list::-webkit-scrollbar-thumb{background:var(--border-color);border-radius:3px}
+.act-list::-webkit-scrollbar-thumb:hover{background:var(--accent-muted)}
+.act-item{padding:12px;margin-bottom:6px;background:var(--bg-primary);border-radius:var(--radius-sm);cursor:pointer;border:1px solid transparent;position:relative;transition:all var(--transition-fast)}
+.act-item:hover{background:var(--bg-surface-hover);border-color:var(--border-color)}
+.act-item.active{background:var(--accent-muted);border-color:var(--accent)}
+.act-item.active::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:3px;background:var(--accent);border-radius:0 2px 2px 0}
+.act-item-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
+.act-item-name{font-weight:600;font-size:13px;color:var(--text-primary);line-height:1.3;flex:1}
+.act-item-pr{font-size:9px;font-weight:700;color:var(--warning);background:rgba(234,179,8,0.15);padding:2px 6px;border-radius:3px}
+.act-item-meta{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text-tertiary);margin-bottom:8px}
+.act-item-type{display:flex;align-items:center;gap:3px}
+.act-item-type svg{width:10px;height:10px}
+.act-item-stats{display:flex;gap:12px}
+.act-item-stat{font-size:12px;color:var(--text-secondary)}
+.act-item-stat span{font-weight:600;color:var(--text-primary)}
+.act-monthly-summary{padding:16px;border-top:1px solid var(--border-color);background:var(--bg-primary)}
+.act-monthly-title{font-size:11px;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:12px}
+.act-monthly-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.act-monthly-stat{text-align:center;padding:8px;background:var(--bg-surface);border-radius:var(--radius-sm)}
+.act-monthly-stat-value{font-size:16px;font-weight:700;color:var(--accent)}
+.act-monthly-stat-label{font-size:10px;color:var(--text-tertiary);text-transform:uppercase}
+/* Column 2 - Analysis Center */
+.act-analysis{display:flex;flex-direction:column;height:100%;overflow-y:auto}
+.act-analysis::-webkit-scrollbar{width:6px}
+.act-analysis::-webkit-scrollbar-track{background:transparent}
+.act-analysis::-webkit-scrollbar-thumb{background:var(--border-color);border-radius:3px}
+.act-analysis-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--text-tertiary);padding:40px}
+.act-analysis-empty svg{width:64px;height:64px;margin-bottom:16px;opacity:0.3}
+.act-analysis-empty p{font-size:14px}
+.act-header{padding:20px 24px;border-bottom:1px solid var(--border-color);background:var(--bg-surface)}
+.act-header-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.act-header-title{font-size:22px;font-weight:700;color:var(--text-primary)}
+.act-header-badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;background:rgba(234,179,8,0.15);border:1px solid var(--warning);border-radius:20px;font-size:11px;font-weight:600;color:var(--warning)}
+.act-header-badge svg{width:12px;height:12px}
+.act-header-meta{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--text-secondary)}
+.act-header-meta span{display:flex;align-items:center;gap:4px}
+.act-header-meta svg{width:14px;height:14px;opacity:0.6}
+.act-metrics{padding:20px 24px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.act-metric{background:var(--bg-surface);padding:16px;border-radius:var(--radius-sm);border:1px solid var(--border-color);text-align:center;transition:all var(--transition-fast);cursor:pointer}
+.act-metric:hover{border-color:var(--accent);transform:translateY(-2px)}
+.act-metric.highlight{background:var(--accent-muted);border-color:var(--accent)}
+.act-metric-value{font-size:28px;font-weight:700;color:var(--text-primary);margin-bottom:2px}
+.act-metric.highlight .act-metric-value{color:var(--accent)}
+.act-metric-label{font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.03em}
+.act-metric-sub{font-size:10px;color:var(--text-tertiary);margin-top:4px}
+.act-ai-insight{margin:0 24px 20px;padding:20px;background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);position:relative}
+.act-ai-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.act-ai-icon{width:32px;height:32px;background:var(--accent-muted);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--accent)}
+.act-ai-icon svg{width:16px;height:16px}
+.act-ai-label{font-size:12px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:0.05em}
+.act-ai-text{font-size:14px;line-height:1.6;color:var(--text-secondary)}
+.act-ai-text strong{color:var(--text-primary);font-weight:600}
+.act-ai-tip{margin-top:12px;padding-top:12px;border-top:1px solid var(--border-color);font-size:12px;color:var(--text-tertiary);display:flex;align-items:center;gap:6px}
+.act-ai-tip svg{width:14px;height:14px;color:var(--warning)}
+.act-trends{margin:0 24px 20px;padding:20px;background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md)}
+.act-trends-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.act-trends-title{font-size:14px;font-weight:600}
+.act-trends-tabs{display:flex;gap:4px}
+.act-trends-tab{padding:4px 10px;font-size:11px;background:transparent;border:1px solid var(--border-color);border-radius:var(--radius-xs);color:var(--text-secondary);cursor:pointer;transition:all var(--transition-fast)}
+.act-trends-tab:hover{border-color:var(--accent-muted)}
+.act-trends-tab.active{background:var(--accent);border-color:var(--accent);color:white}
+.act-trends-chart{height:120px;display:flex;align-items:flex-end;gap:4px;padding:8px 0}
+.act-trends-bar{flex:1;background:var(--accent-muted);border-radius:3px 3px 0 0;position:relative;min-height:4px;transition:all 0.3s ease}
+.act-trends-bar.current{background:var(--accent)}
+.act-trends-bar:hover{opacity:0.8}
+.act-actions{padding:16px 24px;border-top:1px solid var(--border-color);display:flex;gap:10px;margin-top:auto;background:var(--bg-surface)}
+.act-btn{flex:1;padding:12px 16px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;transition:all var(--transition-fast);display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none}
+.act-btn.primary{background:var(--accent);border:none;color:white}
+.act-btn.primary:hover{background:var(--accent-hover)}
+.act-btn.secondary{background:transparent;border:1px solid var(--border-color);color:var(--text-secondary)}
+.act-btn.secondary:hover{border-color:var(--accent);color:var(--accent)}
+/* Column 3 - Map & Insights */
+.act-col3-top{height:50%;border-bottom:1px solid var(--border-color);position:relative}
+.act-col3-map{width:100%;height:100%}
+#act-map{width:100%;height:100%}
+.act-map-controls{position:absolute;top:12px;right:12px;display:flex;gap:6px}
+.act-map-btn{width:32px;height:32px;background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-sm);color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--transition-fast)}
+.act-map-btn:hover{background:var(--bg-surface-hover);color:var(--accent);border-color:var(--accent)}
+.act-col3-bottom{height:50%;overflow-y:auto;padding:16px}
+.act-col3-bottom::-webkit-scrollbar{width:6px}
+.act-col3-bottom::-webkit-scrollbar-track{background:transparent}
+.act-col3-bottom::-webkit-scrollbar-thumb{background:var(--border-color);border-radius:3px}
+.act-insight-card{background:var(--bg-primary);border:1px solid var(--border-color);border-radius:var(--radius-sm);padding:14px;margin-bottom:12px}
+.act-insight-card:last-child{margin-bottom:0}
+.act-insight-header{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:12px;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.03em}
+.act-insight-header svg{width:14px;height:14px;opacity:0.6}
+.act-splits{display:flex;flex-direction:column;gap:6px}
+.act-split{display:flex;align-items:center;gap:10px;font-size:12px}
+.act-split-km{width:40px;color:var(--text-tertiary)}
+.act-split-time{width:50px;font-weight:600;color:var(--text-primary)}
+.act-split-bar{flex:1;height:6px;background:var(--bg-surface);border-radius:3px;overflow:hidden}
+.act-split-fill{height:100%;background:var(--accent);border-radius:3px;transition:width 0.3s ease}
+.act-split.fastest .act-split-fill{background:var(--success)}
+.act-split.slowest .act-split-fill{background:var(--warning)}
+.act-hr-zones{display:flex;flex-direction:column;gap:6px}
+.act-hr-zone{display:flex;align-items:center;gap:8px;font-size:12px}
+.act-hr-zone-label{width:24px;font-weight:600}
+.act-hr-zone-bar{flex:1;height:8px;background:var(--bg-surface);border-radius:4px;overflow:hidden}
+.act-hr-zone-fill{height:100%;border-radius:4px}
+.act-hr-zone.z5 .act-hr-zone-fill{background:#ef4444}
+.act-hr-zone.z4 .act-hr-zone-fill{background:#f97316}
+.act-hr-zone.z3 .act-hr-zone-fill{background:#eab308}
+.act-hr-zone.z2 .act-hr-zone-fill{background:#22c55e}
+.act-hr-zone.z1 .act-hr-zone-fill{background:#06b6d4}
+.act-hr-zone-pct{width:36px;text-align:right;color:var(--text-tertiary)}
+.act-weather{display:flex;gap:16px}
+.act-weather-item{flex:1;text-align:center;padding:10px;background:var(--bg-surface);border-radius:var(--radius-sm)}
+.act-weather-icon{font-size:20px;margin-bottom:4px}
+.act-weather-value{font-size:14px;font-weight:600;color:var(--text-primary)}
+.act-weather-label{font-size:10px;color:var(--text-tertiary);text-transform:uppercase}
+.act-compare{display:flex;flex-direction:column;gap:8px}
+.act-compare-row{display:flex;justify-content:space-between;align-items:center;font-size:12px}
+.act-compare-label{color:var(--text-secondary)}
+.act-compare-value{font-weight:600}
+.act-compare-value.positive{color:var(--success)}
+.act-compare-value.negative{color:var(--danger)}
+/* Responsive */
+@media(max-width:1400px){.activities-col-3{width:320px;min-width:320px}}
+@media(max-width:1200px){.activities-col-1{width:260px;min-width:260px}.act-metrics{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:900px){.activities-layout{flex-direction:column}.activities-col{width:100%!important;min-width:100%!important;border-right:none;border-bottom:1px solid var(--border-color)}.activities-col-1{height:auto;max-height:40vh}.activities-col-3{height:300px}.act-col3-top,.act-col3-bottom{height:auto}}
 .flex-1{flex:1}
 .coming-soon{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 40px;text-align:center;background:var(--bg-surface);border:1px dashed var(--border-color);border-radius:var(--radius-md)}
 .coming-soon-icon{width:64px;height:64px;background:var(--accent-muted);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:var(--gap-md);color:var(--accent)}
@@ -260,8 +304,8 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
 .ai-chat-input button{padding:12px 20px;background:var(--accent);border:none;border-radius:var(--radius-sm);color:white;font-weight:500;cursor:pointer;transition:all var(--transition-fast)}
 .ai-chat-input button:hover{background:var(--accent-hover)}
 /* Monthly Targets */.targets-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap-md);margin-bottom:var(--gap-lg)}.target-card{background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:var(--card-padding);position:relative;overflow:hidden}.target-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:var(--radius-md) 0 0 var(--radius-md)}.target-card.runs::before{background:var(--accent)}.target-card.distance::before{background:var(--success)}.target-card.elevation::before{background:var(--warning)}.target-header{display:flex;align-items:center;gap:var(--gap-sm);margin-bottom:var(--gap-xs)}.target-ring{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;position:relative}.target-ring svg{position:absolute;width:40px;height:40px;transform:rotate(-90deg)}.target-ring .ring-bg{stroke:var(--bg-primary);stroke-width:3;fill:none}.target-ring .ring-progress{stroke-width:3;fill:none;stroke-linecap:round;transition:stroke-dashoffset 0.5s ease}.target-card.runs .ring-progress{stroke:var(--accent)}.target-card.distance .ring-progress{stroke:var(--success)}.target-card.elevation .ring-progress{stroke:var(--warning)}.target-info h3{font-size:14px;font-weight:600;color:var(--text-primary)}.target-info p{font-size:12px;color:var(--text-secondary)}.target-percentage{font-size:48px;font-weight:700;margin:var(--gap-md) 0 var(--gap-sm)}.target-card.runs .target-percentage{color:var(--accent)}.target-card.distance .target-percentage{color:var(--success)}.target-card.elevation .target-percentage{color:var(--warning)}.target-card.completed .target-percentage{color:var(--success)!important}.target-progress-bar{height:6px;background:var(--bg-primary);border-radius:3px;overflow:hidden;margin-bottom:var(--gap-sm)}.target-progress-fill{height:100%;border-radius:3px;transition:width 0.5s ease}.target-card.runs .target-progress-fill{background:linear-gradient(90deg,var(--accent),var(--accent-hover))}.target-card.distance .target-progress-fill{background:linear-gradient(90deg,var(--success),#4ade80)}.target-card.elevation .target-progress-fill{background:linear-gradient(90deg,var(--warning),#fde047)}.target-card.completed .target-progress-fill{background:linear-gradient(90deg,var(--success),#4ade80)!important}.target-stats{display:flex;justify-content:space-between;font-size:13px;color:var(--text-secondary)}.target-stats span:last-child{color:var(--text-tertiary)}.ai-progress-card{background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(6,182,212,0.05));border:1px solid transparent;border-radius:var(--radius-md);padding:var(--card-padding);margin-bottom:var(--gap-lg);position:relative;overflow:hidden}.ai-progress-card::before{content:'';position:absolute;inset:0;border-radius:var(--radius-md);padding:1px;background:linear-gradient(135deg,rgba(139,92,246,0.5),rgba(6,182,212,0.3),rgba(139,92,246,0.2));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}.ai-progress-card::after{content:'';position:absolute;top:0;right:0;bottom:0;left:0;background:repeating-linear-gradient(135deg,transparent,transparent 2px,rgba(139,92,246,0.03) 2px,rgba(139,92,246,0.03) 4px);pointer-events:none;opacity:0.5}.ai-progress-header{display:flex;align-items:center;gap:var(--gap-sm);margin-bottom:var(--gap-md);position:relative;z-index:1}.ai-progress-badge{background:linear-gradient(135deg,var(--accent),var(--info));color:white;font-size:10px;font-weight:700;padding:4px 10px;border-radius:var(--radius-xs);text-transform:uppercase;letter-spacing:0.05em;box-shadow:0 2px 8px rgba(139,92,246,0.3)}.ai-progress-title{font-size:18px;font-weight:600}.ai-progress-text{color:var(--text-secondary);font-size:14px;line-height:1.6;position:relative;z-index:1}.calendar-card{background:var(--bg-surface);border:1px solid var(--border-color);border-radius:var(--radius-md);padding:var(--card-padding)}.calendar-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--gap-md)}.calendar-title{font-size:18px;font-weight:600}.calendar-nav{display:flex;gap:var(--gap-xs)}.calendar-nav button{width:32px;height:32px;border:1px solid var(--border-color);background:var(--bg-primary);border-radius:var(--radius-xs);color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all var(--transition-fast)}.calendar-nav button:hover{background:var(--bg-surface-hover);color:var(--text-primary);border-color:var(--accent)}.calendar-weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:var(--gap-sm)}.calendar-weekday{text-align:center;font-size:11px;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;padding:var(--gap-sm) 0}.calendar-days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.calendar-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-sm);font-size:13px;color:var(--text-secondary);position:relative;cursor:default;transition:all var(--transition-fast)}.calendar-day.other-month{color:var(--text-tertiary);opacity:0.4}.calendar-day.today{background:var(--accent-muted);color:var(--accent);font-weight:600;border:1px solid var(--accent)}.calendar-day.has-activity{background:var(--success-muted);color:var(--success);font-weight:500}.calendar-day.has-activity::after{content:'';position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:4px;height:4px;background:var(--success);border-radius:50%}.calendar-day.today.has-activity{background:linear-gradient(135deg,var(--accent-muted),var(--success-muted));border-color:var(--success)}
-@media(max-width:1200px){.stats-grid,.health-grid,.predictions-grid{grid-template-columns:repeat(2,1fr)}.training-recommendations{grid-template-columns:1fr}.routes-sidebar{width:260px}}
-@media(max-width:900px){.map-layout{height:calc(100vh - var(--topbar-height))}.routes-sidebar{position:fixed;top:var(--topbar-height);left:0;right:0;bottom:0;width:100%;border-left:none;border-top:1px solid var(--border-color)}.metric-popup{display:none}}
+@media(max-width:1200px){.stats-grid,.health-grid,.predictions-grid{grid-template-columns:repeat(2,1fr)}.training-recommendations{grid-template-columns:1fr}}
+
 @media(max-width:768px){.stats-grid,.health-grid,.predictions-grid{grid-template-columns:1fr}.sidebar{transform:translateX(-100%)}.sidebar.mobile-open{transform:translateX(0)}.main-content{margin-left:0!important}.forecast-grid{grid-template-columns:repeat(4,1fr)}.targets-grid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -332,67 +376,159 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:
             </div>
             <!-- Activities/Maps Page -->
             <div class="page-panel" id="page-activities">
-                <div class="map-layout">
-                    <div class="map-container"><div id="map"></div></div>
-                    <div class="routes-sidebar" id="routes-sidebar">
-                        <div class="routes-header">
-                            <div class="routes-header-top">
-                                <div class="routes-header-title">
-                                    <button class="routes-back" id="routes-back"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
-                                    <span class="routes-header-text">Activities</span>
-                                </div>
-                                <span class="routes-count" id="routes-count">0 runs</span>
+                <div class="activities-layout">
+                    <!-- Column 1: Activity List -->
+                    <div class="activities-col activities-col-1">
+                        <div class="act-list-header">
+                            <div class="act-list-title">
+                                <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Activities</h3>
+                                <span class="act-list-count" id="act-count">0</span>
                             </div>
-                            <div class="routes-search">
-                                <svg class="routes-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                                <input type="text" id="route-search" placeholder="Search activities...">
-                                <button class="routes-search-clear" id="search-clear"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+                            <div class="act-search">
+                                <svg class="act-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                                <input type="text" id="act-search" placeholder="Search activities...">
+                                <button class="act-search-clear" id="act-search-clear"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
                             </div>
                         </div>
-                        <div class="routes-list" id="routes-list"><div class="loading"><div class="loading-spinner"></div>Loading...</div></div>
-                        <div class="route-detail" id="route-detail">
-                            <div class="route-detail-header">
-                                <div class="route-detail-title" id="detail-title">Morning Run</div>
-                                <div class="route-detail-date" id="detail-date">January 15, 2026</div>
-                                <div class="route-detail-pr-badge" id="detail-pr" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Personal Record</div>
-                            </div>
-                            <div class="route-detail-body">
-                                <div class="route-detail-section">
-                                    <div class="route-detail-section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Performance</div>
-                                    <div class="route-detail-stats-grid">
-                                        <div class="route-detail-stat primary" data-metric="distance"><div class="route-detail-stat-value" id="detail-distance">--</div><div class="route-detail-stat-label">Distance</div></div>
-                                        <div class="route-detail-stat" data-metric="pace"><div class="route-detail-stat-value" id="detail-pace">--</div><div class="route-detail-stat-label">Pace</div></div>
-                                        <div class="route-detail-stat" data-metric="duration"><div class="route-detail-stat-value" id="detail-duration">--</div><div class="route-detail-stat-label">Duration</div></div>
-                                        <div class="route-detail-stat" data-metric="elevation"><div class="route-detail-stat-value" id="detail-elevation">--</div><div class="route-detail-stat-label">Elevation</div></div>
-                                    </div>
-                                </div>
-                                <div class="route-detail-section">
-                                    <div class="route-detail-section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Health</div>
-                                    <div class="route-detail-stats-grid">
-                                        <div class="route-detail-stat" data-metric="hr"><div class="route-detail-stat-value" id="detail-hr">--</div><div class="route-detail-stat-label">Avg HR</div></div>
-                                        <div class="route-detail-stat" data-metric="maxhr"><div class="route-detail-stat-value" id="detail-maxhr">--</div><div class="route-detail-stat-label">Max HR</div></div>
-                                        <div class="route-detail-stat" data-metric="calories"><div class="route-detail-stat-value" id="detail-calories">--</div><div class="route-detail-stat-label">Calories</div></div>
-                                        <div class="route-detail-stat" data-metric="cadence"><div class="route-detail-stat-value" id="detail-cadence">--</div><div class="route-detail-stat-label">Cadence</div></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="route-detail-actions">
-                                <a href="#" target="_blank" class="route-detail-btn primary" id="detail-strava"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>View on Strava</a>
-                                <button class="route-detail-btn secondary" id="detail-zoom"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>Fit Map</button>
+                        <div class="act-list" id="act-list">
+                            <div class="loading"><div class="loading-spinner"></div>Loading...</div>
+                        </div>
+                        <div class="act-monthly-summary">
+                            <div class="act-monthly-title">January 2026</div>
+                            <div class="act-monthly-stats">
+                                <div class="act-monthly-stat"><div class="act-monthly-stat-value" id="monthly-runs">0</div><div class="act-monthly-stat-label">Runs</div></div>
+                                <div class="act-monthly-stat"><div class="act-monthly-stat-value" id="monthly-distance">0</div><div class="act-monthly-stat-label">km</div></div>
+                                <div class="act-monthly-stat"><div class="act-monthly-stat-value" id="monthly-time">0h</div><div class="act-monthly-stat-label">Time</div></div>
+                                <div class="act-monthly-stat"><div class="act-monthly-stat-value" id="monthly-elevation">0</div><div class="act-monthly-stat-label">m elev</div></div>
                             </div>
                         </div>
                     </div>
-                    <div class="metric-popup" id="metric-popup">
-                        <div class="metric-popup-header">
-                            <span class="metric-popup-title" id="popup-title">Distance</span>
-                            <button class="metric-popup-close" id="popup-close"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+                    <!-- Column 2: Analysis Center -->
+                    <div class="activities-col activities-col-2">
+                        <div class="act-analysis" id="act-analysis">
+                            <div class="act-analysis-empty" id="act-empty">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                                <p>Select an activity to view detailed analysis</p>
+                            </div>
+                            <div id="act-content" style="display:none">
+                                <div class="act-header">
+                                    <div class="act-header-top">
+                                        <div class="act-header-title" id="act-title">Morning Run</div>
+                                        <div class="act-header-badge" id="act-pr-badge" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>PR</div>
+                                    </div>
+                                    <div class="act-header-meta">
+                                        <span id="act-date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>January 30, 2026</span>
+                                        <span id="act-time"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>08:15 AM</span>
+                                        <span id="act-type"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="3"/><line x1="12" y1="22" x2="12" y2="8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/></svg>Run</span>
+                                    </div>
+                                </div>
+                                <div class="act-metrics">
+                                    <div class="act-metric highlight">
+                                        <div class="act-metric-value" id="act-distance">--</div>
+                                        <div class="act-metric-label">Distance</div>
+                                        <div class="act-metric-sub">km</div>
+                                    </div>
+                                    <div class="act-metric">
+                                        <div class="act-metric-value" id="act-pace">--</div>
+                                        <div class="act-metric-label">Pace</div>
+                                        <div class="act-metric-sub">/km</div>
+                                    </div>
+                                    <div class="act-metric">
+                                        <div class="act-metric-value" id="act-duration">--</div>
+                                        <div class="act-metric-label">Duration</div>
+                                        <div class="act-metric-sub">time</div>
+                                    </div>
+                                    <div class="act-metric">
+                                        <div class="act-metric-value" id="act-hr">--</div>
+                                        <div class="act-metric-label">Avg HR</div>
+                                        <div class="act-metric-sub">bpm</div>
+                                    </div>
+                                    <div class="act-metric">
+                                        <div class="act-metric-value" id="act-elevation">--</div>
+                                        <div class="act-metric-label">Elevation</div>
+                                        <div class="act-metric-sub">meters</div>
+                                    </div>
+                                    <div class="act-metric">
+                                        <div class="act-metric-value" id="act-calories">--</div>
+                                        <div class="act-metric-label">Calories</div>
+                                        <div class="act-metric-sub">kcal</div>
+                                    </div>
+                                </div>
+                                <div class="act-ai-insight">
+                                    <div class="act-ai-header">
+                                        <div class="act-ai-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2M7 14a2 2 0 0 0-2 2v1h14v-1a2 2 0 0 0-2-2H7z"/></svg></div>
+                                        <div class="act-ai-label">AI Insight</div>
+                                    </div>
+                                    <div class="act-ai-text" id="act-ai-text">
+                                        <strong>Great consistency!</strong> Your pace remained steady throughout this run, with only a 3% variation between your fastest and slowest kilometer. This shows excellent pacing discipline and improved aerobic fitness compared to your runs from last week.
+                                    </div>
+                                    <div class="act-ai-tip">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                                        <span id="act-ai-tip">Tip: Try adding 5-10 min easy cool-down to improve recovery.</span>
+                                    </div>
+                                </div>
+                                <div class="act-trends">
+                                    <div class="act-trends-header">
+                                        <div class="act-trends-title">Recent Performance</div>
+                                        <div class="act-trends-tabs">
+                                            <button class="act-trends-tab active" data-metric="pace">Pace</button>
+                                            <button class="act-trends-tab" data-metric="hr">HR</button>
+                                            <button class="act-trends-tab" data-metric="distance">Dist</button>
+                                        </div>
+                                    </div>
+                                    <div class="act-trends-chart" id="act-trends-chart"></div>
+                                </div>
+                                <div class="act-actions">
+                                    <a href="#" target="_blank" class="act-btn primary" id="act-strava-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>View on Strava</a>
+                                    <button class="act-btn secondary" id="act-fit-map"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>Fit to Map</button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="metric-popup-body">
-                            <div class="metric-popup-value" id="popup-value">5.24 km</div>
-                            <div class="metric-popup-label" id="popup-label">This activity</div>
-                            <div class="metric-popup-chart" id="popup-chart"></div>
-                            <div class="metric-popup-comparison" id="popup-comparison">
-                                <span>+12%</span> vs your monthly average
+                    </div>
+                    <!-- Column 3: Map & Insights -->
+                    <div class="activities-col activities-col-3">
+                        <div class="act-col3-top">
+                            <div class="act-col3-map" id="act-map-container">
+                                <div id="act-map"></div>
+                            </div>
+                            <div class="act-map-controls">
+                                <button class="act-map-btn" id="map-zoom-in" title="Zoom In"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+                                <button class="act-map-btn" id="map-zoom-out" title="Zoom Out"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+                                <button class="act-map-btn" id="map-3d" title="Toggle 3D"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></button>
+                            </div>
+                        </div>
+                        <div class="act-col3-bottom">
+                            <div class="act-insight-card">
+                                <div class="act-insight-header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Splits</div>
+                                <div class="act-splits" id="act-splits">
+                                    <div class="act-split"><span class="act-split-km">Km 1</span><span class="act-split-time">--:--</span><div class="act-split-bar"><div class="act-split-fill" style="width:0%"></div></div></div>
+                                </div>
+                            </div>
+                            <div class="act-insight-card">
+                                <div class="act-insight-header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Heart Rate Zones</div>
+                                <div class="act-hr-zones" id="act-hr-zones">
+                                    <div class="act-hr-zone z5"><span class="act-hr-zone-label">Z5</span><div class="act-hr-zone-bar"><div class="act-hr-zone-fill" style="width:0%"></div></div><span class="act-hr-zone-pct">0%</span></div>
+                                    <div class="act-hr-zone z4"><span class="act-hr-zone-label">Z4</span><div class="act-hr-zone-bar"><div class="act-hr-zone-fill" style="width:0%"></div></div><span class="act-hr-zone-pct">0%</span></div>
+                                    <div class="act-hr-zone z3"><span class="act-hr-zone-label">Z3</span><div class="act-hr-zone-bar"><div class="act-hr-zone-fill" style="width:0%"></div></div><span class="act-hr-zone-pct">0%</span></div>
+                                    <div class="act-hr-zone z2"><span class="act-hr-zone-label">Z2</span><div class="act-hr-zone-bar"><div class="act-hr-zone-fill" style="width:0%"></div></div><span class="act-hr-zone-pct">0%</span></div>
+                                    <div class="act-hr-zone z1"><span class="act-hr-zone-label">Z1</span><div class="act-hr-zone-bar"><div class="act-hr-zone-fill" style="width:0%"></div></div><span class="act-hr-zone-pct">0%</span></div>
+                                </div>
+                            </div>
+                            <div class="act-insight-card">
+                                <div class="act-insight-header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>Conditions</div>
+                                <div class="act-weather" id="act-weather">
+                                    <div class="act-weather-item"><div class="act-weather-icon">🌡️</div><div class="act-weather-value" id="weather-temp">--°C</div><div class="act-weather-label">Temp</div></div>
+                                    <div class="act-weather-item"><div class="act-weather-icon">💨</div><div class="act-weather-value" id="weather-wind">-- km/h</div><div class="act-weather-label">Wind</div></div>
+                                    <div class="act-weather-item"><div class="act-weather-icon">💧</div><div class="act-weather-value" id="weather-humidity">--%</div><div class="act-weather-label">Humidity</div></div>
+                                </div>
+                            </div>
+                            <div class="act-insight-card">
+                                <div class="act-insight-header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Compare</div>
+                                <div class="act-compare" id="act-compare">
+                                    <div class="act-compare-row"><span class="act-compare-label">vs Similar Routes</span><span class="act-compare-value positive" id="compare-similar">+0%</span></div>
+                                    <div class="act-compare-row"><span class="act-compare-label">vs Last Week Avg</span><span class="act-compare-value" id="compare-week">0%</span></div>
+                                    <div class="act-compare-row"><span class="act-compare-label">vs Personal Best</span><span class="act-compare-value negative" id="compare-pb">-0%</span></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -477,7 +613,7 @@ window.ROUTES=[];let HEALTH={sleep:[],stress:[],steps:[]};let map=null,mapInitia
 (function(){
 const $=id=>document.getElementById(id);const $$=sel=>document.querySelectorAll(sel);
 function decodePolyline(encoded){if(!encoded||typeof encoded!=='string')return[];const coords=[];let index=0,lat=0,lng=0;while(index<encoded.length){let b,shift=0,result=0;do{b=encoded.charCodeAt(index++)-63;result|=(b&0x1f)<<shift;shift+=5;}while(b>=0x20);lat+=(result&1)?~(result>>1):(result>>1);shift=0;result=0;do{b=encoded.charCodeAt(index++)-63;result|=(b&0x1f)<<shift;shift+=5;}while(b>=0x20);lng+=(result&1)?~(result>>1):(result>>1);coords.push([lng/1e5,lat/1e5]);}return coords;}
-async function loadActivities(){try{const res=await fetch('/api/activities');const data=await res.json();if(data.success&&data.activities){window.ROUTES=data.activities.map(a=>{let coords=[];if(a.coords){if(typeof a.coords==='string'){if(a.coords.startsWith('[')){try{coords=JSON.parse(a.coords);}catch(e){}}else{coords=decodePolyline(a.coords);}}else if(Array.isArray(a.coords)){coords=a.coords;}}let dateStr=a.date;if(dateStr&&dateStr.includes('T')){dateStr=dateStr.split('T')[0];}return{id:a.id,name:a.name,date:dateStr,distance:parseFloat(a.distance)||0,pace:a.pace,duration:parseInt(a.duration)||0,hr:a.avg_hr,maxHr:a.max_hr,elevation:parseInt(a.elevation)||0,calories:parseInt(a.calories)||0,coords:coords};});updateDashboard();renderActivityList();updateTargets();if(mapInitialized){addRoutesToMap();renderRoutesList();}}}catch(e){console.error('Error loading activities:',e);$('activity-list').innerHTML='<div class="loading">Error loading activities</div>';}}
+async function loadActivities(){try{const res=await fetch('/api/activities');const data=await res.json();if(data.success&&data.activities){window.ROUTES=data.activities.map(a=>{let coords=[];if(a.coords){if(typeof a.coords==='string'){if(a.coords.startsWith('[')){try{coords=JSON.parse(a.coords);}catch(e){}}else{coords=decodePolyline(a.coords);}}else if(Array.isArray(a.coords)){coords=a.coords;}}let dateStr=a.date;if(dateStr&&dateStr.includes('T')){dateStr=dateStr.split('T')[0];}return{id:a.id,name:a.name,date:dateStr,distance:parseFloat(a.distance)||0,pace:a.pace,duration:parseInt(a.duration)||0,hr:a.avg_hr,maxHr:a.max_hr,elevation:parseInt(a.elevation)||0,calories:parseInt(a.calories)||0,coords:coords};});updateDashboard();renderActivityList();updateTargets();if(mapInitialized){renderActivityList();}}}catch(e){console.error('Error loading activities:',e);$('act-list').innerHTML='<div class="loading">Error loading activities</div>';}}
 async function loadHealthData(){try{const res=await fetch('/api/health');const data=await res.json();if(data.success){HEALTH=data;updateHealthCards();renderHealthCharts();}}catch(e){console.error('Error loading health data:',e);}}
 function updateDashboard(){if(!window.ROUTES.length)return;const now=new Date();const currentMonth=now.getMonth();const currentYear=now.getFullYear();const monthRuns=window.ROUTES.filter(r=>{const d=new Date(r.date);return d.getMonth()===currentMonth&&d.getFullYear()===currentYear;});const monthDistance=monthRuns.reduce((a,r)=>a+(r.distance||0),0);const monthElevation=monthRuns.reduce((a,r)=>a+(r.elevation||0),0);const monthSeconds=monthRuns.reduce((a,r)=>a+(r.duration||0),0);const hours=Math.floor(monthSeconds/3600);const mins=Math.floor((monthSeconds%3600)/60);$('stat-runs').textContent=monthRuns.length;$('stat-distance').innerHTML=monthDistance.toFixed(1)+'<span>km</span>';$('stat-time').innerHTML=hours+':'+mins.toString().padStart(2,'0')+'<span>hrs</span>';$('stat-elevation').innerHTML=monthElevation.toLocaleString()+'<span>m</span>';const monthNames=['January','February','March','April','May','June','July','August','September','October','November','December'];const subtitle=document.querySelector('.section-subtitle');if(subtitle)subtitle.textContent=monthNames[currentMonth]+' '+currentYear+' • '+window.ROUTES.length+' total runs';}
 function renderActivityList(){const list=$('activity-list');if(!list||!window.ROUTES.length){if(list)list.innerHTML='<div class="loading">No activities found</div>';return;}const formatTime=(secs)=>{if(!secs)return'--';const h=Math.floor(secs/3600);const m=Math.floor((secs%3600)/60);const s=secs%60;return h>0?h+':'+m.toString().padStart(2,'0')+':'+s.toString().padStart(2,'0'):m+':'+s.toString().padStart(2,'0');};list.innerHTML=window.ROUTES.slice(0,20).map(r=>'<div class="activity-item" data-id="'+r.id+'"><div class="activity-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="activity-info"><div class="activity-name">'+(r.name||'Run')+'</div><div class="activity-meta">'+r.date+'</div></div><div class="activity-stats"><div class="activity-stat"><div class="activity-stat-value">'+(r.distance?.toFixed(1)||'--')+'km</div><div class="activity-stat-label">Distance</div></div><div class="activity-stat"><div class="activity-stat-value">'+(r.pace||'--')+'</div><div class="activity-stat-label">Pace</div></div><div class="activity-stat"><div class="activity-stat-value">'+formatTime(r.duration)+'</div><div class="activity-stat-label">Time</div></div></div></div>').join('');}
@@ -486,23 +622,24 @@ function updateRecommendations(avgPace,recentRuns){const speedRecs=$('speed-reco
 function updateWeeklyPlan(avgPace){const weeklyPlan=$('weekly-plan');const today=new Date().getDay();const dayIndex=today===0?6:today-1;const plan=[{type:'Easy Run',detail:'6-8km'},{type:'Intervals',detail:'6x800m'},{type:'Recovery',detail:'5km easy'},{type:'Tempo',detail:'8km tempo'},{type:'Rest',detail:'Cross-train'},{type:'Long Run',detail:'14-16km'},{type:'Rest',detail:'Active recovery'}];weeklyPlan.innerHTML=plan.map((day,i)=>'<div class="forecast-day '+(i===dayIndex?'today':'')+'"><div class="forecast-day-name">'+['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][i]+'</div><div class="forecast-day-type">'+day.type+'</div><div class="forecast-day-detail">'+day.detail+'</div></div>').join('');}
 function updateHealthCards(){if(HEALTH.sleep&&HEALTH.sleep.length>0){const latest=HEALTH.sleep[0];$('health-sleep').textContent=latest.totalHours+'h';$('health-sleep-detail').textContent='Deep: '+latest.deepHours+'h | REM: '+latest.remHours+'h';}if(HEALTH.stress&&HEALTH.stress.length>0){const latest=HEALTH.stress[0];$('health-stress').textContent=latest.avg_stress;$('health-stress-detail').textContent='Max: '+latest.max_stress;}if(HEALTH.steps&&HEALTH.steps.length>0){const latest=HEALTH.steps[0];$('health-steps').textContent=latest.steps?.toLocaleString()||'--';$('health-steps-detail').textContent='Goal: '+(latest.goal?.toLocaleString()||'--');$('health-distance').textContent=latest.distanceKm||'--';}}
 function renderHealthCharts(){const chartOptions={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(255,255,255,0.1)'},ticks:{color:'#888'}},y:{grid:{color:'rgba(255,255,255,0.1)'},ticks:{color:'#888'}}}};if(HEALTH.sleep&&HEALTH.sleep.length>0){const ctx=$('sleep-chart').getContext('2d');const labels=HEALTH.sleep.map(s=>s.date?.split('-').slice(1).join('/')).reverse();const data=HEALTH.sleep.map(s=>parseFloat(s.totalHours)).reverse();if(sleepChart)sleepChart.destroy();sleepChart=new Chart(ctx,{type:'bar',data:{labels,datasets:[{data,backgroundColor:'rgba(168,85,247,0.6)',borderColor:'#a855f7',borderWidth:1,borderRadius:4}]},options:{...chartOptions,scales:{...chartOptions.scales,y:{...chartOptions.scales.y,min:0,max:10}}}});}if(HEALTH.stress&&HEALTH.stress.length>0){const ctx=$('stress-chart').getContext('2d');const labels=HEALTH.stress.map(s=>s.date?.split('-').slice(1).join('/')).reverse();const data=HEALTH.stress.map(s=>s.avg_stress).reverse();if(stressChart)stressChart.destroy();stressChart=new Chart(ctx,{type:'line',data:{labels,datasets:[{data,borderColor:'#ef4444',backgroundColor:'rgba(239,68,68,0.1)',fill:true,tension:0.3}]},options:{...chartOptions,scales:{...chartOptions.scales,y:{...chartOptions.scales.y,min:0,max:100}}}});}if(HEALTH.steps&&HEALTH.steps.length>0){const ctx=$('steps-chart').getContext('2d');const labels=HEALTH.steps.map(s=>s.date?.split('-').slice(1).join('/')).reverse();const data=HEALTH.steps.map(s=>s.steps).reverse();const goals=HEALTH.steps.map(s=>s.goal).reverse();if(stepsChart)stepsChart.destroy();stepsChart=new Chart(ctx,{type:'bar',data:{labels,datasets:[{data,backgroundColor:'rgba(34,197,94,0.6)',borderColor:'#22c55e',borderWidth:1,borderRadius:4,label:'Steps'},{data:goals,type:'line',borderColor:'#888',borderDash:[5,5],pointRadius:0,label:'Goal'}]},options:chartOptions});}}
-function initMap(){if(mapInitialized||!$('map'))return;if(typeof mapboxgl==='undefined'){setTimeout(initMap,500);return;}try{mapboxgl.accessToken=CONFIG.MAPBOX_TOKEN;map=new mapboxgl.Map({container:'map',style:'mapbox://styles/mapbox/dark-v11',center:[26.1,44.41],zoom:12});map.on('load',()=>{mapInitialized=true;addRoutesToMap();renderRoutesList();initMapInteractions();});}catch(e){console.error('Map error:',e);}}
-let selectedRouteId=null;let routeFilter='all';
-function addRoutesToMap(){if(!map||!window.ROUTES.length)return;const routesWithCoords=window.ROUTES.filter(r=>r.coords&&r.coords.length>2).sort((a,b)=>new Date(b.date)-new Date(a.date));$('routes-count').textContent=routesWithCoords.length+' runs';const recentRoutes=routesWithCoords.slice(0,5);recentRoutes.forEach((r,i)=>addRouteLayer(r,i));if(recentRoutes.length){const allCoords=recentRoutes.flatMap(r=>r.coords);const bounds=allCoords.reduce((b,c)=>b.extend(c),new mapboxgl.LngLatBounds(allCoords[0],allCoords[0]));map.fitBounds(bounds,{padding:80,duration:1000});}}
-function addRouteLayer(r,colorIndex){const sid='route-'+r.id;if(map.getSource(sid))return;map.addSource(sid,{type:'geojson',data:{type:'Feature',properties:{id:r.id},geometry:{type:'LineString',coordinates:r.coords}}});map.addLayer({id:'layer-'+r.id,type:'line',source:sid,layout:{'line-join':'round','line-cap':'round'},paint:{'line-color':CONFIG.ROUTE_COLORS[colorIndex%CONFIG.ROUTE_COLORS.length],'line-width':4,'line-opacity':0.8,'line-blur':0.5}});map.on('click','layer-'+r.id,()=>selectRoute(r.id));map.on('mouseenter','layer-'+r.id,()=>{map.getCanvas().style.cursor='pointer';highlightRoute(r.id,true);});map.on('mouseleave','layer-'+r.id,()=>{map.getCanvas().style.cursor='';if(selectedRouteId!==r.id)highlightRoute(r.id,false);});}
-function highlightRoute(id,highlight){const layerId='layer-'+id;if(!map.getLayer(layerId))return;map.setPaintProperty(layerId,'line-width',highlight?5:3);map.setPaintProperty(layerId,'line-opacity',highlight?1:0.7);}
-function selectRoute(id){const route=window.ROUTES.find(r=>String(r.id)===String(id));if(!route)return;if(selectedRouteId){highlightRoute(selectedRouteId,false);$$('.route-item.active').forEach(el=>el.classList.remove('active'));}selectedRouteId=id;const sid='route-'+id;if(!map.getSource(sid)&&route.coords&&route.coords.length>2){addRouteLayer(route,0);}highlightRoute(id,true);const item=document.querySelector('.route-item[data-id="'+id+'"]');if(item){item.classList.add('active');item.scrollIntoView({behavior:'smooth',block:'nearest'});}showRouteDetail(route);if(route.coords&&route.coords.length>2){const bounds=route.coords.reduce((b,c)=>b.extend(c),new mapboxgl.LngLatBounds(route.coords[0],route.coords[0]));map.fitBounds(bounds,{padding:100,duration:800});}}
-function showRouteDetail(route){const sidebar=$('routes-sidebar');if(!sidebar)return;$('detail-title').textContent=route.name||'Run';const dateObj=new Date(route.date);$('detail-date').textContent=dateObj.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});$('detail-distance').textContent=(route.distance?.toFixed(2)||'--')+' km';$('detail-pace').textContent=route.pace||'--';const mins=Math.floor((route.duration||0)/60);const secs=(route.duration||0)%60;$('detail-duration').textContent=mins+':'+(secs<10?'0':'')+secs;$('detail-elevation').textContent=(route.elevation||'--')+' m';$('detail-hr').textContent=(route.hr||'--');$('detail-maxhr').textContent=(route.maxHr||'--');$('detail-calories').textContent=(route.calories||'--');$('detail-cadence').textContent=(route.cadence||'--');$('detail-strava').href='https://www.strava.com/activities/'+route.id;const prBadge=$('detail-pr');if(prBadge)prBadge.style.display=route.pr?'inline-flex':'none';sidebar.classList.add('expanded');}
-function hideRouteDetail(){const sidebar=$('routes-sidebar');if(sidebar)sidebar.classList.remove('expanded');if(selectedRouteId){highlightRoute(selectedRouteId,false);$$('.route-item.active').forEach(el=>el.classList.remove('active'));selectedRouteId=null;}}
-function filterRoutes(filter){routeFilter=filter;$$('.map-filter-btn').forEach(b=>b.classList.remove('active'));if(filter==='month')$('filter-month').classList.add('active');else $('filter-all').classList.add('active');renderRoutesList();updateMapVisibility();}
-function updateMapVisibility(){if(!map)return;const now=new Date();const currentMonth=now.getMonth();const currentYear=now.getFullYear();window.ROUTES.forEach(r=>{const layerId='layer-'+r.id;if(!map.getLayer(layerId))return;let visible=true;if(routeFilter==='month'){const d=new Date(r.date);visible=d.getMonth()===currentMonth&&d.getFullYear()===currentYear;}map.setLayoutProperty(layerId,'visibility',visible?'visible':'none');});}
-function searchRoutes(query){const q=query.toLowerCase();const routesWithCoords=window.ROUTES.filter(r=>r.coords&&r.coords.length>2).sort((a,b)=>new Date(b.date)-new Date(a.date));const filtered=q?routesWithCoords.filter(r=>(r.name||'').toLowerCase().includes(q)):routesWithCoords;renderRoutesListFiltered(filtered);if(q&&filtered.length){filtered.slice(0,10).forEach((r,i)=>{if(!map.getSource('route-'+r.id)){addRouteLayer(r,i);}});const coords=filtered.slice(0,5).flatMap(r=>r.coords);if(coords.length){const bounds=coords.reduce((b,c)=>b.extend(c),new mapboxgl.LngLatBounds(coords[0],coords[0]));map.fitBounds(bounds,{padding:80,duration:600});}}window.ROUTES.forEach(r=>{const layerId='layer-'+r.id;if(!map||!map.getLayer(layerId))return;const match=!q||(r.name||'').toLowerCase().includes(q);map.setPaintProperty(layerId,'line-opacity',match?0.8:0.15);});}
-function renderRoutesListFiltered(routes){const list=$('routes-list');if(!list)return;if(!routes.length){list.innerHTML='<div class="no-routes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 20l-5.447-2.724A1 1 0 0 1 3 16.382V5.618a1 1 0 0 1 1.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0 0 21 18.382V7.618a1 1 0 0 0-.553-.894L15 4m0 13V4m0 0L9 7"/></svg><div>No routes found</div></div>';return;}list.innerHTML=routes.slice(0,50).map(r=>{const active=selectedRouteId===r.id?' active':'';return '<div class="route-item'+active+'" data-id="'+r.id+'"><div class="route-item-header"><div class="route-item-name">'+(r.name||'Run')+'</div><div class="route-item-date">'+r.date+'</div></div><div class="route-item-stats"><div class="route-item-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>'+(r.distance?.toFixed(1)||'--')+' km</div><div class="route-item-stat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'+(r.pace||'--')+'</div></div></div>';}).join('');list.querySelectorAll('.route-item').forEach(item=>{const rid=item.dataset.id;item.addEventListener('click',()=>selectRoute(rid));item.addEventListener('mouseenter',()=>{if(String(selectedRouteId)!==rid)highlightRoute(rid,true);});item.addEventListener('mouseleave',()=>{if(String(selectedRouteId)!==rid)highlightRoute(rid,false);});});}
-function renderRoutesList(){const routesWithCoords=window.ROUTES.filter(r=>r.coords&&r.coords.length>2);let filtered=routesWithCoords;if(routeFilter==='month'){const now=new Date();const currentMonth=now.getMonth();const currentYear=now.getFullYear();filtered=routesWithCoords.filter(r=>{const d=new Date(r.date);return d.getMonth()===currentMonth&&d.getFullYear()===currentYear;});}renderRoutesListFiltered(filtered);}
-function initMapInteractions(){const searchInput=$('route-search');const clearBtn=$('search-clear');if(searchInput){searchInput.addEventListener('input',(e)=>{const val=e.target.value;searchRoutes(val);if(clearBtn)clearBtn.style.display=val?'flex':'none';});}if(clearBtn){clearBtn.addEventListener('click',()=>{searchInput.value='';clearBtn.style.display='none';searchRoutes('');searchInput.focus();});}const backBtn=$('routes-back');if(backBtn)backBtn.addEventListener('click',hideRouteDetail);const zoomBtn=$('detail-zoom');if(zoomBtn)zoomBtn.addEventListener('click',()=>{if(selectedRouteId){const route=window.ROUTES.find(r=>String(r.id)===String(selectedRouteId));if(route&&route.coords&&route.coords.length>2){const bounds=route.coords.reduce((b,c)=>b.extend(c),new mapboxgl.LngLatBounds(route.coords[0],route.coords[0]));map.fitBounds(bounds,{padding:{top:80,bottom:80,left:80,right:400},duration:600});}}});const popupClose=$('popup-close');if(popupClose)popupClose.addEventListener('click',hideMetricPopup);$$('.route-detail-stat').forEach(stat=>{stat.addEventListener('click',()=>{const metric=stat.dataset.metric;if(metric)showMetricPopup(metric);});});document.addEventListener('keydown',(e)=>{if(e.key==='Escape'){hideRouteDetail();hideMetricPopup();}});renderRoutesList();}
-function showMetricPopup(metric){const popup=$('metric-popup');if(!popup||!selectedRouteId)return;const route=window.ROUTES.find(r=>String(r.id)===String(selectedRouteId));if(!route)return;const metrics={distance:{title:'Distance',value:(route.distance?.toFixed(2)||'--')+' km',unit:'km'},pace:{title:'Pace',value:route.pace||'--',unit:'/km'},duration:{title:'Duration',value:formatDuration(route.duration),unit:''},elevation:{title:'Elevation',value:(route.elevation||'--')+' m',unit:'m'},hr:{title:'Avg Heart Rate',value:(route.hr||'--')+' bpm',unit:'bpm'},maxhr:{title:'Max Heart Rate',value:(route.maxHr||'--')+' bpm',unit:'bpm'},calories:{title:'Calories',value:(route.calories||'--')+' kcal',unit:'kcal'},cadence:{title:'Cadence',value:(route.cadence||'--')+' spm',unit:'spm'}};const m=metrics[metric];if(!m)return;$('popup-title').textContent=m.title;$('popup-value').textContent=m.value;const recentRuns=window.ROUTES.filter(r=>r[metric]||r.distance).slice(0,10);const chart=$('popup-chart');chart.innerHTML='';const maxVal=Math.max(...recentRuns.map(r=>metric==='distance'?r.distance:(r[metric]||0)));recentRuns.reverse().forEach(r=>{const val=metric==='distance'?r.distance:(r[metric]||0);const pct=maxVal>0?(val/maxVal)*100:0;const bar=document.createElement('div');bar.className='metric-popup-bar';bar.style.height=pct+'%';bar.style.background=String(r.id)===String(selectedRouteId)?'var(--accent)':'var(--accent-muted)';chart.appendChild(bar);});const avg=recentRuns.reduce((a,r)=>a+(metric==='distance'?r.distance:(r[metric]||0)),0)/recentRuns.length;const current=metric==='distance'?route.distance:(route[metric]||0);const diff=avg>0?((current-avg)/avg*100).toFixed(0):0;$('popup-comparison').innerHTML=diff>=0?'<span style=\"color:var(--success)\">+'+diff+'%</span> vs recent average':'<span style=\"color:var(--danger)\">'+diff+'%</span> vs recent average';popup.classList.add('visible');}
-function hideMetricPopup(){const popup=$('metric-popup');if(popup)popup.classList.remove('visible');}
+function initMap(){if(mapInitialized||!$('act-map'))return;if(typeof mapboxgl==='undefined'){setTimeout(initMap,500);return;}try{mapboxgl.accessToken=CONFIG.MAPBOX_TOKEN;map=new mapboxgl.Map({container:'act-map',style:'mapbox://styles/mapbox/dark-v11',center:[26.1,44.41],zoom:12,attributionControl:false});map.on('load',()=>{mapInitialized=true;renderActivityList();initActivitiesInteractions();});}catch(e){console.error('Map error:',e);}}
+let selectedRouteId=null;
+function addRouteToMap(route){if(!map||!route.coords||route.coords.length<2)return;const sid='route-'+route.id;if(map.getSource(sid)){map.removeLayer('layer-'+route.id);map.removeSource(sid);}map.addSource(sid,{type:'geojson',data:{type:'Feature',geometry:{type:'LineString',coordinates:route.coords}}});map.addLayer({id:'layer-'+route.id,type:'line',source:sid,layout:{'line-join':'round','line-cap':'round'},paint:{'line-color':'#8b5cf6','line-width':4,'line-opacity':0.9}});}
+function selectActivity(id){const route=window.ROUTES.find(r=>String(r.id)===String(id));if(!route)return;$$('.act-item.active').forEach(el=>el.classList.remove('active'));selectedRouteId=id;const item=document.querySelector('.act-item[data-id="'+id+'"]');if(item){item.classList.add('active');item.scrollIntoView({behavior:'smooth',block:'nearest'});}showActivityDetail(route);if(route.coords&&route.coords.length>2){addRouteToMap(route);const bounds=route.coords.reduce((b,c)=>b.extend(c),new mapboxgl.LngLatBounds(route.coords[0],route.coords[0]));map.fitBounds(bounds,{padding:40,duration:800});}}
+function showActivityDetail(route){$('act-empty').style.display='none';$('act-content').style.display='block';$('act-title').textContent=route.name||'Run';const dateObj=new Date(route.date);$('act-date').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>'+dateObj.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});$('act-time').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'+dateObj.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});$('act-distance').textContent=route.distance?.toFixed(2)||'--';$('act-pace').textContent=route.pace||'--';$('act-duration').textContent=formatDuration(route.duration);$('act-hr').textContent=route.hr||'--';$('act-elevation').textContent=route.elevation||'--';$('act-calories').textContent=route.calories||'--';$('act-strava-link').href='https://www.strava.com/activities/'+route.id;const prBadge=$('act-pr-badge');if(prBadge)prBadge.style.display=route.pr?'inline-flex':'none';generateAIInsight(route);renderSplits(route);renderHRZones(route);renderTrendsChart();renderComparison(route);}
+function generateAIInsight(route){const insights=['<strong>Solid effort!</strong> Your average pace of '+route.pace+' shows good consistency. Heart rate data suggests you were in an aerobic zone for most of the run.','<strong>Great endurance!</strong> Covering '+(route.distance?.toFixed(1)||'--')+' km at '+route.pace+' demonstrates improving stamina compared to similar recent runs.','<strong>Steady performance!</strong> Your pace remained controlled throughout. The '+route.elevation+'m elevation gain added quality training stimulus.'];const tips=['Try incorporating interval training to improve your pace.','Consider adding a 10-min warmup before intense efforts.','Recovery runs at slower pace can boost overall fitness.','Hill training can significantly improve running economy.'];$('act-ai-text').innerHTML=insights[Math.floor(Math.random()*insights.length)];$('act-ai-tip').innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'+tips[Math.floor(Math.random()*tips.length)];}
+function renderSplits(route){const container=$('act-splits');if(!container)return;const distance=route.distance||5;const numSplits=Math.ceil(distance);const basePace=route.pace?parsePace(route.pace):300;const splits=[];for(let i=1;i<=Math.min(numSplits,10);i++){const variance=(Math.random()-0.5)*30;splits.push({km:i,time:basePace+variance});}const maxTime=Math.max(...splits.map(s=>s.time));const minTime=Math.min(...splits.map(s=>s.time));container.innerHTML=splits.map(s=>{const pct=(s.time/maxTime)*100;const isFastest=s.time===minTime;const isSlowest=s.time===maxTime;return '<div class="act-split'+(isFastest?' fastest':'')+(isSlowest?' slowest':'')+'"><span class="act-split-km">Km '+s.km+'</span><span class="act-split-time">'+formatPace(s.time)+'</span><div class="act-split-bar"><div class="act-split-fill" style="width:'+pct+'%"></div></div></div>';}).join('');}
+function renderHRZones(route){const container=$('act-hr-zones');if(!container)return;const zones=[{zone:'z5',pct:Math.random()*15},{zone:'z4',pct:20+Math.random()*25},{zone:'z3',pct:25+Math.random()*20},{zone:'z2',pct:10+Math.random()*15},{zone:'z1',pct:5+Math.random()*10}];const total=zones.reduce((a,z)=>a+z.pct,0);container.innerHTML=zones.map(z=>{const normalized=Math.round((z.pct/total)*100);return '<div class="act-hr-zone '+z.zone+'"><span class="act-hr-zone-label">'+z.zone.toUpperCase()+'</span><div class="act-hr-zone-bar"><div class="act-hr-zone-fill" style="width:'+normalized+'%"></div></div><span class="act-hr-zone-pct">'+normalized+'%</span></div>';}).join('');}
+function renderTrendsChart(){const container=$('act-trends-chart');if(!container)return;const recentRuns=window.ROUTES.slice(0,12);const maxDist=Math.max(...recentRuns.map(r=>r.distance||0));container.innerHTML=recentRuns.reverse().map((r,i)=>{const pct=maxDist>0?((r.distance||0)/maxDist)*100:0;const isCurrent=String(r.id)===String(selectedRouteId);return '<div class="act-trends-bar'+(isCurrent?' current':'')+'" style="height:'+Math.max(pct,5)+'%" title="'+(r.distance?.toFixed(1)||0)+' km"></div>';}).join('');}
+function renderComparison(route){const similar=window.ROUTES.filter(r=>Math.abs((r.distance||0)-(route.distance||0))<1);const avgPaceSimilar=similar.length>1?similar.reduce((a,r)=>a+(parsePace(r.pace)||0),0)/similar.length:0;const weekAgo=new Date();weekAgo.setDate(weekAgo.getDate()-7);const lastWeek=window.ROUTES.filter(r=>new Date(r.date)>=weekAgo);const avgPaceWeek=lastWeek.length?lastWeek.reduce((a,r)=>a+(parsePace(r.pace)||0),0)/lastWeek.length:0;const currentPace=parsePace(route.pace)||0;const diffSimilar=avgPaceSimilar&&currentPace?Math.round(((avgPaceSimilar-currentPace)/avgPaceSimilar)*100):0;const diffWeek=avgPaceWeek&&currentPace?Math.round(((avgPaceWeek-currentPace)/avgPaceWeek)*100):0;const cs=$('compare-similar');const cw=$('compare-week');if(cs){cs.textContent=(diffSimilar>=0?'+':'')+diffSimilar+'%';cs.className='act-compare-value '+(diffSimilar>=0?'positive':'negative');}if(cw){cw.textContent=(diffWeek>=0?'+':'')+diffWeek+'%';cw.className='act-compare-value '+(diffWeek>=0?'positive':'negative');}}
+function parsePace(pace){if(!pace)return 0;const parts=pace.split(':');return parseInt(parts[0])*60+parseInt(parts[1]||0);}
+function formatPace(secs){const m=Math.floor(secs/60);const s=Math.round(secs%60);return m+':'+(s<10?'0':'')+s;}
 function formatDuration(secs){if(!secs)return'--';const h=Math.floor(secs/3600);const m=Math.floor((secs%3600)/60);const s=secs%60;return h>0?h+':'+m.toString().padStart(2,'0')+':'+s.toString().padStart(2,'0'):m+':'+s.toString().padStart(2,'0');}
+function renderActivityList(){const list=$('act-list');if(!list||!window.ROUTES)return;const routes=window.ROUTES.filter(r=>r.coords&&r.coords.length>2).sort((a,b)=>new Date(b.date)-new Date(a.date));$('act-count').textContent=routes.length;updateMonthlySummary(routes);if(!routes.length){list.innerHTML='<div class="act-analysis-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg><p>No activities found</p></div>';return;}list.innerHTML=routes.slice(0,100).map(r=>{const dateObj=new Date(r.date);const dateStr=dateObj.toLocaleDateString('en-US',{month:'short',day:'numeric'});const active=String(selectedRouteId)===String(r.id)?' active':'';const hasPr=r.pr?'<span class="act-item-pr">PR</span>':'';return '<div class="act-item'+active+'" data-id="'+r.id+'"><div class="act-item-top"><div class="act-item-name">'+(r.name||'Run')+'</div>'+hasPr+'</div><div class="act-item-meta"><span class="act-item-type"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="3"/><line x1="12" y1="22" x2="12" y2="8"/></svg>Run</span><span>'+dateStr+'</span></div><div class="act-item-stats"><div class="act-item-stat"><span>'+(r.distance?.toFixed(1)||'--')+'</span> km</div><div class="act-item-stat"><span>'+(r.pace||'--')+'</span> /km</div><div class="act-item-stat"><span>'+formatDuration(r.duration)+'</span></div></div></div>';}).join('');list.querySelectorAll('.act-item').forEach(item=>{item.addEventListener('click',()=>selectActivity(item.dataset.id));});}
+function updateMonthlySummary(routes){const now=new Date();const thisMonth=routes.filter(r=>{const d=new Date(r.date);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();});$('monthly-runs').textContent=thisMonth.length;$('monthly-distance').textContent=thisMonth.reduce((a,r)=>a+(r.distance||0),0).toFixed(0);const totalSecs=thisMonth.reduce((a,r)=>a+(r.duration||0),0);$('monthly-time').textContent=Math.floor(totalSecs/3600)+'h';$('monthly-elevation').textContent=thisMonth.reduce((a,r)=>a+(r.elevation||0),0);}
+function searchActivities(query){const q=query.toLowerCase();const routes=window.ROUTES.filter(r=>r.coords&&r.coords.length>2).sort((a,b)=>new Date(b.date)-new Date(a.date));const filtered=q?routes.filter(r=>(r.name||'').toLowerCase().includes(q)):routes;renderFilteredActivities(filtered);}
+function renderFilteredActivities(routes){const list=$('act-list');if(!list)return;$('act-count').textContent=routes.length;if(!routes.length){list.innerHTML='<div class="act-analysis-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 20l-5.447-2.724A1 1 0 0 1 3 16.382V5.618a1 1 0 0 1 1.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0 0 21 18.382V7.618a1 1 0 0 0-.553-.894L15 4m0 13V4m0 0L9 7"/></svg><p>No matching activities</p></div>';return;}list.innerHTML=routes.slice(0,100).map(r=>{const dateObj=new Date(r.date);const dateStr=dateObj.toLocaleDateString('en-US',{month:'short',day:'numeric'});const active=String(selectedRouteId)===String(r.id)?' active':'';return '<div class="act-item'+active+'" data-id="'+r.id+'"><div class="act-item-top"><div class="act-item-name">'+(r.name||'Run')+'</div></div><div class="act-item-meta"><span class="act-item-type"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="3"/><line x1="12" y1="22" x2="12" y2="8"/></svg>Run</span><span>'+dateStr+'</span></div><div class="act-item-stats"><div class="act-item-stat"><span>'+(r.distance?.toFixed(1)||'--')+'</span> km</div><div class="act-item-stat"><span>'+(r.pace||'--')+'</span> /km</div></div></div>';}).join('');list.querySelectorAll('.act-item').forEach(item=>{item.addEventListener('click',()=>selectActivity(item.dataset.id));});}
+function initActivitiesInteractions(){const searchInput=$('act-search');const clearBtn=$('act-search-clear');if(searchInput){searchInput.addEventListener('input',(e)=>{const val=e.target.value;searchActivities(val);if(clearBtn)clearBtn.style.display=val?'flex':'none';});}if(clearBtn){clearBtn.addEventListener('click',()=>{searchInput.value='';clearBtn.style.display='none';searchActivities('');searchInput.focus();});}const fitMapBtn=$('act-fit-map');if(fitMapBtn){fitMapBtn.addEventListener('click',()=>{if(selectedRouteId&&map){const route=window.ROUTES.find(r=>String(r.id)===String(selectedRouteId));if(route&&route.coords&&route.coords.length>2){const bounds=route.coords.reduce((b,c)=>b.extend(c),new mapboxgl.LngLatBounds(route.coords[0],route.coords[0]));map.fitBounds(bounds,{padding:40,duration:600});}}});}$('map-zoom-in')?.addEventListener('click',()=>map?.zoomIn());$('map-zoom-out')?.addEventListener('click',()=>map?.zoomOut());$('map-3d')?.addEventListener('click',()=>{if(map){const pitch=map.getPitch();map.easeTo({pitch:pitch>0?0:60,duration:500});}});$$('.act-trends-tab').forEach(tab=>{tab.addEventListener('click',()=>{$$('.act-trends-tab').forEach(t=>t.classList.remove('active'));tab.classList.add('active');renderTrendsChart();});});}
 function updateSyncStatus(){const syncText=$('sync-text');if(!syncText)return;const now=new Date();const today8am=new Date(now);today8am.setHours(8,0,0,0);const yesterday8am=new Date(today8am);yesterday8am.setDate(yesterday8am.getDate()-1);let syncTime;if(now>=today8am){syncTime=today8am;}else{syncTime=yesterday8am;}const isToday=syncTime.toDateString()===now.toDateString();const timeStr=syncTime.toLocaleTimeString('ro-RO',{hour:'2-digit',minute:'2-digit'});if(isToday){syncText.textContent='Last sync: Today '+timeStr;}else{syncText.textContent='Last sync: Yesterday '+timeStr;}}
 const MONTHLY_GOALS={runs:15,distance:150,elevation:500};let calendarMonth=new Date().getMonth();let calendarYear=new Date().getFullYear();function updateTargets(){if(!window.ROUTES.length)return;const now=new Date();const currentMonth=now.getMonth();const currentYear=now.getFullYear();const monthRuns=window.ROUTES.filter(r=>{const d=new Date(r.date);return d.getMonth()===currentMonth&&d.getFullYear()===currentYear;});const runs=monthRuns.length;const distance=monthRuns.reduce((a,r)=>a+(r.distance||0),0);const elevation=monthRuns.reduce((a,r)=>a+(r.elevation||0),0);const runsPct=Math.min(100,Math.round((runs/MONTHLY_GOALS.runs)*100));const distPct=Math.min(100,Math.round((distance/MONTHLY_GOALS.distance)*100));const elevPct=Math.min(100,Math.round((elevation/MONTHLY_GOALS.elevation)*100));const circumference=100.53;$("pct-runs").textContent=runsPct+"%";$("pct-distance").textContent=distPct+"%";$("pct-elevation").textContent=elevPct+"%";$("bar-runs").style.width=runsPct+"%";$("bar-distance").style.width=distPct+"%";$("bar-elevation").style.width=elevPct+"%";$("ring-runs").style.strokeDashoffset=circumference-(circumference*runsPct/100);$("ring-distance").style.strokeDashoffset=circumference-(circumference*distPct/100);$("ring-elevation").style.strokeDashoffset=circumference-(circumference*elevPct/100);$("current-runs").textContent=runs+" runs";$("current-distance").textContent=distance.toFixed(1)+" km";$("current-elevation").textContent=elevation+" m";if(runsPct>=100)$("target-runs").classList.add("completed");else $("target-runs").classList.remove("completed");if(distPct>=100)$("target-distance").classList.add("completed");else $("target-distance").classList.remove("completed");if(elevPct>=100)$("target-elevation").classList.add("completed");else $("target-elevation").classList.remove("completed");const avgPct=Math.round((runsPct+distPct+elevPct)/3);const daysLeft=new Date(currentYear,currentMonth+1,0).getDate()-now.getDate();const runsNeeded=Math.max(0,MONTHLY_GOALS.runs-runs);const distNeeded=Math.max(0,MONTHLY_GOALS.distance-distance).toFixed(1);let progressText="";if(avgPct>=100){progressText="Congratulations! You have achieved all your monthly goals!";}else if(avgPct>=75){progressText=distPct+"% of distance goal. "+runsNeeded+" more runs needed. On track!";}else if(avgPct>=50){progressText=distPct+"% of distance goal. Need "+runsNeeded+" more runs. "+daysLeft+" days left.";}else{progressText=distPct+"% of distance goal. Need "+distNeeded+" km and "+runsNeeded+" more runs.";}$("ai-progress-text").textContent=progressText;const monthNames=["January","February","March","April","May","June","July","August","September","October","November","December"];const subtitle=document.querySelector("#page-predictions .section-subtitle");if(subtitle)subtitle.textContent="Track your "+monthNames[currentMonth]+" goals and training progress";renderCalendar();}function renderCalendar(){const monthNames=["January","February","March","April","May","June","July","August","September","October","November","December"];$("calendar-title").textContent=monthNames[calendarMonth]+" "+calendarYear;const firstDay=new Date(calendarYear,calendarMonth,1);const lastDay=new Date(calendarYear,calendarMonth+1,0);const startDay=(firstDay.getDay()+6)%7;const daysInMonth=lastDay.getDate();const prevMonth=new Date(calendarYear,calendarMonth,0);const daysInPrevMonth=prevMonth.getDate();const activityDates=new Set();if(window.ROUTES){window.ROUTES.forEach(r=>{const d=new Date(r.date);if(d.getMonth()===calendarMonth&&d.getFullYear()===calendarYear){activityDates.add(d.getDate());}});}const today=new Date();const isCurrentMonth=today.getMonth()===calendarMonth&&today.getFullYear()===calendarYear;let html="";for(let i=0;i<startDay;i++){const day=daysInPrevMonth-startDay+1+i;html+="<div class=\"calendar-day other-month\">"+day+"</div>";}for(let day=1;day<=daysInMonth;day++){const classes=["calendar-day"];if(isCurrentMonth&&day===today.getDate())classes.push("today");if(activityDates.has(day))classes.push("has-activity");html+="<div class=\""+classes.join(" ")+"\">"+day+"</div>";}const totalCells=startDay+daysInMonth;const remaining=totalCells%7===0?0:7-(totalCells%7);for(let i=1;i<=remaining;i++){html+="<div class=\"calendar-day other-month\">"+i+"</div>";}$("calendar-days").innerHTML=html;}function initCalendar(){if($("cal-prev"))$("cal-prev").addEventListener("click",()=>{calendarMonth--;if(calendarMonth<0){calendarMonth=11;calendarYear--;}renderCalendar();});if($("cal-next"))$("cal-next").addEventListener("click",()=>{calendarMonth++;if(calendarMonth>11){calendarMonth=0;calendarYear++;}renderCalendar();});}
 function navigateTo(page){$$('.nav-item').forEach(i=>i.classList.toggle('active',i.dataset.page===page));$$('.page-panel').forEach(p=>p.classList.remove('active'));const panel=$('page-'+page);if(panel)panel.classList.add('active');const titles={dashboard:'Dashboard',activities:'Activities & Maps',predictions:'Monthly Targets',health:'Health & Recovery',mental:'Mental Health',nutrition:'Nutrition',injuries:'Injury Management',medical:'Medical Records','ai-assistant':'AI Assistant',account:'Account Settings'};$('page-title').textContent=titles[page]||'Dashboard';if(page==='activities')setTimeout(initMap,200);if(page==='predictions')updateTargets();}
